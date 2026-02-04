@@ -1,21 +1,63 @@
 #include <DxLib.h>
 #include <stdio.h>
-
+#include "Player.h"
+#include "Jump.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+
 	SetOutApplicationLogValidFlag(FALSE);//Log.txtを生成しないように設定
 	ChangeWindowMode(TRUE);//非全画面にセット
 	SetGraphMode(640, 480, 32);//画面サイズ指定
+	SetBackgroundColor(0, 0, 0, 1);
 	if (DxLib_Init() == 1) { return -1; }//初期化に失敗時にエラーを吐かせて終了
 
+	char keyState[256];								// キー情報格納用変数
+	GetHitKeyStateAll(keyState);					// キー入力情報取得
+	int _currentX = 0;
+	int _currentY = 320;
+	int _vectorY = 0;
+	int _jumpPower = 0;
+	int _jumpPlusValue = 1;
+	int _minY = 320;
+	int _gravity = 1;
+	bool _isJumping = false;
+	int _moveValue = 2;
 
+	Player _player;
+	Jump _jump;
+	_player.SetUp();
 	while (ProcessMessage() == 0)
 	{
-		ClearDrawScreen();//裏画面消す
-		SetDrawScreen(DX_SCREEN_BACK);//描画先を裏画面に
+		GetHitKeyStateAll(keyState);
 
-		DrawCircle(100, 200, 30, GetColor(255, 0, 0));
+		if (keyState[KEY_INPUT_RIGHT]) 
+		{
+			_player.Move(_moveValue);
+			//_currentX += 2;
+		}
+		else if (keyState[KEY_INPUT_LEFT])
+		{
+			_player.Move(-_moveValue);
+			//_currentX -= 2;
+		}
+
+		if (keyState[KEY_INPUT_SPACE] && !_isJumping)
+		{
+			_jump.JumpProtocol(_player);
+			_isJumping = true;
+		}
+		
+		if (_player.ReturnY() < _minY) 
+		{
+			_player.Gravity();
+		}
+		else {
+			_isJumping = false;
+		}
+		SetDrawScreen(DX_SCREEN_BACK);//描画先を裏画面に
+		ClearDrawScreen();//裏画面消す
+		_player.DrawPlayer();
 
 		ScreenFlip();//裏画面を表画面にコピー
 	}
@@ -23,3 +65,4 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	DxLib_End();
 	return 0;
 }
+
