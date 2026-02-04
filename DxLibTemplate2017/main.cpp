@@ -14,15 +14,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	char keyState[256];								// キー情報格納用変数
 	GetHitKeyStateAll(keyState);					// キー入力情報取得
-	int _currentX = 0;
-	int _currentY = 320;
-	int _vectorY = 0;
-	int _jumpPower = 0;
-	int _jumpPlusValue = 1;
 	int _minY = 320;
-	int _gravity = 1;
 	bool _isJumping = false;
-	int _moveValue = 2;
+	int _moveValue = 5;
 
 	Player _player;
 	Jump _jump;
@@ -58,7 +52,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		SetDrawScreen(DX_SCREEN_BACK);//描画先を裏画面に
 		ClearDrawScreen();//裏画面消す
 		_player.DrawPlayer();
-
+		_player.Update();
 		ScreenFlip();//裏画面を表画面にコピー
 	}
 

@@ -16,17 +16,17 @@ void Player::Move(int moveValue) {
 }
 
 void Player::Update() {
-
-}
-void Player::DrawPlayer() {
 	if (_currentY <= _startY) {
 		_currentY -= _verticalY;
 	}
 	else {
 		_currentY = _startY;
+		_verticalY = 0;
 	}
-	DrawGraph(_currentX, _currentY, _sampleGraph, TRUE);
 
+}
+void Player::DrawPlayer() {
+	DrawGraph(_currentX, _currentY, _sampleGraph, TRUE);
 }
 
 void Player::Gravity() {
