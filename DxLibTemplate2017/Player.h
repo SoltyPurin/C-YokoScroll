@@ -1,7 +1,7 @@
 #pragma once
 class Player {
 public:
-    void SetUp();
+    void Start();
     void Move(int moveValue);
     void Update();
     void DrawPlayer();

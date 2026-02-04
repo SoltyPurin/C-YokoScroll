@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "Player.h"
 #include "Jump.h"
+#include "Obstacle.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -20,7 +21,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	Player _player;
 	Jump _jump;
-	_player.SetUp();
+	Obstacle _obstacle;
+	_player.Start();
+	_obstacle.Start();
 	while (ProcessMessage() == 0)
 	{
 		GetHitKeyStateAll(keyState);
@@ -52,6 +55,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		SetDrawScreen(DX_SCREEN_BACK);//描画先を裏画面に
 		ClearDrawScreen();//裏画面消す
 		_player.DrawPlayer();
+		_obstacle.DrawObstacle();
 		_player.Update();
 		ScreenFlip();//裏画面を表画面にコピー
 	}

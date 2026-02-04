@@ -6,10 +6,10 @@ int _currentY = 320;
 int _startY = 320;
 int _verticalY = 0;
 int _gravity = 1;
-int _sampleGraph = 0;
+int _playerGraph = 0;
 
-void Player::SetUp() {
-	_sampleGraph = LoadGraph("sample.png");
+void Player::Start() {
+	_playerGraph = LoadGraph("Image/sample.png");
 }
 void Player::Move(int moveValue) {
 	_currentX += moveValue;
@@ -26,7 +26,7 @@ void Player::Update() {
 
 }
 void Player::DrawPlayer() {
-	DrawGraph(_currentX, _currentY, _sampleGraph, TRUE);
+	DrawGraph(_currentX, _currentY, _playerGraph, TRUE);
 }
 
 void Player::Gravity() {
