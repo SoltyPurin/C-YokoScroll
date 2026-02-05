@@ -1,44 +1,55 @@
 #include "Player.h"
 #include <DxLib.h>
+#include "Vector2.h"
 
-int _currentX = 320;
-int _currentY = 320;
-int _startY = 320;
-int _verticalY = 0;
-int _gravity = 1;
+float _initX = 320;
+float _initY = 379;
+float _scaleX = 99;
+float _scaleY = 99;
+float _startY = 379;
+float _verticalY = 0;
+float _gravity = 0.5f;
 int _playerGraph = 0;
 
-void Player::Start() {
+Vector2 _pos;
+
+Player::Player() {
+	_pos.x = _initX;
+	_pos.y = _initY;
 	_playerGraph = LoadGraph("Image/sample.png");
 }
-void Player::Move(int moveValue) {
-	_currentX += moveValue;
+Player::~Player() {
+	DeleteGraph(_playerGraph);
+}
+void Player::Move(float moveValue) {
+	_pos.x += moveValue;
 }
 
 void Player::Update() {
-	if (_currentY <= _startY) {
-		_currentY -= _verticalY;
+	if (_pos.y <= _startY) {
+		_pos.y -= _verticalY;
 	}
 	else {
-		_currentY = _startY;
+		_pos.y = _startY;
 		_verticalY = 0;
 	}
 
 }
 void Player::DrawPlayer() {
-	DrawGraph(_currentX, _currentY, _playerGraph, TRUE);
+	DrawExtendGraph(_pos.x, _pos.y, _pos.x + _scaleX, _pos.y + _scaleY, _playerGraph, TRUE);
+	//DrawGraph(_currentX, _currentY, _playerGraph, TRUE);
 }
 
 void Player::Gravity() {
 	 _verticalY -= _gravity;
 }
-void Player::SetVY(int vy) {
+void Player::SetVY(float vy) {
 	_verticalY = vy;
 }
-int Player::ReturnY() {
-	return _currentY;
+float Player::ReturnVY() {
+	return _verticalY;
 }
 
-int Player::ReturnVY() {
-	return _verticalY;
+Vector2 Player::GetPos() {
+	return _pos;
 }

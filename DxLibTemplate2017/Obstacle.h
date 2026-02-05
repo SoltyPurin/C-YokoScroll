@@ -1,8 +1,12 @@
 #pragma once
+#include "Vector2.h"
 class Obstacle
 {
 public:
-	void Start();
+	Obstacle();
+	~Obstacle();
 	void DrawObstacle();
+	Vector2 ReturnPos();
+	Vector2 ReturnScale();
 };
 

@@ -1,8 +1,8 @@
 #include "Jump.h"
 
-int _jumpPower = 10;
-void Jump::JumpProtocol(Player player) {
-	int vy = player.ReturnVY();
+float _jumpPower = 1.5f;
+void Jump::JumpProtocol(Player& player) {
+	float vy = player.ReturnVY();
 	vy += _jumpPower;
 	player.SetVY(vy);
 }

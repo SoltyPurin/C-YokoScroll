@@ -3,6 +3,6 @@
 class Jump
 {
 public:
-	void JumpProtocol(Player player);
+	void JumpProtocol(Player& player);
 };
 

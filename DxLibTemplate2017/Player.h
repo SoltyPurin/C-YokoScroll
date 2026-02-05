@@ -1,12 +1,14 @@
 #pragma once
+#include "Vector2.h"
 class Player {
 public:
-    void Start();
-    void Move(int moveValue);
+    Player();
+    ~Player();
+    void Move(float moveValue);
     void Update();
     void DrawPlayer();
-    void SetVY(int vy);
+    void SetVY(float vy);
     void Gravity();
-    int ReturnY();
-    int ReturnVY();
+    float ReturnVY();
+    Vector2 GetPos();
 };

@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Jump.h"
 #include "Obstacle.h"
+#include "Stage.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -15,15 +16,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	char keyState[256];								// キー情報格納用変数
 	GetHitKeyStateAll(keyState);					// キー入力情報取得
-	int _minY = 320;
+	float _minY = 320;
 	bool _isJumping = false;
-	int _moveValue = 5;
+	float _moveValue = 5;
 
 	Player _player;
 	Jump _jump;
 	Obstacle _obstacle;
-	_player.Start();
-	_obstacle.Start();
+	Stage _stage(&_player);
 	while (ProcessMessage() == 0)
 	{
 		GetHitKeyStateAll(keyState);
@@ -45,7 +45,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			_isJumping = true;
 		}
 		
-		if (_player.ReturnY() < _minY) 
+		if (_player.GetPos().y < _minY) 
 		{
 			_player.Gravity();
 		}
@@ -54,6 +54,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		SetDrawScreen(DX_SCREEN_BACK);//描画先を裏画面に
 		ClearDrawScreen();//裏画面消す
+		_stage.Update();
 		_player.DrawPlayer();
 		_obstacle.DrawObstacle();
 		_player.Update();
