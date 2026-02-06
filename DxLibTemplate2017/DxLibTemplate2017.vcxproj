@@ -123,6 +123,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
@@ -130,6 +131,7 @@
     <ClInclude Include="Jump.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Rect.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>

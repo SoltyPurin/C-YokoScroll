@@ -10,13 +10,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	SetOutApplicationLogValidFlag(FALSE);//Log.txtを生成しないように設定
 	ChangeWindowMode(TRUE);//非全画面にセット
-	SetGraphMode(640, 480, 32);//画面サイズ指定
+	SetGraphMode(1920, 1080, 32);//画面サイズ指定
 	SetBackgroundColor(0, 0, 0, 1);
 	if (DxLib_Init() == 1) { return -1; }//初期化に失敗時にエラーを吐かせて終了
 
 	char keyState[256];								// キー情報格納用変数
 	GetHitKeyStateAll(keyState);					// キー入力情報取得
-	float _minY = 320;
+	float _minY = 900;
 	bool _isJumping = false;
 	float _moveValue = 5;
 
@@ -24,6 +24,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Jump _jump;
 	Obstacle _obstacle;
 	Stage _stage(&_player);
+	_player.SetStagePointer(&_stage);
 	while (ProcessMessage() == 0)
 	{
 		GetHitKeyStateAll(keyState);
