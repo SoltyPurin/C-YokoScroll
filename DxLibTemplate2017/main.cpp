@@ -21,10 +21,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	float _moveValue = 5;
 
 	Player _player;
-	Jump _jump;
 	Obstacle _obstacle;
-	Stage _stage(&_player);
+	Jump _jump;
+	Stage _stage(&_player,&_obstacle);
 	_player.SetStagePointer(&_stage);
+	_obstacle.SetStagePointer(&_stage);
 	while (ProcessMessage() == 0)
 	{
 		GetHitKeyStateAll(keyState);
@@ -39,25 +40,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			_player.Move(-_moveValue);
 			//_currentX -= 2;
 		}
+		else {
+			_player.Move(0);
+		}
 
-		if (keyState[KEY_INPUT_SPACE] && !_isJumping)
+		if (keyState[KEY_INPUT_SPACE] /*&& !_isJumping*/)
 		{
-			_jump.JumpProtocol(_player);
+			_player.JumpProtocol(_jump);
 			_isJumping = true;
 		}
 		
-		if (_player.GetPos().y < _minY) 
-		{
-			_player.Gravity();
-		}
-		else {
-			_isJumping = false;
-		}
+		//if (_player.GetPos().y < _minY) 
+		//{
+		//	_player.Gravity();
+		//}
+		//else {
+		//	_isJumping = false;
+		//}
 		SetDrawScreen(DX_SCREEN_BACK);//描画先を裏画面に
 		ClearDrawScreen();//裏画面消す
 		_stage.Update();
-		_player.DrawPlayer();
-		_obstacle.DrawObstacle();
+		_player.Update();
+		_obstacle.Update();
 		_player.Update();
 		ScreenFlip();//裏画面を表画面にコピー
 	}
