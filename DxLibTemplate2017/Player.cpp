@@ -64,20 +64,20 @@ void Player::CheckHitMap(Rect& chipRect)
     }
 
     // めり込み量（左右・上下）
-    const float overlapL = _collisionRect.GetRight() - chipRect.GetLeft();   // 左へ押す量
-    const float overlapR = chipRect.GetRight() - _collisionRect.GetLeft(); // 右へ押す量
-    const float overlapT = _collisionRect.GetBottom() - chipRect.GetTop();    // 上へ押す量
-    const float overlapB = chipRect.GetBottom() - _collisionRect.GetTop();  // 下へ押す量
+    float overlapL = _collisionRect.GetRight() - chipRect.GetLeft();   // 左へ押す量
+    float overlapR = chipRect.GetRight() - _collisionRect.GetLeft(); // 右へ押す量
+    float overlapT = _collisionRect.GetBottom() - chipRect.GetTop();    // 上へ押す量
+    float overlapB = chipRect.GetBottom() - _collisionRect.GetTop();  // 下へ押す量
 
-    // X/Yそれぞれ「最小の押し戻し量」
-    const float pushX = (overlapL < overlapR) ? overlapL : overlapR;
-    const float pushY = (overlapT < overlapB) ? overlapT : overlapB;
+    // X/Yそれぞれ最小の押し戻し量
+    float pushX = (overlapL < overlapR) ? overlapL : overlapR;
+    float pushY = (overlapT < overlapB) ? overlapT : overlapB;
 
     // 中心でどっち側にいるか判定
-    const float rcx = (_collisionRect.GetLeft() + _collisionRect.GetRight()) * 0.5f;
-    const float rcy = (_collisionRect.GetTop() + _collisionRect.GetBottom()) * 0.5f;
-    const float ccx = (chipRect.GetLeft() + chipRect.GetRight()) * 0.5f;
-    const float ccy = (chipRect.GetTop() + chipRect.GetBottom()) * 0.5f;
+    float rcx = (_collisionRect.GetLeft() + _collisionRect.GetRight()) * 0.5f;
+    float rcy = (_collisionRect.GetTop() + _collisionRect.GetBottom()) * 0.5f;
+    float ccx = (chipRect.GetLeft() + chipRect.GetRight()) * 0.5f;
+    float ccy = (chipRect.GetTop() + chipRect.GetBottom()) * 0.5f;
 
     // 重要：小さい軸だけ解決（壁に当たったのに縦へ押し戻す…を防ぐ）
     if (pushX < pushY)
