@@ -60,6 +60,10 @@ Stage::~Stage() {
 void Stage::Update() {
 	DrawBackGround();
 	DrawMapChip();
+	Rect chipRect;
+	if (IsCollision(_player->ReturnRect(), chipRect)) {
+		_player->CheckHitMap(chipRect);
+	}
 }
 
 void Stage::DrawBackGround() {
@@ -115,38 +119,55 @@ void Stage::DrawMapChip() {
 
 bool Stage::IsCollision(Rect rect, Rect& chipRect)
 {
+	bool hit = false;
+
+	// rectの中心（距離評価用）
+	const float rcx = (rect.GetLeft() + rect.GetRight()) * 0.5f;
+	const float rcy = (rect.GetTop() + rect.GetBottom()) * 0.5f;
+
+	float bestDist2 = 0.0f;
+
 	for (int y = 0; y < CHIP_NUM_Y; y++)
 	{
 		for (int x = 0; x < CHIP_NUM_X; x++)
 		{
-			// マップチップ0番は当たり判定がないため飛ばす
 			if (CHIP_DATA[y][x] == 0) continue;
 
-			int chipLeft = static_cast<int>(x * CHIP_SIZE * kChipScale);
-			int chipRight = static_cast<int>(chipLeft + CHIP_SIZE * kChipScale);
-			int chipTop = static_cast<int>(y * CHIP_SIZE * kChipScale);
-			int chipBottom = static_cast<int>(chipTop + CHIP_SIZE * kChipScale);
+			const int chipLeft = static_cast<int>(x * CHIP_SIZE * kChipScale);
+			const int chipRight = static_cast<int>(chipLeft + CHIP_SIZE * kChipScale);
+			const int chipTop = static_cast<int>(y * CHIP_SIZE * kChipScale);
+			const int chipBottom = static_cast<int>(chipTop + CHIP_SIZE * kChipScale);
 
-			// 絶対に当たらない場合
-			if (chipLeft > rect.GetRight()) continue;
+			// AABB 非交差ならスキップ
+			if (chipLeft > rect.GetRight())  continue;
 			if (chipTop > rect.GetBottom()) continue;
-			if (chipRight < rect.GetLeft()) continue;
-			if (chipBottom < rect.GetTop()) continue;
+			if (chipRight < rect.GetLeft())   continue;
+			if (chipBottom < rect.GetTop())    continue;
 
-			// ぶつかったマップチップの矩形を設定する
-			chipRect.m_left = static_cast<float>(chipLeft);
-			chipRect.m_right = static_cast<float>(chipRight);
-			chipRect.m_top = static_cast<float>(chipTop);
-			chipRect.m_bottom = static_cast<float>(chipBottom);
+			// このチップの中心
+			const float ccx = (chipLeft + chipRight) * 0.5f;
+			const float ccy = (chipTop + chipBottom) * 0.5f;
 
-			// いずれかのチップに当たっていたら終了する
-			return true;
+			const float dx = ccx - rcx;
+			const float dy = ccy - rcy;
+			const float dist2 = dx * dx + dy * dy;
+
+			// 最も近い衝突チップを採用
+			if (!hit || dist2 < bestDist2)
+			{
+				hit = true;
+				bestDist2 = dist2;
+
+				chipRect.m_left = static_cast<float>(chipLeft);
+				chipRect.m_right = static_cast<float>(chipRight);
+				chipRect.m_top = static_cast<float>(chipTop);
+				chipRect.m_bottom = static_cast<float>(chipBottom);
+			}
 		}
 	}
 
-	return false;
+	return hit;
 }
-
 int Stage::GetScrollX() {
 	int result = static_cast<int>(_player->GetPos().x - SCREEN_WIDTH * 0.5);
 	if (result < 0)

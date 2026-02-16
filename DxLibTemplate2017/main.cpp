@@ -50,13 +50,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			_isJumping = true;
 		}
 		
-		//if (_player.GetPos().y < _minY) 
-		//{
-		//	_player.Gravity();
-		//}
-		//else {
-		//	_isJumping = false;
-		//}
 		SetDrawScreen(DX_SCREEN_BACK);//•`‰ææ‚ð— ‰æ–Ê‚É
 		ClearDrawScreen();//— ‰æ–ÊÁ‚·
 		_stage.Update();

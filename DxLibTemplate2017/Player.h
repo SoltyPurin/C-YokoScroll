@@ -17,8 +17,9 @@ public:
     float ReturnVY();
     Vector2 GetPos();
     void JumpProtocol(Jump& jump);
+    Rect ReturnRect();
+    void CheckHitMap(Rect& chipRect);
 private:
-    void CheckHitMap(Rect chipRect);
     Vector2 _move;
     Stage* _stagePointer;
     Rect _collisionRect;

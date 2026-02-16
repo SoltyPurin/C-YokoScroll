@@ -16,7 +16,6 @@ float _drawY;
 bool _isGround = false;
 
 Vector2 _pos;
-Player _player;
 
 Player::Player():
 _stagePointer(nullptr)
@@ -40,7 +39,6 @@ void Player::Update() {
 	_pos.x += _move.x;
 	_collisionRect.SetCenter(_drawX + _playerScale * 0.5f, _drawY + _playerScale * 0.5f, _playerScale, _playerScale);
 	DrawPlayer();
-	CheckHitMap(_collisionRect);
 }
 void Player::DrawPlayer() {
 	_drawX = _pos.x - _stagePointer->GetScrollX() - _playerScale * 0.5f;
@@ -53,46 +51,69 @@ void Player::DrawPlayer() {
 #endif
 }
 
-void Player::CheckHitMap(Rect chipRect)
+void Player::CheckHitMap(Rect& chipRect)
 {
-	// 横から当たったかチェックする
-	_pos.x += _move.x;
-	_collisionRect.SetCenter(_pos.x, _pos.y, _playerScale-1, _playerScale-1);
+    // 当たり矩形
+    _collisionRect.SetCenter(_pos.x, _pos.y, _playerScale - 1, _playerScale - 1);
 
-	if (_stagePointer->IsCollision(_collisionRect, chipRect))
-	{
-		if (_move.x > 0.0f)
-		{
-			_pos.x = chipRect.GetLeft() - _playerScale * 0.5f;
-		}
-		else if (_move.x < 0.0f)
-		{
-			_pos.x = chipRect.GetRight() + _playerScale * 0.5f;
-		}
-		_move.x = 0.0f;
-	}
+    // まずは当たってるか
+    if (!_stagePointer->IsCollision(_collisionRect, chipRect))
+    {
+        _isGround = false;
+        return;
+    }
 
-	// 縦から当たったかチェックする
-	//_pos.y += _verticalY;
-	_collisionRect.SetCenter(_pos.x, _pos.y, _playerScale-1, _playerScale-1);
+    // めり込み量（左右・上下）
+    const float overlapL = _collisionRect.GetRight() - chipRect.GetLeft();   // 左へ押す量
+    const float overlapR = chipRect.GetRight() - _collisionRect.GetLeft(); // 右へ押す量
+    const float overlapT = _collisionRect.GetBottom() - chipRect.GetTop();    // 上へ押す量
+    const float overlapB = chipRect.GetBottom() - _collisionRect.GetTop();  // 下へ押す量
 
-	if (_stagePointer->IsCollision(_collisionRect, chipRect))
-	{
-		if (_verticalY < 0.0f)
-		{
-			_pos.y = chipRect.GetTop() - _playerScale * 0.5f;
-			_verticalY = 0.0f;
-			_isGround = true;
-		}
-		else
-		{
-			_pos.y = chipRect.GetBottom() + _playerScale * 0.5f;
-			_isGround = false;
-			Gravity();
-		}
-	}
+    // X/Yそれぞれ「最小の押し戻し量」
+    const float pushX = (overlapL < overlapR) ? overlapL : overlapR;
+    const float pushY = (overlapT < overlapB) ? overlapT : overlapB;
+
+    // 中心でどっち側にいるか判定
+    const float rcx = (_collisionRect.GetLeft() + _collisionRect.GetRight()) * 0.5f;
+    const float rcy = (_collisionRect.GetTop() + _collisionRect.GetBottom()) * 0.5f;
+    const float ccx = (chipRect.GetLeft() + chipRect.GetRight()) * 0.5f;
+    const float ccy = (chipRect.GetTop() + chipRect.GetBottom()) * 0.5f;
+
+    // 重要：小さい軸だけ解決（壁に当たったのに縦へ押し戻す…を防ぐ）
+    if (pushX < pushY)
+    {
+        // 横解決
+        if (rcx < ccx)
+            _pos.x -= pushX; // チップの左側にいる → 左へ
+        else
+            _pos.x += pushX; // チップの右側にいる → 右へ
+
+        _move.x = 0.0f;
+        // 横衝突だけでは地面判定は変えない（降りられない原因になりやすい）
+    }
+    else
+    {
+        // 縦解決
+        if (rcy < ccy)
+        {
+            // 上から乗った（着地）
+            _pos.y -= pushY;
+            _verticalY = 0.0f;
+            _isGround = true;
+        }
+        else
+        {
+            // 下から頭ぶつけ
+            _pos.y += pushY;
+            _verticalY = 0.0f;   // ←ここ重要（ぶつけたら止める）
+            _isGround = false;
+        }
+    }
 }
 
+Rect Player::ReturnRect() {
+	return _collisionRect;
+}
 void Player::Gravity() {
 	 _verticalY -= _gravity;
 }
@@ -111,5 +132,6 @@ void Player::JumpProtocol(Jump& jump) {
 	if (!_isGround) {
 		return;
 	}
-	jump.JumpProtocol(_player);
+	jump.JumpProtocol(*this);
+	_isGround = false;
 }
