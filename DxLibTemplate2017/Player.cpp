@@ -33,8 +33,8 @@ void Player::Move(float moveValue) {
 
 void Player::Update() {
 	if (!_isGround) {
-		Gravity();
 	}
+    Gravity();
 	_pos.y -= _verticalY;
 	_pos.x += _move.x;
 	_collisionRect.SetCenter(_drawX + _playerScale * 0.5f, _drawY + _playerScale * 0.5f, _playerScale, _playerScale);
@@ -105,7 +105,7 @@ void Player::CheckHitMap(Rect& chipRect)
         {
             // 下から頭ぶつけ
             _pos.y += pushY;
-            _verticalY = 0.0f;   // ←ここ重要（ぶつけたら止める）
+            _verticalY = 0.0f;  
             _isGround = false;
         }
     }
