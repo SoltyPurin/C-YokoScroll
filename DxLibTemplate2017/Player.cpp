@@ -32,8 +32,6 @@ void Player::Move(float moveValue) {
 }
 
 void Player::Update() {
-	if (!_isGround) {
-	}
     Gravity();
 	_pos.y -= _verticalY;
 	_pos.x += _move.x;
@@ -98,17 +96,22 @@ void Player::CheckHitMap(Rect& chipRect)
         {
             // è„Ç©ÇÁèÊÇ¡ÇΩÅiíÖínÅj
             _pos.y -= pushY;
-            _verticalY = 0.0f;
+            if (_verticalY <= 0) {
+                _verticalY = 0.0f;
+            }
             _isGround = true;
         }
         else
         {
             // â∫Ç©ÇÁì™Ç‘Ç¬ÇØ
             _pos.y += pushY;
-            _verticalY = 0.0f;  
+            if (_verticalY <= 0) {
+                _verticalY = 0.0f;
+            }
             _isGround = false;
         }
     }
+
 }
 
 Rect Player::ReturnRect() {

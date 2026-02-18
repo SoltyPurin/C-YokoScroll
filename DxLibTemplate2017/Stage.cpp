@@ -2,6 +2,8 @@
 #include "Obstacle.h"
 #include "Player.h"
 #include <DxLib.h>
+#include <fstream>
+#include <sstream>
 
 int _backGroundHandler = 0;
 namespace
@@ -20,19 +22,22 @@ namespace
 	constexpr int CHIP_NUM_Y = SCREEN_HEIGHT / CHIP_SIZE;
 
 	// マップチップの配列情報
-	constexpr int CHIP_DATA[CHIP_NUM_Y][CHIP_NUM_X] =
-	{
-		{3, 0, 0, 0, 0, 0, 0},
-		{3, 0, 0, 0, 0, 0, 0},
-		{3, 0, 0, 0, 0, 0, 0},
-		{3, 0, 0, 0, 0, 1, 1},
-		{3, 0, 0, 0, 0, 0, 0},
-		{3, 0, 0, 0, 0, 0, 0},
-		{3, 0, 0, 0, 1, 1, 1},
-		{3, 0, 0, 1, 2, 2, 2},
-		{3, 1, 1, 2, 2, 2, 2},
-		{3, 2, 2, 2, 2, 2, 2}
-	};
+	int CHIP_DATA[CHIP_NUM_Y][CHIP_NUM_X]/* =*/;
+	//{
+	//	{3, 0, 0, 0, 0, 0, 0},
+	//	{3, 0, 0, 0, 0, 0, 0},
+	//	{3, 0, 0, 0, 0, 0, 0},
+	//	{3, 0, 0, 0, 0, 1, 1},
+	//	{3, 0, 0, 0, 0, 0, 0},
+	//	{3, 0, 0, 0, 0, 0, 0},
+	//	{3, 0, 0, 0, 1, 1, 1,1},
+	//	{3, 0, 0, 1, 2, 2, 2},
+	//	{3, 1, 1, 2, 2, 2, 2},
+	//	{3, 2, 2, 2, 2, 2, 2}
+	//};
+
+	constexpr int kChipNumX = 46;
+	constexpr int kChipNumY = 17;
 }
 int _bgWidth = static_cast<int>(SCREEN_WIDTH)-1;
 int _bgHeight = static_cast<int>(SCREEN_HEIGHT)-1;
@@ -43,20 +48,44 @@ Stage::Stage(Player* player,Obstacle* obstacle):
 {
 	pos = { 0,0 };
 	_backGroundHandler = LoadGraph("Image/BackGround.jpg");
-	_mapHandle = LoadGraph("Image/mapChip.png");
+	_backGroundHandle = LoadGraph("Image/mapChip.png");
 
 	int graphW = 0;
 	int graphH = 0;
-	GetGraphSize(_mapHandle, &graphW, &graphH);
+	GetGraphSize(_backGroundHandle, &graphW, &graphH);
 
 	_graphChipNumX = graphW / CHIP_SIZE;
 	_graphChipNumY = graphH / CHIP_SIZE;
+
+	LoadMap();
 }
 Stage::~Stage() {
 	DeleteGraph(_backGroundHandler);
-	DeleteGraph(_mapHandle);
+	DeleteGraph(_backGroundHandle);
 }
 
+void Stage::LoadMap() {
+	std::ifstream file("CSV/TestMapData.csv");
+	std::string line;
+
+	// getline関数で1行ずつ読み込む
+	int y = 0;
+	while (std::getline(file, line) && y < kChipNumY)
+	{
+		std::istringstream stream(line);
+		std::string field;
+
+		// 「,」区切りごとにデータを読み込む
+		int x = 0;
+		while (getline(stream, field, ',') && x < kChipNumX)
+		{
+			// 文字列をint型に変換してm_chipDataに追加する
+			CHIP_DATA[y][x] = std::stoi(field);
+			x++;
+		}
+		y++;
+	}
+}
 void Stage::Update() {
 	DrawBackGround();
 	DrawMapChip();
@@ -106,7 +135,7 @@ void Stage::DrawMapChip() {
 				srcX, srcY,
 				CHIP_SIZE, CHIP_SIZE,
 				kChipScale, 0.0f,
-				_mapHandle, true);
+				_backGroundHandle, true);
 
 
 #ifdef _DEBUG

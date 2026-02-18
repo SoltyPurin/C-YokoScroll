@@ -9,6 +9,7 @@ class Stage
 public:
 	Stage(Player* player,Obstacle* obstacle);
 	~Stage();
+	void LoadMap();
 	void Update();
 	void DrawBackGround();
 	void DrawMapChip();
@@ -19,7 +20,8 @@ private:
 	Vector2 pos;
 	Vector2 size;
 	Player* _player;
-	int _mapHandle;
+	int _mapData;
+	int _backGroundHandle;
 	int _graphChipNumX;
 	int _graphChipNumY;
 };

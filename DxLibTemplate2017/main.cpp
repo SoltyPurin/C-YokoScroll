@@ -4,6 +4,7 @@
 #include "Jump.h"
 #include "Obstacle.h"
 #include "Stage.h"
+#include "Pad.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -29,13 +30,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	while (ProcessMessage() == 0)
 	{
 		GetHitKeyStateAll(keyState);
-
-		if (keyState[KEY_INPUT_RIGHT]) 
+		Pad::Update();
+		if (Pad::IsPress(PAD_INPUT_RIGHT))
 		{
 			_player.Move(_moveValue);
 			//_currentX += 2;
 		}
-		else if (keyState[KEY_INPUT_LEFT])
+		else if (Pad::IsPress(PAD_INPUT_LEFT))
 		{
 			_player.Move(-_moveValue);
 			//_currentX -= 2;
@@ -44,7 +45,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			_player.Move(0);
 		}
 
-		if (keyState[KEY_INPUT_SPACE] /*&& !_isJumping*/)
+		if (keyState[KEY_INPUT_SPACE] || Pad::IsPress(PAD_INPUT_1))
 		{
 			_player.JumpProtocol(_jump);
 			_isJumping = true;
