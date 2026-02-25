@@ -4,6 +4,7 @@
 #include <DxLib.h>
 #include <fstream>
 #include <sstream>
+#include "ThrowAxe.h"
 
 int _backGroundHandler = 0;
 namespace
@@ -22,29 +23,17 @@ namespace
 	constexpr int CHIP_NUM_Y = SCREEN_HEIGHT / CHIP_SIZE;
 
 	// マップチップの配列情報
-	int CHIP_DATA[CHIP_NUM_Y][CHIP_NUM_X]/* =*/;
-	//{
-	//	{3, 0, 0, 0, 0, 0, 0},
-	//	{3, 0, 0, 0, 0, 0, 0},
-	//	{3, 0, 0, 0, 0, 0, 0},
-	//	{3, 0, 0, 0, 0, 1, 1},
-	//	{3, 0, 0, 0, 0, 0, 0},
-	//	{3, 0, 0, 0, 0, 0, 0},
-	//	{3, 0, 0, 0, 1, 1, 1,1},
-	//	{3, 0, 0, 1, 2, 2, 2},
-	//	{3, 1, 1, 2, 2, 2, 2},
-	//	{3, 2, 2, 2, 2, 2, 2}
-	//};
-
+	int CHIP_DATA[CHIP_NUM_Y][CHIP_NUM_X];
 	constexpr int kChipNumX = 46;
 	constexpr int kChipNumY = 17;
 }
 int _bgWidth = static_cast<int>(SCREEN_WIDTH)-1;
 int _bgHeight = static_cast<int>(SCREEN_HEIGHT)-1;
-Stage::Stage(Player* player,Obstacle* obstacle):
+Stage::Stage(Player* player):
 	_player(player),
 	_graphChipNumX(0),
-	_graphChipNumY(0)
+	_graphChipNumY(0),
+	_axe(nullptr)
 {
 	pos = { 0,0 };
 	_backGroundHandler = LoadGraph("Image/BackGround.jpg");
@@ -89,12 +78,32 @@ void Stage::LoadMap() {
 void Stage::Update() {
 	DrawBackGround();
 	DrawMapChip();
+	UpdateAxe();
 	Rect chipRect;
 	if (IsCollision(_player->ReturnRect(), chipRect)) {
 		_player->CheckHitMap(chipRect);
 	}
 }
 
+void Stage::DrawAxe() {
+	if (!_axe) {
+		return;
+	}
+	_axe->DrawAxe();
+}
+
+void Stage::UpdateAxe() {
+	ThrowAxe* newAxe = _player->CreateAxe();
+	if (newAxe != nullptr) {
+		//斧を生成できた場合は保持
+		_axe = newAxe;
+	}
+
+	if (!_axe) {
+		return;
+	}
+	_axe->Update();
+}
 void Stage::DrawBackGround() {
 	GetGraphSize(_backGroundHandler,&_bgWidth , &_bgHeight);
 	int scrollBg = GetScrollX() % _bgWidth;
@@ -145,7 +154,6 @@ void Stage::DrawMapChip() {
 		}
 	}
 }
-
 bool Stage::IsCollision(Rect rect, Rect& chipRect)
 {
 	bool hit = false;
@@ -194,8 +202,8 @@ bool Stage::IsCollision(Rect rect, Rect& chipRect)
 			}
 		}
 	}
+		return hit;
 
-	return hit;
 }
 int Stage::GetScrollX() {
 	int result = static_cast<int>(_player->GetPos().x - SCREEN_WIDTH * 0.5);

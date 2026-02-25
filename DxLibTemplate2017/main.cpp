@@ -5,6 +5,7 @@
 #include "Obstacle.h"
 #include "Stage.h"
 #include "Pad.h"
+#include "ThrowAxe.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -19,33 +20,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	GetHitKeyStateAll(keyState);					// キー入力情報取得
 	float _minY = 900;
 	bool _isJumping = false;
+	bool _isRight = true;
 	float _moveValue = 5;
 
 	Player _player;
-	Obstacle _obstacle;
 	Jump _jump;
-	Stage _stage(&_player,&_obstacle);
+	Stage _stage(&_player);
 	_player.SetStagePointer(&_stage);
-	_obstacle.SetStagePointer(&_stage);
 	while (ProcessMessage() == 0)
 	{
 		GetHitKeyStateAll(keyState);
 		Pad::Update();
-		if (Pad::IsPress(PAD_INPUT_RIGHT))
+		if (Pad::IsPress(PAD_INPUT_RIGHT) || keyState[KEY_INPUT_RIGHT])
 		{
-			_player.Move(_moveValue);
+			_isRight = true;
+			_player.Move(_moveValue,_isRight);
 			//_currentX += 2;
 		}
-		else if (Pad::IsPress(PAD_INPUT_LEFT))
+		else if (Pad::IsPress(PAD_INPUT_LEFT) || keyState[KEY_INPUT_LEFT])
 		{
-			_player.Move(-_moveValue);
+			_isRight = false;
+			_player.Move(-_moveValue,_isRight);
 			//_currentX -= 2;
 		}
 		else {
-			_player.Move(0);
+			_player.Move(0,_isRight);
 		}
-
-		if (keyState[KEY_INPUT_SPACE] || Pad::IsPress(PAD_INPUT_1))
+		if (Pad::IsPress(PAD_INPUT_1) || keyState[KEY_INPUT_SPACE])
 		{
 			_player.JumpProtocol(_jump);
 			_isJumping = true;
@@ -55,8 +56,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ClearDrawScreen();//裏画面消す
 		_stage.Update();
 		_player.Update();
-		_obstacle.Update();
-		_player.Update();
+		//_obstacle.Update();
 		ScreenFlip();//裏画面を表画面にコピー
 	}
 

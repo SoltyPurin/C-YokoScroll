@@ -4,6 +4,8 @@
 #include "Stage.h"
 #include "Rect.h"
 #include "Jump.h"
+#include "ThrowAxe.h"
+#include "Pad.h"
 float _initX = 320;
 float _initY = 600;
 float _playerScale = 99;
@@ -11,10 +13,10 @@ float _verticalY = 0;
 float _gravity = 0.1f;
 int _playerGraph = 0;
 float _groundY = 900;
-float _drawX;
-float _drawY;
 bool _isGround = false;
+bool _isRight = true;
 
+Vector2 _draw;
 Vector2 _pos;
 
 Player::Player():
@@ -27,26 +29,35 @@ _stagePointer(nullptr)
 Player::~Player() {
 	DeleteGraph(_playerGraph);
 }
-void Player::Move(float moveValue) {
+void Player::Move(float moveValue,bool isRight) {
 	_move.x = moveValue;
+    _isRight = isRight;
 }
 
 void Player::Update() {
     Gravity();
+    CheckFall();
 	_pos.y -= _verticalY;
 	_pos.x += _move.x;
-	_collisionRect.SetCenter(_drawX + _playerScale * 0.5f, _drawY + _playerScale * 0.5f, _playerScale, _playerScale);
+	_collisionRect.SetCenter(_draw.x + _playerScale * 0.5f, _draw.y + _playerScale * 0.5f, _playerScale, _playerScale);
 	DrawPlayer();
 }
 void Player::DrawPlayer() {
-	_drawX = _pos.x - _stagePointer->GetScrollX() - _playerScale * 0.5f;
-	_drawY = _pos.y - _stagePointer->GetScrollY() - _playerScale * 0.5f;
-	DrawExtendGraph(_drawX, _drawY, _drawX + _playerScale, _drawY + _playerScale, _playerGraph, TRUE);
+	_draw.x = _pos.x - _stagePointer->GetScrollX() - _playerScale * 0.5f;
+	_draw.y = _pos.y - _stagePointer->GetScrollY() - _playerScale * 0.5f;
+	DrawExtendGraph(_draw.x, _draw.y, _draw.x + _playerScale, _draw.y + _playerScale, _playerGraph, TRUE);
 	//DrawGraph(_currentX, _currentY, _playerGraph, TRUE);
 #ifdef _DEBUG
 // “–‚½‚è”»’è‚ð•\Ž¦
 	_collisionRect.Draw(0x0000ff, false);
 #endif
+}
+
+void Player::CheckFall() {
+    if (_pos.y >= _groundY) {
+        _pos.x = _initX;
+        _pos.y = _initY;
+    }
 }
 
 void Player::CheckHitMap(Rect& chipRect)
@@ -114,6 +125,15 @@ void Player::CheckHitMap(Rect& chipRect)
 
 }
 
+ThrowAxe* Player::CreateAxe() {
+    if (Pad::IsTrigger(PAD_INPUT_2)) {
+        ThrowAxe* axe = new ThrowAxe();
+        axe->SetInfo(_draw, _isRight);
+        return axe;
+    }
+
+    return nullptr;
+}
 Rect Player::ReturnRect() {
 	return _collisionRect;
 }
