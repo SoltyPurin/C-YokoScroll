@@ -17,11 +17,12 @@ public:
 	bool IsCollision(Rect rect, Rect& chipRect);
 	void DrawAxe();
 	void UpdateAxe();
+	void DeleteAxe(int index);
 private:
 	Vector2 pos;
 	Vector2 size;
 	Player* _player;
-	ThrowAxe* _axe;
+	ThrowAxe* _axe[16];
 	int _mapData;
 	int _backGroundHandle;
 	int _graphChipNumX;

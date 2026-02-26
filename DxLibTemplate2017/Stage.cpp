@@ -24,17 +24,21 @@ namespace
 
 	// マップチップの配列情報
 	int CHIP_DATA[CHIP_NUM_Y][CHIP_NUM_X];
-	constexpr int kChipNumX = 46;
-	constexpr int kChipNumY = 17;
+
+	constexpr int AXE_MAX = 16;
 }
 int _bgWidth = static_cast<int>(SCREEN_WIDTH)-1;
 int _bgHeight = static_cast<int>(SCREEN_HEIGHT)-1;
 Stage::Stage(Player* player):
 	_player(player),
 	_graphChipNumX(0),
-	_graphChipNumY(0),
-	_axe(nullptr)
+	_graphChipNumY(0)
+
 {
+	for (int i = 0; i < AXE_MAX; i++)
+	{
+		_axe[i] = nullptr;
+	}
 	pos = { 0,0 };
 	_backGroundHandler = LoadGraph("Image/BackGround.jpg");
 	_backGroundHandle = LoadGraph("Image/mapChip.png");
@@ -59,14 +63,14 @@ void Stage::LoadMap() {
 
 	// getline関数で1行ずつ読み込む
 	int y = 0;
-	while (std::getline(file, line) && y < kChipNumY)
+	while (std::getline(file, line) && y < CHIP_NUM_Y)
 	{
 		std::istringstream stream(line);
 		std::string field;
 
 		// 「,」区切りごとにデータを読み込む
 		int x = 0;
-		while (getline(stream, field, ',') && x < kChipNumX)
+		while (getline(stream, field, ',') && x < CHIP_NUM_X)
 		{
 			// 文字列をint型に変換してm_chipDataに追加する
 			CHIP_DATA[y][x] = std::stoi(field);
@@ -89,20 +93,52 @@ void Stage::DrawAxe() {
 	if (!_axe) {
 		return;
 	}
-	_axe->DrawAxe();
+	for (int i = 0; i < AXE_MAX; i++)
+	{
+		if (!_axe[i]) continue;
+		_axe[i]->DrawAxe();
+	}
 }
 
 void Stage::UpdateAxe() {
 	ThrowAxe* newAxe = _player->CreateAxe();
 	if (newAxe != nullptr) {
 		//斧を生成できた場合は保持
-		_axe = newAxe;
+		for (int i = 0; i < AXE_MAX; i++)
+		{
+			if (_axe[i] == nullptr) {
+				_axe[i] = newAxe;
+				printfDx("斧生成\n");
+				break;
+			}
+		}
 	}
 
+	for (int i = 0; i < AXE_MAX; i++)
+	{
+		if (!_axe[i]) continue;
+
+		_axe[i]->Update();
+
+		// 画面外に出たら削除する
+		bool isDelete = false;
+		isDelete = _axe[i]->GetPos().x < 0 || _axe[i]->GetPos().x > SCREEN_WIDTH;
+		if (isDelete)
+		{
+			DeleteAxe(i);
+		}
+	}
+
+}
+
+void Stage::DeleteAxe(int index) {
 	if (!_axe) {
 		return;
 	}
-	_axe->Update();
+
+	delete _axe[index];
+	_axe[index] = nullptr;
+	printfDx("弾削除\n");
 }
 void Stage::DrawBackGround() {
 	GetGraphSize(_backGroundHandler,&_bgWidth , &_bgHeight);
