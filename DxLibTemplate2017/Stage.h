@@ -2,7 +2,7 @@
 #include "Vector2.h"
 #include "Rect.h"
 class Player;
-class ThrowAxe;
+class Axe;
 class Stage
 {
 public:
@@ -22,7 +22,7 @@ private:
 	Vector2 pos;
 	Vector2 size;
 	Player* _player;
-	ThrowAxe* _axe[16];
+	Axe* _axe[16];
 	int _mapData;
 	int _backGroundHandle;
 	int _graphChipNumX;

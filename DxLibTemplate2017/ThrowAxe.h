@@ -1,10 +1,10 @@
 #pragma once
 #include "Vector2.h"
-class ThrowAxe
+class Axe
 {
 public:
-	ThrowAxe();
-	~ThrowAxe();
+	Axe();
+	~Axe();
 	void Update();
 	void DrawAxe();
 	void SetInfo(const Vector2& playerPos, bool isRight);	

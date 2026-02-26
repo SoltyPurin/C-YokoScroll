@@ -20,7 +20,8 @@ Vector2 _draw;
 Vector2 _pos;
 
 Player::Player():
-_stagePointer(nullptr)
+_stagePointer(nullptr),
+jump(nullptr)
 {
 	_pos.x = _initX;
 	_pos.y = _initY;
@@ -125,9 +126,9 @@ void Player::CheckHitMap(Rect& chipRect)
 
 }
 
-ThrowAxe* Player::CreateAxe() {
+Axe* Player::CreateAxe() {
     if (Pad::IsTrigger(PAD_INPUT_2)) {
-        ThrowAxe* axe = new ThrowAxe();
+        Axe* axe = new Axe();
         axe->SetInfo(_draw, _isRight);
         return axe;
     }

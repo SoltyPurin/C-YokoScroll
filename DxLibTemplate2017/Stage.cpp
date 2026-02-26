@@ -101,7 +101,7 @@ void Stage::DrawAxe() {
 }
 
 void Stage::UpdateAxe() {
-	ThrowAxe* newAxe = _player->CreateAxe();
+	Axe* newAxe = _player->CreateAxe();
 	if (newAxe != nullptr) {
 		//•€‚ğ¶¬‚Å‚«‚½ê‡‚Í•Û
 		for (int i = 0; i < AXE_MAX; i++)
@@ -138,7 +138,7 @@ void Stage::DeleteAxe(int index) {
 
 	delete _axe[index];
 	_axe[index] = nullptr;
-	printfDx("’eíœ\n");
+	printfDx("íœ\n");
 }
 void Stage::DrawBackGround() {
 	GetGraphSize(_backGroundHandler,&_bgWidth , &_bgHeight);

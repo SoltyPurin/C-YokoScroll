@@ -4,7 +4,7 @@
 class Rect;
 class Jump;
 class Stage;
-class ThrowAxe;
+class Axe;
 class Player {
 public:
     Player();
@@ -21,7 +21,7 @@ public:
     Rect ReturnRect();
     void CheckHitMap(Rect& chipRect);
     void CheckFall();
-    ThrowAxe* CreateAxe();
+    Axe* CreateAxe();
 private:
     Vector2 _move;
     Stage* _stagePointer;

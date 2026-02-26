@@ -9,24 +9,24 @@ namespace
 }
 float _axeScale = 80;
 
-ThrowAxe::ThrowAxe():
+Axe::Axe():
 _axePosition({0,0}),
 _move({AXE_SPEED,0})
 {
 	_axeHandle = LoadGraph("Image/Axe.png");
 }
 
-ThrowAxe::~ThrowAxe() {
+Axe::~Axe() {
 	DeleteGraph(_axeHandle);
 }
 
-void ThrowAxe::Update() {
+void Axe::Update() {
 	_axePosition += _move;
 	_axePosition.y -= _axeVerticalY;
 	Gravity();
 	DrawAxe();
 }
-void ThrowAxe::SetInfo(const Vector2& playerPos, bool isRight) {
+void Axe::SetInfo(const Vector2& playerPos, bool isRight) {
 	_axePosition = playerPos;
 	if (isRight) {
 		_move.x = AXE_SPEED;
@@ -37,16 +37,16 @@ void ThrowAxe::SetInfo(const Vector2& playerPos, bool isRight) {
 	_axeVerticalY = AXE_VERTICAL;
 }
 
-void ThrowAxe::DrawAxe() {
+void Axe::DrawAxe() {
 	float plusPosx = _axePosition.x + _axeScale;
 	float plusPosy = _axePosition.y + _axeScale;
 	DrawExtendGraph(_axePosition.x, _axePosition.y, plusPosx, plusPosy, _axeHandle, TRUE);
 }
 
-void ThrowAxe::Gravity() {
+void Axe::Gravity() {
 	_axeVerticalY -= GRAVITY;
 }
 
-Vector2 ThrowAxe::GetPos() {
+Vector2 Axe::GetPos() {
 	return _axePosition;
 }
