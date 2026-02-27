@@ -1,20 +1,20 @@
 #pragma once
+#include "Character.h"
 #include "Vector2.h"
 #include "Rect.h"
 class Rect;
 class Jump;
 class Stage;
 class Axe;
-class Player {
+class Player : public Character {
 public:
     Player();
-    ~Player();
+    virtual ~Player();
+    virtual void Update() override;
+    virtual void Draw() override;
     void SetStagePointer(Stage* pStage) { _stagePointer = pStage; }
     void Move(float moveValue,bool isRight);
-    void Update();
-    void DrawPlayer();
     void SetVY(float vy);
-    void Gravity();
     float ReturnVY();
     Vector2 GetPos();
     void JumpProtocol(Jump& jump);
@@ -25,6 +25,5 @@ public:
 private:
     Vector2 _move;
     Stage* _stagePointer;
-    Rect _collisionRect;
     Jump* jump;
 };

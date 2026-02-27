@@ -9,15 +9,9 @@
 float _initX = 320;
 float _initY = 600;
 float _playerScale = 99;
-float _verticalY = 0;
-float _gravity = 0.1f;
-int _playerGraph = 0;
-float _groundY = 900;
 bool _isGround = false;
 bool _isRight = true;
 
-Vector2 _draw;
-Vector2 _pos;
 
 Player::Player():
 _stagePointer(nullptr),
@@ -25,10 +19,10 @@ jump(nullptr)
 {
 	_pos.x = _initX;
 	_pos.y = _initY;
-	_playerGraph = LoadGraph("Image/sample.png");
+	_imageHandle = LoadGraph("Image/sample.png");
 }
 Player::~Player() {
-	DeleteGraph(_playerGraph);
+	DeleteGraph(_imageHandle);
 }
 void Player::Move(float moveValue,bool isRight) {
 	_move.x = moveValue;
@@ -41,12 +35,17 @@ void Player::Update() {
 	_pos.y -= _verticalY;
 	_pos.x += _move.x;
 	_collisionRect.SetCenter(_draw.x + _playerScale * 0.5f, _draw.y + _playerScale * 0.5f, _playerScale, _playerScale);
-	DrawPlayer();
+	Draw();
 }
-void Player::DrawPlayer() {
+void Player::Draw() {
 	_draw.x = _pos.x - _stagePointer->GetScrollX() - _playerScale * 0.5f;
 	_draw.y = _pos.y - _stagePointer->GetScrollY() - _playerScale * 0.5f;
-	DrawExtendGraph(_draw.x, _draw.y, _draw.x + _playerScale, _draw.y + _playerScale, _playerGraph, TRUE);
+    if (_isRight) {
+        DrawExtendGraph(_draw.x, _draw.y, _draw.x + _playerScale, _draw.y + _playerScale, _imageHandle, TRUE);
+    }
+    else {
+        DrawExtendGraph(_draw.x + _playerScale, _draw.y, _draw.x, _draw.y + _playerScale, _imageHandle, TRUE);
+    }
 	//DrawGraph(_currentX, _currentY, _playerGraph, TRUE);
 #ifdef _DEBUG
 // “–‚½‚è”»’è‚ð•\Ž¦
@@ -137,9 +136,6 @@ Axe* Player::CreateAxe() {
 }
 Rect Player::ReturnRect() {
 	return _collisionRect;
-}
-void Player::Gravity() {
-	 _verticalY -= _gravity;
 }
 void Player::SetVY(float vy) {
 	_verticalY = vy;

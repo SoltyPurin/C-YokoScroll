@@ -1,6 +1,7 @@
 #include "Stage.h"
 #include "Obstacle.h"
 #include "Player.h"
+#include "Enemy.h"
 #include <DxLib.h>
 #include <fstream>
 #include <sstream>
@@ -29,12 +30,12 @@ namespace
 }
 int _bgWidth = static_cast<int>(SCREEN_WIDTH)-1;
 int _bgHeight = static_cast<int>(SCREEN_HEIGHT)-1;
-Stage::Stage(Player* player):
+Stage::Stage(Player* player) :
 	_player(player),
 	_graphChipNumX(0),
 	_graphChipNumY(0)
-
 {
+	_enemy = new Enemy;
 	for (int i = 0; i < AXE_MAX; i++)
 	{
 		_axe[i] = nullptr;
@@ -83,6 +84,7 @@ void Stage::Update() {
 	DrawBackGround();
 	DrawMapChip();
 	UpdateAxe();
+	_enemy->Update();
 	Rect chipRect;
 	if (IsCollision(_player->ReturnRect(), chipRect)) {
 		_player->CheckHitMap(chipRect);
@@ -121,9 +123,9 @@ void Stage::UpdateAxe() {
 		_axe[i]->Update();
 
 		// ‰æ–ÊŠO‚Éo‚½‚çíœ‚·‚é
-		bool isDelete = false;
-		isDelete = _axe[i]->GetPos().x < 0 || _axe[i]->GetPos().x > SCREEN_WIDTH;
-		if (isDelete)
+		bool isOutOfScreen = _axe[i]->GetPos().x < 0 || _axe[i]->GetPos().x > SCREEN_WIDTH;
+		bool isTouchEnemy = _axe[i]->GetColRect().IsCollision(_enemy->GetColRect());
+		if (isOutOfScreen || isTouchEnemy)
 		{
 			DeleteAxe(i);
 		}

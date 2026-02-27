@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include <stdio.h>
 #include "Player.h"
+#include "Enemy.h"
 #include "Jump.h"
 #include "Obstacle.h"
 #include "Stage.h"

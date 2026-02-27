@@ -23,6 +23,7 @@ Axe::~Axe() {
 void Axe::Update() {
 	_axePosition += _move;
 	_axePosition.y -= _axeVerticalY;
+	_axeCollision.SetCenter(_axePosition.x, _axePosition.y, _axeScale, _axeScale);
 	Gravity();
 	DrawAxe();
 }
@@ -38,9 +39,17 @@ void Axe::SetInfo(const Vector2& playerPos, bool isRight) {
 }
 
 void Axe::DrawAxe() {
-	float plusPosx = _axePosition.x + _axeScale;
-	float plusPosy = _axePosition.y + _axeScale;
-	DrawExtendGraph(_axePosition.x, _axePosition.y, plusPosx, plusPosy, _axeHandle, TRUE);
+	float drawX = _axePosition.x - _axeScale * 0.5f;
+	float drawY = _axePosition.y- _axeScale * 0.5f;
+
+	float plusPosx = drawX + _axeScale;
+	float plusPosy = drawY + _axeScale;
+	DrawExtendGraph(drawX,drawY, plusPosx, plusPosy, _axeHandle, TRUE);
+#ifdef _DEBUG
+	// “–‚½‚è”»’è‚ð•\Ž¦
+	_axeCollision.Draw(0x00ff00, false);
+#endif
+
 }
 
 void Axe::Gravity() {
