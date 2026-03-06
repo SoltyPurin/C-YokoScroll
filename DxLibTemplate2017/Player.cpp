@@ -6,8 +6,6 @@
 #include "Jump.h"
 #include "ThrowAxe.h"
 #include "Pad.h"
-float _initX = 320;
-float _initY = 600;
 bool _isGround = false;
 bool _isRight = true;
 
@@ -15,8 +13,7 @@ bool _isRight = true;
 Player::Player():
 jump(nullptr)
 {
-	_pos.x = _initX;
-	_pos.y = _initY;
+    ResetPosition();
 	_imageHandle = LoadGraph("Image/sample.png");
 }
 Player::~Player() {
@@ -53,8 +50,7 @@ void Player::Draw() {
 
 void Player::CheckFall() {
     if (_pos.y >= _groundY) {
-        _pos.x = _initX;
-        _pos.y = _initY;
+        ResetPosition();
     }
 }
 
@@ -132,9 +128,6 @@ Axe* Player::CreateAxe() {
 
     return nullptr;
 }
-Rect Player::ReturnRect() {
-	return _collisionRect;
-}
 void Player::SetVY(float vy) {
 	_verticalY = vy;
 }
@@ -152,4 +145,9 @@ void Player::JumpProtocol(Jump& jump) {
 	}
 	jump.JumpProtocol(*this);
 	_isGround = false;
+}
+
+void Player::ResetPosition() {
+    _pos.x = _initX;
+    _pos.y = _initY;
 }

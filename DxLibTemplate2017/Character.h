@@ -13,8 +13,11 @@ public:
 	virtual void Update();
 	virtual void Draw();
 	virtual void TakeDamage();
-	void SetStagePointer(Stage* pStage) { _stagePointer = pStage; }
+	virtual void SetStagePointer(Stage* pStage) { _stagePointer = pStage; }
+	virtual void CheckHitMap(Rect& chipRect);
+	Rect ReturnRect();
 	Rect GetColRect() const { return _collisionRect; }
+	virtual void ResetPosition();
 protected:
 	int _imageHandle;
 	void Gravity();
@@ -26,6 +29,8 @@ protected:
 	float _scale = 99;
 	float _gravity = 0.1f;
 	float _groundY = 900;
+	float _initX = 320;
+	float _initY = 600;
 };
 
 

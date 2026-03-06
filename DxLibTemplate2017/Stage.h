@@ -18,7 +18,9 @@ public:
 	bool IsCollision(Rect rect, Rect& chipRect);
 	void DrawAxe();
 	void UpdateAxe();
+	void DetectPlayerToEnemyCollision();
 	void DeleteAxe(int index);
+	void ResetGame();
 private:
 	Vector2 pos;
 	Vector2 size;

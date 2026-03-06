@@ -86,12 +86,44 @@ void Stage::Update() {
 	DrawBackGround();
 	DrawMapChip();
 	UpdateAxe();
-	if (_enemy) {
-		_enemy->Update();
-	}
+	DetectPlayerToEnemyCollision();
 	Rect chipRect;
 	if (IsCollision(_player->ReturnRect(), chipRect)) {
 		_player->CheckHitMap(chipRect);
+	}
+	if (_enemy) {
+		if (_enemy) {
+			_enemy->Update();
+		}
+
+		if (IsCollision(_enemy->ReturnRect(), chipRect)) {
+			_enemy->CheckHitMap(chipRect);
+		}
+	}
+}
+
+void Stage::DetectPlayerToEnemyCollision() {
+	if (_enemy) {
+		bool isPlayerEnemyCollision = _enemy->GetColRect().IsCollision(_player->GetColRect());
+		if (isPlayerEnemyCollision) {
+			ResetGame();
+		}
+	}
+}
+
+void Stage::ResetGame() {
+	for (int i = 0; i < AXE_MAX; i++)
+	{
+		if (!_axe[i]) continue;
+		delete _axe[i];
+		_axe[i] = nullptr;
+	}
+	_player->ResetPosition();
+	if (_enemy) {
+		_enemy->ResetPosition();
+	}
+	else {
+		_enemy = new Enemy;
 	}
 }
 
@@ -114,7 +146,6 @@ void Stage::UpdateAxe() {
 		{
 			if (_axe[i] == nullptr) {
 				_axe[i] = newAxe;
-				printfDx("ïÄê∂ê¨\n");
 				break;
 			}
 		}
@@ -128,27 +159,29 @@ void Stage::UpdateAxe() {
 
 		// âÊñ äOÇ…èoÇΩÇÁçÌèúÇ∑ÇÈ
 		bool isOutOfScreen = _axe[i]->GetPos().x < 0 || _axe[i]->GetPos().x > SCREEN_WIDTH;
-		bool isTouchEnemy = _axe[i]->GetColRect().IsCollision(_enemy->GetColRect());
-		if (isTouchEnemy) {
-			delete _enemy;
-			_enemy = nullptr;
+		bool isTouchEnemy = false;
+		if (_enemy) {
+			isTouchEnemy = _axe[i]->GetColRect().IsCollision(_enemy->GetColRect());
 		}
 		if (isOutOfScreen || isTouchEnemy)
 		{
 			DeleteAxe(i);
+		}
+		if (isTouchEnemy) {
+			delete _enemy;
+			_enemy = nullptr;
 		}
 	}
 
 }
 
 void Stage::DeleteAxe(int index) {
-	if (!_axe) {
+	if (!_axe[index]) {
 		return;
 	}
 
 	delete _axe[index];
 	_axe[index] = nullptr;
-	printfDx("çÌèú\n");
 }
 void Stage::DrawBackGround() {
 	GetGraphSize(_backGroundHandler,&_bgWidth , &_bgHeight);

@@ -52,6 +52,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			_player.JumpProtocol(_jump);
 			_isJumping = true;
 		}
+
+		if (Pad::IsPress(PAD_INPUT_3)) {
+			_stage.ResetGame();
+		}
 		
 		SetDrawScreen(DX_SCREEN_BACK);//•`‰ææ‚ğ— ‰æ–Ê‚É
 		ClearDrawScreen();//— ‰æ–ÊÁ‚·
