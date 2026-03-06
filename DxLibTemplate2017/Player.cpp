@@ -8,13 +8,11 @@
 #include "Pad.h"
 float _initX = 320;
 float _initY = 600;
-float _playerScale = 99;
 bool _isGround = false;
 bool _isRight = true;
 
 
 Player::Player():
-_stagePointer(nullptr),
 jump(nullptr)
 {
 	_pos.x = _initX;
@@ -34,17 +32,17 @@ void Player::Update() {
     CheckFall();
 	_pos.y -= _verticalY;
 	_pos.x += _move.x;
-	_collisionRect.SetCenter(_draw.x + _playerScale * 0.5f, _draw.y + _playerScale * 0.5f, _playerScale, _playerScale);
+	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale, _scale);
 	Draw();
 }
 void Player::Draw() {
-	_draw.x = _pos.x - _stagePointer->GetScrollX() - _playerScale * 0.5f;
-	_draw.y = _pos.y - _stagePointer->GetScrollY() - _playerScale * 0.5f;
+	_draw.x = _pos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
+	_draw.y = _pos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
     if (_isRight) {
-        DrawExtendGraph(_draw.x, _draw.y, _draw.x + _playerScale, _draw.y + _playerScale, _imageHandle, TRUE);
+        DrawExtendGraph(_draw.x, _draw.y, _draw.x + _scale, _draw.y + _scale, _imageHandle, TRUE);
     }
     else {
-        DrawExtendGraph(_draw.x + _playerScale, _draw.y, _draw.x, _draw.y + _playerScale, _imageHandle, TRUE);
+        DrawExtendGraph(_draw.x + _scale, _draw.y, _draw.x, _draw.y + _scale, _imageHandle, TRUE);
     }
 	//DrawGraph(_currentX, _currentY, _playerGraph, TRUE);
 #ifdef _DEBUG
@@ -63,7 +61,7 @@ void Player::CheckFall() {
 void Player::CheckHitMap(Rect& chipRect)
 {
     // “–‚½‚è‹éŒ`
-    _collisionRect.SetCenter(_pos.x, _pos.y, _playerScale - 1, _playerScale - 1);
+    _collisionRect.SetCenter(_pos.x, _pos.y, _scale - 1, _scale - 1);
 
     // ‚Ü‚¸‚Í“–‚½‚Á‚Ä‚é‚©
     if (!_stagePointer->IsCollision(_collisionRect, chipRect))

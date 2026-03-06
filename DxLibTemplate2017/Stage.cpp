@@ -35,7 +35,9 @@ Stage::Stage(Player* player) :
 	_graphChipNumX(0),
 	_graphChipNumY(0)
 {
+	_player->SetStagePointer(this);
 	_enemy = new Enemy;
+	_enemy->SetStagePointer(this);
 	for (int i = 0; i < AXE_MAX; i++)
 	{
 		_axe[i] = nullptr;
@@ -84,7 +86,9 @@ void Stage::Update() {
 	DrawBackGround();
 	DrawMapChip();
 	UpdateAxe();
-	_enemy->Update();
+	if (_enemy) {
+		_enemy->Update();
+	}
 	Rect chipRect;
 	if (IsCollision(_player->ReturnRect(), chipRect)) {
 		_player->CheckHitMap(chipRect);
@@ -125,6 +129,10 @@ void Stage::UpdateAxe() {
 		// ‰æ–ÊŠO‚Éo‚½‚çíœ‚·‚é
 		bool isOutOfScreen = _axe[i]->GetPos().x < 0 || _axe[i]->GetPos().x > SCREEN_WIDTH;
 		bool isTouchEnemy = _axe[i]->GetColRect().IsCollision(_enemy->GetColRect());
+		if (isTouchEnemy) {
+			delete _enemy;
+			_enemy = nullptr;
+		}
 		if (isOutOfScreen || isTouchEnemy)
 		{
 			DeleteAxe(i);

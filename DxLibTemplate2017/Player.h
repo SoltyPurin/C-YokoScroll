@@ -12,7 +12,6 @@ public:
     virtual ~Player();
     virtual void Update() override;
     virtual void Draw() override;
-    void SetStagePointer(Stage* pStage) { _stagePointer = pStage; }
     void Move(float moveValue,bool isRight);
     void SetVY(float vy);
     float ReturnVY();
@@ -24,6 +23,5 @@ public:
     Axe* CreateAxe();
 private:
     Vector2 _move;
-    Stage* _stagePointer;
     Jump* jump;
 };

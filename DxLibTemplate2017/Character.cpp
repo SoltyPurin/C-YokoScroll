@@ -1,6 +1,8 @@
 #include "Character.h"
+#include "Stage.h"
 
-Character::Character() {
+Character::Character() :
+_stagePointer(nullptr){
 
 }
 
@@ -16,9 +18,12 @@ void Character::Update() {
 }
 
 void Character::Draw() {
-
 }
 
 void Character::Gravity() {
 	_verticalY -= _gravity;
+}
+
+void Character::TakeDamage() {
+
 }
