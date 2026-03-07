@@ -9,10 +9,12 @@
 bool _isGround = false;
 bool _isRight = true;
 
+int _prevTime = 0;
 
 Player::Player():
 jump(nullptr)
 {
+    _prevTime = GetNowCount();
     ResetPosition();
 	_imageHandle = LoadGraph("Image/sample.png");
 }
@@ -25,9 +27,12 @@ void Player::Move(float moveValue,bool isRight) {
 }
 
 void Player::Update() {
+    int currentTime = GetNowCount();
+    float deltatime = (currentTime - _prevTime) / 1000.0f;
+    _prevTime = currentTime;
     Gravity();
-	_pos.y -= _verticalY;
-	_pos.x += _move.x;
+	_pos.y -= _verticalY * _oneMinuteMovePixel * deltatime;
+	_pos.x += _move.x * _oneMinuteMovePixel *deltatime;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale, _scale);
 	Draw();
 }

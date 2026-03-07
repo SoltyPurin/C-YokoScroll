@@ -31,9 +31,6 @@ void Character::TakeDamage() {
 
 }
 
-Rect Character::ReturnRect() {
-		return _collisionRect;
-}
 
 void Character::ResetPosition() {
 	_pos.x = _initX;

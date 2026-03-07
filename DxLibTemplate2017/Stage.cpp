@@ -86,10 +86,9 @@ void Stage::Update() {
 	DrawBackGround();
 	DrawMapChip();
 	UpdateAxe();
-	PlayerFallCheck();
 	DetectPlayerToEnemyCollision();
 	Rect chipRect;
-	if (IsCollision(_player->ReturnRect(), chipRect)) {
+	if (IsCollision(_player->GetColRect(), chipRect)) {
 		_player->CheckHitMap(chipRect);
 	}
 	if (_enemy) {
@@ -97,10 +96,11 @@ void Stage::Update() {
 			_enemy->Update();
 		}
 
-		if (IsCollision(_enemy->ReturnRect(), chipRect)) {
+		if (IsCollision(_enemy->GetColRect(), chipRect)) {
 			_enemy->CheckHitMap(chipRect);
 		}
 	}
+	PlayerFallCheck();
 }
 
 void Stage::PlayerFallCheck() {
@@ -131,6 +131,7 @@ void Stage::ResetGame() {
 	}
 	else {
 		_enemy = new Enemy;
+		_enemy->SetStagePointer(this);
 	}
 }
 
