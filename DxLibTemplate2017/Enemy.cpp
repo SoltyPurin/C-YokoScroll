@@ -18,12 +18,8 @@ Enemy::~Enemy() {
 void Enemy::Update() {
 	Gravity();
 	_pos.y -= _verticalY;
-	if (_pos.y >= _groundY) {
-		_pos.y = _groundY;
-		_verticalY = 0;
-	}
+    Draw();
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _enemyScale, _enemyScale);
-	Draw();
 }
 
 void Enemy::Draw() {

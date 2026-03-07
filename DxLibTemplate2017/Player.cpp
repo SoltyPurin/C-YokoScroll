@@ -26,7 +26,6 @@ void Player::Move(float moveValue,bool isRight) {
 
 void Player::Update() {
     Gravity();
-    CheckFall();
 	_pos.y -= _verticalY;
 	_pos.x += _move.x;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale, _scale);
@@ -46,12 +45,6 @@ void Player::Draw() {
 // “–‚½‚è”»’è‚ð•\Ž¦
 	_collisionRect.Draw(0x0000ff, false);
 #endif
-}
-
-void Player::CheckFall() {
-    if (_pos.y >= _groundY) {
-        ResetPosition();
-    }
 }
 
 void Player::CheckHitMap(Rect& chipRect)

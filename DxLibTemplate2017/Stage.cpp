@@ -44,11 +44,11 @@ Stage::Stage(Player* player) :
 	}
 	pos = { 0,0 };
 	_backGroundHandler = LoadGraph("Image/BackGround.jpg");
-	_backGroundHandle = LoadGraph("Image/mapChip.png");
+	_mapChipHandle = LoadGraph("Image/mapChip.png");
 
 	int graphW = 0;
 	int graphH = 0;
-	GetGraphSize(_backGroundHandle, &graphW, &graphH);
+	GetGraphSize(_mapChipHandle, &graphW, &graphH);
 
 	_graphChipNumX = graphW / CHIP_SIZE;
 	_graphChipNumY = graphH / CHIP_SIZE;
@@ -57,7 +57,7 @@ Stage::Stage(Player* player) :
 }
 Stage::~Stage() {
 	DeleteGraph(_backGroundHandler);
-	DeleteGraph(_backGroundHandle);
+	DeleteGraph(_mapChipHandle);
 }
 
 void Stage::LoadMap() {
@@ -86,6 +86,7 @@ void Stage::Update() {
 	DrawBackGround();
 	DrawMapChip();
 	UpdateAxe();
+	PlayerFallCheck();
 	DetectPlayerToEnemyCollision();
 	Rect chipRect;
 	if (IsCollision(_player->ReturnRect(), chipRect)) {
@@ -99,6 +100,12 @@ void Stage::Update() {
 		if (IsCollision(_enemy->ReturnRect(), chipRect)) {
 			_enemy->CheckHitMap(chipRect);
 		}
+	}
+}
+
+void Stage::PlayerFallCheck() {
+	if (_player->GetPos().y >= _groundY) {
+		ResetGame();
 	}
 }
 
@@ -134,7 +141,7 @@ void Stage::DrawAxe() {
 	for (int i = 0; i < AXE_MAX; i++)
 	{
 		if (!_axe[i]) continue;
-		_axe[i]->DrawAxe();
+		_axe[i]->DrawWeapon();
 	}
 }
 
@@ -223,7 +230,7 @@ void Stage::DrawMapChip() {
 				srcX, srcY,
 				CHIP_SIZE, CHIP_SIZE,
 				kChipScale, 0.0f,
-				_backGroundHandle, true);
+				_mapChipHandle, true);
 
 
 #ifdef _DEBUG

@@ -54,7 +54,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 
 		if (Pad::IsPress(PAD_INPUT_3)) {
-			_stage.ResetGame();
+			//•Ší‚ÌØ‚è‘Ö‚¦
+			
+			//_stage.ResetGame();
 		}
 		
 		SetDrawScreen(DX_SCREEN_BACK);//•`‰ææ‚ğ— ‰æ–Ê‚É

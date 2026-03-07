@@ -129,7 +129,9 @@
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="ThrowAxe.cpp" />
+    <ClCompile Include="ThrowKnife.cpp" />
     <ClCompile Include="Vector2.cpp" />
+    <ClCompile Include="Weapons.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
@@ -141,7 +143,9 @@
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="ThrowAxe.h" />
+    <ClInclude Include="ThrowKnife.h" />
     <ClInclude Include="Vector2.h" />
+    <ClInclude Include="Weapons.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

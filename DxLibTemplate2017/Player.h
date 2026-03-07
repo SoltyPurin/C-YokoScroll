@@ -19,7 +19,6 @@ public:
     float ReturnVY();
     Vector2 GetPos();
     void JumpProtocol(Jump& jump);
-    void CheckFall();
     Axe* CreateAxe();
 private:
     Vector2 _move;

@@ -28,7 +28,6 @@ protected:
 	Rect _collisionRect;
 	float _scale = 99;
 	float _gravity = 0.1f;
-	float _groundY = 900;
 	float _initX = 320;
 	float _initY = 600;
 };

@@ -21,14 +21,16 @@ public:
 	void DetectPlayerToEnemyCollision();
 	void DeleteAxe(int index);
 	void ResetGame();
+	void PlayerFallCheck();
 private:
 	Vector2 pos;
 	Vector2 size;
 	Player* _player;
 	Enemy* _enemy;
 	Axe* _axe[16];
+	float _groundY = 900;
 	int _mapData;
-	int _backGroundHandle;
+	int _mapChipHandle;
 	int _graphChipNumX;
 	int _graphChipNumY;
 };
