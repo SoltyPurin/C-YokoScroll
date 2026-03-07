@@ -6,6 +6,7 @@ class Rect;
 class Jump;
 class Stage;
 class Axe;
+class ThrowKnife;
 class Player : public Character {
 public:
     Player();
@@ -20,6 +21,7 @@ public:
     Vector2 GetPos();
     void JumpProtocol(Jump& jump);
     Axe* CreateAxe();
+    ThrowKnife* CreateKnife();
 private:
     Vector2 _move;
     Jump* jump;

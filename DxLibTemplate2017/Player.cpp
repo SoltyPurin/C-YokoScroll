@@ -5,6 +5,7 @@
 #include "Rect.h"
 #include "Jump.h"
 #include "ThrowAxe.h"
+#include "ThrowKnife.h"
 #include "Pad.h"
 bool _isGround = false;
 bool _isRight = true;
@@ -117,6 +118,15 @@ void Player::CheckHitMap(Rect& chipRect)
 
 }
 
+ThrowKnife* Player::CreateKnife() {
+    if (Pad::IsTrigger(PAD_INPUT_2)) {
+        printfDx("ƒiƒCƒt¶¬");
+        ThrowKnife* knife = new ThrowKnife();
+        knife->SetInfo(_draw, _isRight);
+        return knife;
+    }
+    return nullptr;
+}
 Axe* Player::CreateAxe() {
     if (Pad::IsTrigger(PAD_INPUT_2)) {
         Axe* axe = new Axe();

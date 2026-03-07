@@ -4,6 +4,7 @@
 class Player;
 class Enemy;
 class Axe;
+class ThrowKnife;
 class Stage
 {
 public:
@@ -18,8 +19,11 @@ public:
 	bool IsCollision(Rect rect, Rect& chipRect);
 	void DrawAxe();
 	void UpdateAxe();
+	void DrawKnife();
+	void UpdateKnife();
 	void DetectPlayerToEnemyCollision();
 	void DeleteAxe(int index);
+	void DeleteKnife(int index);
 	void ResetGame();
 	void PlayerFallCheck();
 private:
@@ -28,6 +32,7 @@ private:
 	Player* _player;
 	Enemy* _enemy;
 	Axe* _axe[16];
+	ThrowKnife* _knife[16];
 	float _groundY = 900;
 	int _mapData;
 	int _mapChipHandle;

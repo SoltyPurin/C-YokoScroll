@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include "ThrowAxe.h"
+#include "ThrowKnife.h"
 
 int _backGroundHandler = 0;
 namespace
@@ -26,7 +27,7 @@ namespace
 	// マップチップの配列情報
 	int CHIP_DATA[CHIP_NUM_Y][CHIP_NUM_X];
 
-	constexpr int AXE_MAX = 16;
+	constexpr int WEAPON_MAX = 16;
 }
 int _bgWidth = static_cast<int>(SCREEN_WIDTH)-1;
 int _bgHeight = static_cast<int>(SCREEN_HEIGHT)-1;
@@ -38,9 +39,12 @@ Stage::Stage(Player* player) :
 	_player->SetStagePointer(this);
 	_enemy = new Enemy;
 	_enemy->SetStagePointer(this);
-	for (int i = 0; i < AXE_MAX; i++)
+	for (int i = 0; i < WEAPON_MAX; i++)
 	{
 		_axe[i] = nullptr;
+	}
+	for (int i = 0; i < WEAPON_MAX; i++) {
+		_knife[i] = nullptr;
 	}
 	pos = { 0,0 };
 	_backGroundHandler = LoadGraph("Image/BackGround.jpg");
@@ -86,6 +90,7 @@ void Stage::Update() {
 	DrawBackGround();
 	DrawMapChip();
 	UpdateAxe();
+	UpdateKnife();
 	DetectPlayerToEnemyCollision();
 	Rect chipRect;
 	if (IsCollision(_player->GetColRect(), chipRect)) {
@@ -119,11 +124,16 @@ void Stage::DetectPlayerToEnemyCollision() {
 }
 
 void Stage::ResetGame() {
-	for (int i = 0; i < AXE_MAX; i++)
+	for (int i = 0; i < WEAPON_MAX; i++)
 	{
 		if (!_axe[i]) continue;
 		delete _axe[i];
 		_axe[i] = nullptr;
+	}
+	for (int i = 0; i < WEAPON_MAX; i++) {
+		if (!_knife[i])continue;
+		delete _knife[i];
+		_knife[i] = nullptr;
 	}
 	_player->ResetPosition();
 	if (_enemy) {
@@ -135,11 +145,14 @@ void Stage::ResetGame() {
 	}
 }
 
+#pragma region Axe
+
+
 void Stage::DrawAxe() {
 	if (!_axe) {
 		return;
 	}
-	for (int i = 0; i < AXE_MAX; i++)
+	for (int i = 0; i < WEAPON_MAX; i++)
 	{
 		if (!_axe[i]) continue;
 		_axe[i]->DrawWeapon();
@@ -150,7 +163,7 @@ void Stage::UpdateAxe() {
 	Axe* newAxe = _player->CreateAxe();
 	if (newAxe != nullptr) {
 		//斧を生成できた場合は保持
-		for (int i = 0; i < AXE_MAX; i++)
+		for (int i = 0; i < WEAPON_MAX; i++)
 		{
 			if (_axe[i] == nullptr) {
 				_axe[i] = newAxe;
@@ -159,7 +172,7 @@ void Stage::UpdateAxe() {
 		}
 	}
 
-	for (int i = 0; i < AXE_MAX; i++)
+	for (int i = 0; i < WEAPON_MAX; i++)
 	{
 		if (!_axe[i]) continue;
 
@@ -191,6 +204,67 @@ void Stage::DeleteAxe(int index) {
 	delete _axe[index];
 	_axe[index] = nullptr;
 }
+#pragma endregion
+#pragma region Knife
+
+void Stage::DrawKnife() {
+	if (!_knife) {
+		return;
+	}
+	for (int i = 0; i < WEAPON_MAX; i++)
+	{
+		if (!_knife[i]) continue;
+		_knife[i]->DrawWeapon();
+	}
+}
+void Stage::UpdateKnife() {
+	ThrowKnife* newKnife = _player->CreateKnife();
+	if (newKnife != nullptr) {
+		//ナイフを生成できた場合は保持
+		for (int i = 0; i < WEAPON_MAX; i++)
+		{
+			if (_knife[i] == nullptr) {
+				_knife[i] = newKnife;
+				break;
+			}
+		}
+	}
+
+	for (int i = 0; i < WEAPON_MAX; i++)
+	{
+		if (!_knife[i]) continue;
+
+		_knife[i]->Update();
+
+		// 画面外に出たら削除する
+		bool isOutOfScreen = _knife[i]->GetPos().x < 0 || _knife[i]->GetPos().x > SCREEN_WIDTH;
+		bool isTouchEnemy = false;
+		if (_enemy) {
+			isTouchEnemy = _knife[i]->GetColRect().IsCollision(_enemy->GetColRect());
+		}
+		if (isOutOfScreen || isTouchEnemy)
+		{
+			DeleteKnife(i);
+		}
+		if (isTouchEnemy) {
+			delete _enemy;
+			_enemy = nullptr;
+		}
+	}
+
+}
+
+void Stage::DeleteKnife(int index) {
+	if (!_knife[index]) {
+		return;
+	}
+
+	delete _knife[index];
+	_knife[index] = nullptr;
+}
+#pragma endregion
+
+
 void Stage::DrawBackGround() {
 	GetGraphSize(_backGroundHandler,&_bgWidth , &_bgHeight);
 	int scrollBg = GetScrollX() % _bgWidth;
