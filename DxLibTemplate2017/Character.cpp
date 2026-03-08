@@ -20,8 +20,8 @@ void Character::Update() {
 void Character::Draw() {
 }
 
-void Character::Gravity() {
-	_verticalY -= _gravity;
+void Character::Gravity(float deltaTime) {
+	_verticalY -= _gravity * deltaTime;
 }
 
 void Character::CheckHitMap(Rect& chipRect) {

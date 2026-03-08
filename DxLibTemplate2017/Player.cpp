@@ -10,7 +10,6 @@
 bool _isGround = false;
 bool _isRight = true;
 
-int _prevTime = 0;
 
 Player::Player():
 jump(nullptr)
@@ -29,11 +28,11 @@ void Player::Move(float moveValue,bool isRight) {
 
 void Player::Update() {
     int currentTime = GetNowCount();
-    float deltatime = (currentTime - _prevTime) / 1000.0f;
+    _deltaTime = (currentTime - _prevTime) / 1000.0f;
     _prevTime = currentTime;
-    Gravity();
-	_pos.y -= _verticalY * _oneMinuteMovePixel * deltatime;
-	_pos.x += _move.x * _oneMinuteMovePixel *deltatime;
+    Gravity(_deltaTime);
+	_pos.y -= _verticalY * _oneMinuteMovePixel * _deltaTime;
+	_pos.x += _move.x * _oneMinuteMovePixel * _deltaTime;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale, _scale);
 	Draw();
 }

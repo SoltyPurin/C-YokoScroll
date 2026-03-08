@@ -5,6 +5,7 @@
 
 
 Enemy::Enemy() {
+    _prevTime = GetNowCount();
 	_imageHandle = LoadGraph("Image/RedEnemy.png");
     _initX = _enInitX;
     _initY = _enInitY;
@@ -16,8 +17,12 @@ Enemy::~Enemy() {
 }
 
 void Enemy::Update() {
-	Gravity();
-	_pos.y -= _verticalY;
+    int currentTime = GetNowCount();
+    _deltaTime = (currentTime - _prevTime) / 1000.0f;
+    _prevTime = currentTime;
+
+	Gravity(_deltaTime);
+	_pos.y -= _verticalY * _oneMinuteMovePixel * _deltaTime;
     Draw();
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _enemyScale, _enemyScale);
 }
