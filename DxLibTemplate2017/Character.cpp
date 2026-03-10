@@ -21,7 +21,7 @@ void Character::Draw() {
 }
 
 void Character::Gravity(float deltaTime) {
-	_verticalY -= _gravity * deltaTime;
+	_verticalY -= _gravity * deltaTime ;
 }
 
 void Character::CheckHitMap(Rect& chipRect) {

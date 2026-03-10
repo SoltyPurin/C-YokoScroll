@@ -7,16 +7,17 @@
 #include "ThrowAxe.h"
 #include "ThrowKnife.h"
 #include "Pad.h"
-bool _isGround = false;
-bool _isRight = true;
+
 
 
 Player::Player():
 jump(nullptr)
 {
+    _weaponIndex = 0;
     _prevTime = GetNowCount();
     ResetPosition();
 	_imageHandle = LoadGraph("Image/sample.png");
+    _weaponCount = static_cast<int>(WeaponKinds::Max);
 }
 Player::~Player() {
 	DeleteGraph(_imageHandle);
@@ -36,6 +37,12 @@ void Player::Update() {
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale, _scale);
 	Draw();
 }
+void Player::ChangeWeapon() {
+    _weaponIndex++;
+    if (_weaponIndex >= _weaponCount) {
+        _weaponIndex = 0;
+    }
+}
 void Player::Draw() {
 	_draw.x = _pos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
 	_draw.y = _pos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
@@ -51,7 +58,9 @@ void Player::Draw() {
 	_collisionRect.Draw(0x0000ff, false);
 #endif
 }
-
+int Player::ReturnCurrentWeaponIndex() {
+    return _weaponIndex;
+}
 void Player::CheckHitMap(Rect& chipRect)
 {
     // 当たり矩形
@@ -89,7 +98,7 @@ void Player::CheckHitMap(Rect& chipRect)
         else
             _pos.x += pushX; // チップの右側にいる → 右へ
 
-        _move.x = 0.0f;
+        //_move.x = 0.0f;
         // 横衝突だけでは地面判定は変えない（降りられない原因になりやすい）
     }
     else
@@ -118,8 +127,10 @@ void Player::CheckHitMap(Rect& chipRect)
 }
 
 ThrowKnife* Player::CreateKnife() {
+    if (_weaponIndex != static_cast<int>(WeaponKinds::UseKnife)) {
+        return nullptr;
+    }
     if (Pad::IsTrigger(PAD_INPUT_2)) {
-        printfDx("ナイフ生成");
         ThrowKnife* knife = new ThrowKnife();
         knife->SetInfo(_draw, _isRight);
         return knife;
@@ -127,6 +138,9 @@ ThrowKnife* Player::CreateKnife() {
     return nullptr;
 }
 Axe* Player::CreateAxe() {
+    if (_weaponIndex != static_cast<int>(WeaponKinds::UseAxe)) {
+        return nullptr;
+    }
     if (Pad::IsTrigger(PAD_INPUT_2)) {
         Axe* axe = new Axe();
         axe->SetInfo(_draw, _isRight);

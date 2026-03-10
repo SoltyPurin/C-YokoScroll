@@ -70,7 +70,7 @@ protected:
 	//‘å‚«‚³
 	float _scale = 99;
 	//d—Í
-	float _gravity = 0.3f;
+	float _gravity = 10.5f;
 	//Å‰‚ÌXÀ•W
 	float _initX = 320;
 	//Å‰‚ÌyÀ•W

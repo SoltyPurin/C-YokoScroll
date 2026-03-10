@@ -12,6 +12,7 @@ public:
 	virtual void Update()override;
 	virtual void Draw()override;
 	virtual void CheckHitMap(Rect& chipRect) override;
+	void SetPosition(float x, float y);
 private:
 	float _enemyScale = 99;
 	float _enInitX = 220;

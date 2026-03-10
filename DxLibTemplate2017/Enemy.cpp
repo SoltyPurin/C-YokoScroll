@@ -39,6 +39,12 @@ void Enemy::Draw() {
 
 }
 
+void Enemy::SetPosition(float x, float y) {
+    _initX = x;
+    _initY = y;
+    ResetPosition();
+}
+
 void Enemy::CheckHitMap(Rect& chipRect) {
 
     // めり込み量（左右・上下）

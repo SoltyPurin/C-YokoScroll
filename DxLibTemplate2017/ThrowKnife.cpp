@@ -7,15 +7,13 @@ namespace
 }
 
 
-ThrowKnife::ThrowKnife() {
+ThrowKnife::ThrowKnife() : Weapons() {
 	_move.x = Knife_SPEED;
-	_weaponHandle = LoadGraph("Image/Axe.png");
-}
-ThrowKnife::~ThrowKnife() {
-	DeleteGraph(_weaponHandle);
+	_weaponHandle = LoadGraph("Image/Knife.png");
 }
 void ThrowKnife::Update(){
-	_weaponPosition += _move;
+	Weapons::Update();
+	_weaponPosition += _move * _oneMinuteMovePixel * _deltaTime;
 	_weaponCollision.SetCenter(_weaponPosition.x, _weaponPosition.y, _weaponScale, _weaponScale);
 	DrawWeapon();
 }
@@ -28,4 +26,5 @@ void ThrowKnife::SetInfo(const Vector2& playerPos, bool isRight) {
 	else {
 		_move.x = -Knife_SPEED;
 	}
+	_isRight = isRight;
 }

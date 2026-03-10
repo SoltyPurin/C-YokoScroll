@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "Vector2.h"
 #include "Rect.h"
 class Player;
@@ -26,11 +27,13 @@ public:
 	void DeleteKnife(int index);
 	void ResetGame();
 	void PlayerFallCheck();
+	void DrawCurrentWeapon();
+	void SpawnEnemy(int enIndex, float x, float y);
 private:
 	Vector2 pos;
 	Vector2 size;
 	Player* _player;
-	Enemy* _enemy;
+	std::vector<Enemy*> _enemys;
 	Axe* _axe[16];
 	ThrowKnife* _knife[16];
 	float _groundY = 900;
@@ -38,5 +41,9 @@ private:
 	int _mapChipHandle;
 	int _graphChipNumX;
 	int _graphChipNumY;
+	int _axeHandle;
+	int _knifeHandle;
+	int _colChipIndex;
+	bool _isResetting = false;
 };
 

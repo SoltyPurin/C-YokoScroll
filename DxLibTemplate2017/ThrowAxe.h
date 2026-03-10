@@ -6,7 +6,7 @@ class Axe : public Weapons
 {
 public:
 	Axe();
-	~Axe();
+	//~Axe();
   	virtual void Update() override;
 	void Gravity();
 	virtual void SetInfo(const Vector2& playerPos, bool isRight) override;

@@ -9,19 +9,16 @@ namespace
 	constexpr float GRAVITY = 0.5f;
 }
 
-Axe::Axe()
+Axe::Axe() : Weapons()
 {
 	_move.x = AXE_SPEED;
 	_weaponHandle = LoadGraph("Image/Axe.png");
 }
 
-Axe::~Axe() {
-	DeleteGraph(_weaponHandle);
-}
-
 void Axe::Update() {
-	_weaponPosition += _move;
-	_weaponPosition.y -= _axeVerticalY;
+	Weapons::Update();
+	_weaponPosition += _move * _oneMinuteMovePixel * _deltaTime;
+	_weaponPosition.y -= _axeVerticalY * _oneMinuteMovePixel * _deltaTime;
 	_weaponCollision.SetCenter(_weaponPosition.x, _weaponPosition.y, _weaponScale, _weaponScale);
 	Gravity();
 	DrawWeapon();

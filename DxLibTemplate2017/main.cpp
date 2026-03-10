@@ -53,10 +53,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			_isJumping = true;
 		}
 
-		if (Pad::IsPress(PAD_INPUT_3)) {
+		if (Pad::IsTrigger(PAD_INPUT_3)) {
 			//•Ší‚ÌØ‚è‘Ö‚¦
-			
-			//_stage.ResetGame();
+			_player.ChangeWeapon();
 		}
 		
 		SetDrawScreen(DX_SCREEN_BACK);//•`‰ææ‚ğ— ‰æ–Ê‚É

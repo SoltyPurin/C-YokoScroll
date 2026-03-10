@@ -20,9 +20,20 @@ public:
     float ReturnVY();
     Vector2 GetPos();
     void JumpProtocol(Jump& jump);
+    void ChangeWeapon();
     Axe* CreateAxe();
     ThrowKnife* CreateKnife();
+    int ReturnCurrentWeaponIndex();
 private:
+    enum class WeaponKinds {
+        UseAxe,
+        UseKnife,
+        Max
+    };
     Vector2 _move;
     Jump* jump;
+    int _weaponIndex;
+    int _weaponCount = 0;
+    bool _isGround = false;
+    bool _isRight = true;
 };

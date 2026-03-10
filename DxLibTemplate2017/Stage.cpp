@@ -7,6 +7,7 @@
 #include <sstream>
 #include "ThrowAxe.h"
 #include "ThrowKnife.h"
+#include <vector>
 
 int _backGroundHandler = 0;
 namespace
@@ -37,8 +38,6 @@ Stage::Stage(Player* player) :
 	_graphChipNumY(0)
 {
 	_player->SetStagePointer(this);
-	_enemy = new Enemy;
-	_enemy->SetStagePointer(this);
 	for (int i = 0; i < WEAPON_MAX; i++)
 	{
 		_axe[i] = nullptr;
@@ -49,6 +48,8 @@ Stage::Stage(Player* player) :
 	pos = { 0,0 };
 	_backGroundHandler = LoadGraph("Image/BackGround.jpg");
 	_mapChipHandle = LoadGraph("Image/mapChip.png");
+	_axeHandle = LoadGraph("Image/Axe.png");
+	_knifeHandle = LoadGraph("Image/Knife.png");
 
 	int graphW = 0;
 	int graphH = 0;
@@ -81,48 +82,99 @@ void Stage::LoadMap() {
 		{
 			// 文字列をint型に変換してm_chipDataに追加する
 			CHIP_DATA[y][x] = std::stoi(field);
+			if (CHIP_DATA[y][x] == 5) { // 5番を敵配置チップとする
+				SpawnEnemy(0, x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale); // 敵を生成
+				CHIP_DATA[y][x] = 0; // マップ上は空気に戻す
+			}
+
+
 			x++;
 		}
 		y++;
 	}
+}
+
+void Stage::SpawnEnemy(int enIndex,float x,float y) {
+	Enemy* newEnemy = new Enemy;
+	_enemys.push_back(newEnemy);
+		newEnemy->SetPosition(x, y);
+		newEnemy->SetStagePointer(this);
+		//printfDx("敵を生成");
+
 }
 void Stage::Update() {
 	DrawBackGround();
 	DrawMapChip();
 	UpdateAxe();
 	UpdateKnife();
+	DrawCurrentWeapon();
 	DetectPlayerToEnemyCollision();
+	printfDx("現在の敵の数: %d\n", (int)_enemys.size());
 	Rect chipRect;
 	if (IsCollision(_player->GetColRect(), chipRect)) {
 		_player->CheckHitMap(chipRect);
 	}
-	if (_enemy) {
-		if (_enemy) {
-			_enemy->Update();
-		}
+	for (auto i = _enemys.begin(); i != _enemys.end(); ) {
+		Enemy* enemy = *i;
+		if (enemy) {
+			if (enemy) {
+				enemy->Update();
+			}
 
-		if (IsCollision(_enemy->GetColRect(), chipRect)) {
-			_enemy->CheckHitMap(chipRect);
+			if (IsCollision(enemy->GetColRect(), chipRect)) {
+				enemy->CheckHitMap(chipRect);
+			}
+			i++;
+		}
+		else {
+			i = _enemys.erase(i);
 		}
 	}
 	PlayerFallCheck();
+	if (_isResetting) {
+		ResetGame();
+		_isResetting = false;
+	}
+}
+
+void Stage::DrawCurrentWeapon() {
+	int curWeapon = _player->ReturnCurrentWeaponIndex();
+	switch (curWeapon)
+	{
+	case 0:
+		DrawGraph(0, 0, _axeHandle, TRUE);
+		break;
+
+	case 1:
+		DrawGraph(0, 0, _knifeHandle, TRUE);
+		break;
+	default:
+		DrawGraph(0, 0, _knifeHandle, TRUE);
+		break;
+	}
 }
 
 void Stage::PlayerFallCheck() {
 	if (_player->GetPos().y >= _groundY) {
-		ResetGame();
+		_isResetting = true;
 	}
 }
 
 void Stage::DetectPlayerToEnemyCollision() {
-	if (_enemy) {
-		bool isPlayerEnemyCollision = _enemy->GetColRect().IsCollision(_player->GetColRect());
-		if (isPlayerEnemyCollision) {
-			ResetGame();
+	for (auto i = _enemys.begin(); i != _enemys.end();) {
+		Enemy* enemy = *i;
+		if (enemy) {
+			bool isPlayerEnemyCollision = enemy->GetColRect().IsCollision(_player->GetColRect());
+			if (isPlayerEnemyCollision) {
+				_isResetting = true;
+			}
+			i++;
+		}
+		else {
+			i = _enemys.erase(i);
 		}
 	}
 }
-
 void Stage::ResetGame() {
 	for (int i = 0; i < WEAPON_MAX; i++)
 	{
@@ -135,14 +187,12 @@ void Stage::ResetGame() {
 		delete _knife[i];
 		_knife[i] = nullptr;
 	}
+	for (auto enemy : _enemys) {
+		delete enemy;
+	}
+	_enemys.clear();
 	_player->ResetPosition();
-	if (_enemy) {
-		_enemy->ResetPosition();
-	}
-	else {
-		_enemy = new Enemy;
-		_enemy->SetStagePointer(this);
-	}
+	LoadMap();
 }
 
 #pragma region Axe
@@ -181,16 +231,26 @@ void Stage::UpdateAxe() {
 		// 画面外に出たら削除する
 		bool isOutOfScreen = _axe[i]->GetPos().x < 0 || _axe[i]->GetPos().x > SCREEN_WIDTH;
 		bool isTouchEnemy = false;
-		if (_enemy) {
-			isTouchEnemy = _axe[i]->GetColRect().IsCollision(_enemy->GetColRect());
+		for (auto j = _enemys.begin(); j != _enemys.end();) {
+			Enemy* enemy = *j;
+			if (enemy) {
+				isTouchEnemy = _axe[i]->GetColRect().IsCollision(enemy->GetColRect());
+				if (isTouchEnemy) {
+					//敵を削除
+					delete enemy;
+					//要素の中身を前につめる
+					j = _enemys.erase(j);
+					break;
+
+				}
+				else {
+					j++;
+				}
+			}
 		}
 		if (isOutOfScreen || isTouchEnemy)
 		{
 			DeleteAxe(i);
-		}
-		if (isTouchEnemy) {
-			delete _enemy;
-			_enemy = nullptr;
 		}
 	}
 
@@ -239,16 +299,25 @@ void Stage::UpdateKnife() {
 		// 画面外に出たら削除する
 		bool isOutOfScreen = _knife[i]->GetPos().x < 0 || _knife[i]->GetPos().x > SCREEN_WIDTH;
 		bool isTouchEnemy = false;
-		if (_enemy) {
-			isTouchEnemy = _knife[i]->GetColRect().IsCollision(_enemy->GetColRect());
+		for (auto j = _enemys.begin(); j != _enemys.end();) {
+			Enemy* enemy = *j;
+			if (enemy) {
+				isTouchEnemy = _knife[i]->GetColRect().IsCollision(enemy->GetColRect());
+				if (isTouchEnemy) {
+					delete enemy;
+					j = _enemys.erase(j);
+					break;
+
+				}
+				else {
+					j++;
+				}
+			}
 		}
+
 		if (isOutOfScreen || isTouchEnemy)
 		{
 			DeleteKnife(i);
-		}
-		if (isTouchEnemy) {
-			delete _enemy;
-			_enemy = nullptr;
 		}
 	}
 
@@ -330,6 +399,7 @@ bool Stage::IsCollision(Rect rect, Rect& chipRect)
 		for (int x = 0; x < CHIP_NUM_X; x++)
 		{
 			if (CHIP_DATA[y][x] == 0) continue;
+			if (CHIP_DATA[y][x] == 6) continue;
 
 			const int chipLeft = static_cast<int>(x * CHIP_SIZE * kChipScale);
 			const int chipRight = static_cast<int>(chipLeft + CHIP_SIZE * kChipScale);
@@ -360,6 +430,8 @@ bool Stage::IsCollision(Rect rect, Rect& chipRect)
 				chipRect.m_right = static_cast<float>(chipRight);
 				chipRect.m_top = static_cast<float>(chipTop);
 				chipRect.m_bottom = static_cast<float>(chipBottom);
+
+				_colChipIndex = CHIP_DATA[y][x];
 			}
 		}
 	}

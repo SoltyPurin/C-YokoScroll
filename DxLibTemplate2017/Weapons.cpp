@@ -5,15 +5,17 @@ Weapons::Weapons():
 	_weaponPosition({ 0,0 }),
 	_move({ 0,0 })
 {
-
+	_prevTime = GetNowCount();
 }
 
 Weapons::~Weapons() {
-
+	DeleteGraph(_weaponHandle);
 }
 
 void Weapons::Update() {
-
+	int currentTime = GetNowCount();
+	_deltaTime = (currentTime - _prevTime) / 1000.0f;
+	_prevTime = currentTime;
 }
 void Weapons::DrawWeapon() {
 	float drawX = _weaponPosition.x - _weaponScale * 0.5f;
@@ -21,7 +23,12 @@ void Weapons::DrawWeapon() {
 
 	float plusPosx = drawX + _weaponScale;
 	float plusPosy = drawY + _weaponScale;
-	DrawExtendGraph(drawX, drawY, plusPosx, plusPosy, _weaponHandle, TRUE);
+	if (_isRight) {
+		DrawExtendGraph(drawX, drawY, plusPosx, plusPosy, _weaponHandle, TRUE);
+	}
+	else {
+		DrawExtendGraph(plusPosx, drawY,  drawX, plusPosy, _weaponHandle, TRUE);
+	}
 #ifdef _DEBUG
 	// “–‚½‚è”»’è‚ð•\Ž¦
 	_weaponCollision.Draw(0x00ff00, false);
