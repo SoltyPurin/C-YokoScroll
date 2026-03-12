@@ -23,7 +23,6 @@ void Enemy::Update() {
 
 	Gravity(_deltaTime);
 	_pos.y -= _verticalY * _oneMinuteMovePixel * _deltaTime;
-    Draw();
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _enemyScale, _enemyScale);
 }
 

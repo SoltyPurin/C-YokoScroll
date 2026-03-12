@@ -7,16 +7,17 @@
 #include <sstream>
 #include "ThrowAxe.h"
 #include "ThrowKnife.h"
+#include "VerticalMoveFloor.h"
 #include <vector>
 
 int _backGroundHandler = 0;
 namespace
 {
-	constexpr float MAP_WIDTH = 5000.0f;	 // マップ全体の幅
+	constexpr float MAP_WIDTH = 10000.0f;	 // マップ全体の幅
 	constexpr float MAP_HEIGHT = 1080.0f;	 // マップ全体の高さ
 	constexpr float SCREEN_WIDTH = 1920.0f;	 // スクリーンの幅
 	constexpr float SCREEN_HEIGHT = 1080.0f; // スクリーンの高さ
-	constexpr int CHIP_SIZE = 64;
+	constexpr float CHIP_SIZE = 64;
 
 	
 	constexpr float kChipScale = 1.5f; 	// マップチップ拡大率
@@ -63,6 +64,8 @@ Stage::Stage(Player* player) :
 Stage::~Stage() {
 	DeleteGraph(_backGroundHandler);
 	DeleteGraph(_mapChipHandle);
+	DeleteGraph(_axeHandle);
+	DeleteGraph(_knifeHandle);
 }
 
 void Stage::LoadMap() {
@@ -87,6 +90,12 @@ void Stage::LoadMap() {
 				CHIP_DATA[y][x] = 0; // マップ上は空気に戻す
 			}
 
+			//移動床を生成
+			if (CHIP_DATA[y][x] == 8) {//8番を移動床とする
+				SetMoveFloor(x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale);
+				CHIP_DATA[y][x] = 0;
+			}
+
 
 			x++;
 		}
@@ -94,42 +103,48 @@ void Stage::LoadMap() {
 	}
 }
 
+void Stage::SetMoveFloor(float x, float y) {
+	VerticalMoveFloor* newFloor = new VerticalMoveFloor(this);
+	_moveFloors.push_back(newFloor);
+	newFloor->SetPosition(x, y);
+}
+
 void Stage::SpawnEnemy(int enIndex,float x,float y) {
 	Enemy* newEnemy = new Enemy;
 	_enemys.push_back(newEnemy);
-		newEnemy->SetPosition(x, y);
-		newEnemy->SetStagePointer(this);
-		//printfDx("敵を生成");
+	newEnemy->SetPosition(x, y);
+	newEnemy->SetStagePointer(this);
 
 }
 void Stage::Update() {
 	DrawBackGround();
 	DrawMapChip();
-	UpdateAxe();
-	UpdateKnife();
-	DrawCurrentWeapon();
-	DetectPlayerToEnemyCollision();
-	printfDx("現在の敵の数: %d\n", (int)_enemys.size());
-	Rect chipRect;
-	if (IsCollision(_player->GetColRect(), chipRect)) {
-		_player->CheckHitMap(chipRect);
+		for (auto i = _moveFloors.begin(); i != _moveFloors.end();i++) {
+		VerticalMoveFloor* floor = *i;
+			floor->Update();
+			floor->DrawFloor(GetScrollX(),GetScrollY());
 	}
+
+	DetectPlayerToEnemyCollision();
+	DetectPlayerToMoveFloorCollision();
+	Rect chipRect;
+	_player->CheckHitMap(chipRect);
+
 	for (auto i = _enemys.begin(); i != _enemys.end(); ) {
 		Enemy* enemy = *i;
 		if (enemy) {
-			if (enemy) {
-				enemy->Update();
-			}
-
-			if (IsCollision(enemy->GetColRect(), chipRect)) {
-				enemy->CheckHitMap(chipRect);
-			}
+			enemy->Update();
+			enemy->Draw();
+			enemy->CheckHitMap(chipRect);
 			i++;
 		}
 		else {
 			i = _enemys.erase(i);
 		}
 	}
+	UpdateAxe();
+	UpdateKnife();
+	DrawCurrentWeapon();
 	PlayerFallCheck();
 	if (_isResetting) {
 		ResetGame();
@@ -167,12 +182,24 @@ void Stage::DetectPlayerToEnemyCollision() {
 			bool isPlayerEnemyCollision = enemy->GetColRect().IsCollision(_player->GetColRect());
 			if (isPlayerEnemyCollision) {
 				_isResetting = true;
+				break;
 			}
 			i++;
 		}
 		else {
 			i = _enemys.erase(i);
 		}
+	}
+}
+
+void Stage::DetectPlayerToMoveFloorCollision() {
+	for (auto i = _moveFloors.begin(); i != _moveFloors.end(); i++) { 
+		VerticalMoveFloor* floor = *i;
+			bool isPlayerFloorCollision = floor->GetColRect().IsCollision(_player->GetColRect());
+			if (isPlayerFloorCollision) {
+				_player->CheckObstacleHitMap(floor->GetColRect());
+			}
+
 	}
 }
 void Stage::ResetGame() {
@@ -190,7 +217,11 @@ void Stage::ResetGame() {
 	for (auto enemy : _enemys) {
 		delete enemy;
 	}
+	for (auto floor : _moveFloors) {
+		delete floor;
+	}
 	_enemys.clear();
+	_moveFloors.clear();
 	_player->ResetPosition();
 	LoadMap();
 }

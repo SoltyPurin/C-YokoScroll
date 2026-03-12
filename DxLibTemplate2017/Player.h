@@ -14,6 +14,7 @@ public:
     virtual void Update() override;
     virtual void Draw() override;
     virtual void CheckHitMap(Rect& chipRect) override;
+    void CheckObstacleHitMap(Rect& obstacleRect);
     virtual void ResetPosition() override;
     void Move(float moveValue,bool isRight);
     void SetVY(float vy);

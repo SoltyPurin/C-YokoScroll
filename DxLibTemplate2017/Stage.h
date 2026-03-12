@@ -6,6 +6,7 @@ class Player;
 class Enemy;
 class Axe;
 class ThrowKnife;
+class VerticalMoveFloor;
 class Stage
 {
 public:
@@ -23,17 +24,20 @@ public:
 	void DrawKnife();
 	void UpdateKnife();
 	void DetectPlayerToEnemyCollision();
+	void DetectPlayerToMoveFloorCollision();
 	void DeleteAxe(int index);
 	void DeleteKnife(int index);
 	void ResetGame();
 	void PlayerFallCheck();
 	void DrawCurrentWeapon();
 	void SpawnEnemy(int enIndex, float x, float y);
+	void SetMoveFloor(float x, float y);
 private:
 	Vector2 pos;
 	Vector2 size;
 	Player* _player;
 	std::vector<Enemy*> _enemys;
+	std::vector<VerticalMoveFloor*> _moveFloors;
 	Axe* _axe[16];
 	ThrowKnife* _knife[16];
 	float _groundY = 900;

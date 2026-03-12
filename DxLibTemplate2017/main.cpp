@@ -53,7 +53,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			_isJumping = true;
 		}
 
-		if (Pad::IsTrigger(PAD_INPUT_3)) {
+		if (Pad::IsTrigger(PAD_INPUT_2)) {
 			//•Ší‚ÌØ‚è‘Ö‚¦
 			_player.ChangeWeapon();
 		}

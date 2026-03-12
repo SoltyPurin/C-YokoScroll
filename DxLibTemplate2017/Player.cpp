@@ -36,6 +36,12 @@ void Player::Update() {
 	_pos.x += _move.x * _oneMinuteMovePixel * _deltaTime;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale, _scale);
 	Draw();
+    if (_isGround) {
+        printfDx("ジャンプ可能\n");
+    }
+    else {
+        printfDx("ジャンプ不可能\n");
+    }
 }
 void Player::ChangeWeapon() {
     _weaponIndex++;
@@ -69,7 +75,9 @@ void Player::CheckHitMap(Rect& chipRect)
     // まずは当たってるか
     if (!_stagePointer->IsCollision(_collisionRect, chipRect))
     {
-        _isGround = false;
+        if (!_isGround) {
+            _isGround = false;
+        }
         return;
     }
 
@@ -125,12 +133,58 @@ void Player::CheckHitMap(Rect& chipRect)
     }
 
 }
+void Player::CheckObstacleHitMap(Rect& obstacleRect) {
+    // 当たり矩形
+    //_collisionRect.SetCenter(_pos.x, _pos.y, _scale , _scale);
+    if (!_collisionRect.IsCollision(obstacleRect)) return;
+
+    // めり込み量（左右・上下）
+    float overlapL = _collisionRect.GetRight() - obstacleRect.GetLeft();   // 左へ押す量
+    float overlapR = obstacleRect.GetRight() - _collisionRect.GetLeft(); // 右へ押す量
+    float overlapT = _collisionRect.GetBottom() - obstacleRect.GetTop();    // 上へ押す量
+    float overlapB = obstacleRect.GetBottom() - _collisionRect.GetTop();  // 下へ押す量
+
+    // X/Yそれぞれ最小の押し戻し量
+    float pushX = (overlapL < overlapR) ? overlapL : overlapR;
+    float pushY = (overlapT < overlapB) ? overlapT : overlapB;
+
+    // 中心でどっち側にいるか判定
+    float rcx = (_collisionRect.GetLeft() + _collisionRect.GetRight()) * 0.5f;
+    float rcy = (_collisionRect.GetTop() + _collisionRect.GetBottom()) * 0.5f;
+    float ccx = (obstacleRect.GetLeft() + obstacleRect.GetRight()) * 0.5f;
+    float ccy = (obstacleRect.GetTop() + obstacleRect.GetBottom()) * 0.5f;
+
+    // 重要：小さい軸だけ解決（壁に当たったのに縦へ押し戻す…を防ぐ）
+    if (pushX < pushY)
+    {
+        // 横解決
+        if (rcx < ccx)
+            _pos.x -= pushX; // チップの左側にいる → 左へ
+        else
+            _pos.x += pushX; // チップの右側にいる → 右へ
+
+        // 横衝突だけでは地面判定は変えない（降りられない原因になりやすい）
+    }
+    else
+    {
+        // 縦解決
+        if (rcy < ccy)
+        {
+            // 上から乗った（着地）
+            _pos.y -= pushY;
+            if (_verticalY <= 0) {
+                _verticalY = 0.0f;
+                _isGround = true;
+            }
+        }
+    }
+}
 
 ThrowKnife* Player::CreateKnife() {
     if (_weaponIndex != static_cast<int>(WeaponKinds::UseKnife)) {
         return nullptr;
     }
-    if (Pad::IsTrigger(PAD_INPUT_2)) {
+    if (Pad::IsTrigger(PAD_INPUT_3)) {
         ThrowKnife* knife = new ThrowKnife();
         knife->SetInfo(_draw, _isRight);
         return knife;
@@ -141,7 +195,7 @@ Axe* Player::CreateAxe() {
     if (_weaponIndex != static_cast<int>(WeaponKinds::UseAxe)) {
         return nullptr;
     }
-    if (Pad::IsTrigger(PAD_INPUT_2)) {
+    if (Pad::IsTrigger(PAD_INPUT_3)) {
         Axe* axe = new Axe();
         axe->SetInfo(_draw, _isRight);
         return axe;
