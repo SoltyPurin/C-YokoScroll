@@ -36,12 +36,6 @@ void Player::Update() {
 	_pos.x += _move.x * _oneMinuteMovePixel * _deltaTime;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale, _scale);
 	Draw();
-    if (_isGround) {
-        printfDx("ジャンプ可能\n");
-    }
-    else {
-        printfDx("ジャンプ不可能\n");
-    }
 }
 void Player::ChangeWeapon() {
     _weaponIndex++;
