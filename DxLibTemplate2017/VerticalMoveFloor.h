@@ -28,5 +28,27 @@ private:
 	Stage* _stagePointer;
 
 	Rect _collisionRect;
+
+	//上昇のフラグ、1が上昇、-1が下降
+	int _upperFlagValue;
+
+	//一秒間に動くピクセル数
+	float _oneMinuteMovePixel = 100;
+
+	//速度
+	float _floorMoveSpeed = 1;
+
+	//最初の地点からどれだけ移動するか
+	float _moveRange =100;
+
+	float _upperLimit;
+
+	float _downerLimit;
+
+	//時間
+	float _deltaTime = 0;
+	//最初の時間
+	float _prevTime = 0;
+
 };
 
