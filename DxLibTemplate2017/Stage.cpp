@@ -9,12 +9,13 @@
 #include "ThrowKnife.h"
 #include "VerticalMoveFloor.h"
 #include <vector>
+#include "Spring.h"
 
 int _backGroundHandler = 0;
 namespace
 {
 	constexpr float MAP_WIDTH = 10000.0f;	 // マップ全体の幅
-	constexpr float MAP_HEIGHT = 1080.0f;	 // マップ全体の高さ
+	constexpr float MAP_HEIGHT = 2080.0f;	 // マップ全体の高さ
 	constexpr float SCREEN_WIDTH = 1920.0f;	 // スクリーンの幅
 	constexpr float SCREEN_HEIGHT = 1080.0f; // スクリーンの高さ
 	constexpr float CHIP_SIZE = 64;
@@ -86,13 +87,29 @@ void Stage::LoadMap() {
 			// 文字列をint型に変換してm_chipDataに追加する
 			CHIP_DATA[y][x] = std::stoi(field);
 			if (CHIP_DATA[y][x] == 5) { // 5番を敵配置チップとする
-				SpawnEnemy(0, x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale); // 敵を生成
-				CHIP_DATA[y][x] = 0; // マップ上は空気に戻す
+				// チップの左上座標を計算
+				float leftX = x * CHIP_SIZE * kChipScale;
+
+				// 敵のサイズ（99）の半分を足して、中心座標を計算する
+				float centerX = leftX + (CHIP_SIZE * kChipScale * 0.5f);
+
+				float topY = y * CHIP_SIZE * kChipScale; // マップチップの上の端の座標
+
+				// topY から「敵のサイズの半分」だけ引く（＝上にずらす）
+				float adjustedY = topY - (kChipScale * 0.5f);
+
+				SpawnEnemy(0, centerX, y/* * CHIP_SIZE * kChipScale*/);
+				CHIP_DATA[y][x] = 0;
 			}
 
 			//移動床を生成
 			if (CHIP_DATA[y][x] == 8) {//8番を移動床とする
 				SetMoveFloor(x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale);
+				CHIP_DATA[y][x] = 0;
+			}
+
+			if (CHIP_DATA[y][x] == 9) {//9番を非発動バネとする
+				SetSpring(x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale);
 				CHIP_DATA[y][x] = 0;
 			}
 
@@ -103,6 +120,11 @@ void Stage::LoadMap() {
 	}
 }
 
+void Stage::SetSpring(float x, float y) {
+	Spring* newSpring = new Spring(this);
+	_springs.push_back(newSpring);
+	newSpring->SetPosition(x, y);
+}
 void Stage::SetMoveFloor(float x, float y) {
 	VerticalMoveFloor* newFloor = new VerticalMoveFloor(this);
 	_moveFloors.push_back(newFloor);
@@ -123,10 +145,15 @@ void Stage::Update() {
 		VerticalMoveFloor* floor = *i;
 			floor->Update();
 			floor->DrawFloor(GetScrollX(),GetScrollY());
-	}
+		}
+		for (auto i = _springs.begin(); i != _springs.end(); i++) {
+			Spring* spring = *i;
+			spring->Update();
+			spring->DrawSpring(GetScrollX(), GetScrollY());
+		}
 
 	DetectPlayerToEnemyCollision();
-	DetectPlayerToMoveFloorCollision();
+	DetectPlayerToObstacleCollision();
 	Rect chipRect;
 	_player->CheckHitMap(chipRect);
 
@@ -134,8 +161,11 @@ void Stage::Update() {
 		Enemy* enemy = *i;
 		if (enemy) {
 			enemy->Update();
+			Rect enemyChipRect;
+			if (IsCollision(enemy->GetColRect(), enemyChipRect)) {
+				enemy->CheckHitMap(enemyChipRect); // 当たっている時だけ押し戻しを実行
+			}
 			enemy->Draw();
-			enemy->CheckHitMap(chipRect);
 			i++;
 		}
 		else {
@@ -191,15 +221,23 @@ void Stage::DetectPlayerToEnemyCollision() {
 		}
 	}
 }
-
-void Stage::DetectPlayerToMoveFloorCollision() {
+void Stage::DetectPlayerToObstacleCollision() {
 	for (auto i = _moveFloors.begin(); i != _moveFloors.end(); i++) { 
 		VerticalMoveFloor* floor = *i;
 			bool isPlayerFloorCollision = floor->GetColRect().IsCollision(_player->GetColRect());
 			if (isPlayerFloorCollision) {
-				_player->CheckObstacleHitMap(floor->GetColRect());
+				_player->CheckObstacleHitMap(floor->GetColRect(),false);
 			}
 
+	}
+
+	for (auto i = _springs.begin(); i != _springs.end(); i++) {
+		Spring* spring = *i;
+		bool isPlayerFloorCollision = spring->GetColRect().IsCollision(_player->GetColRect());
+		if (isPlayerFloorCollision) {
+			_player->CheckObstacleHitMap(spring->GetColRect(), true);
+			spring->ActiveSpring();
+		}
 	}
 }
 void Stage::ResetGame() {

@@ -10,8 +10,7 @@
 
 
 
-Player::Player():
-jump(nullptr)
+Player::Player()
 {
     _weaponIndex = 0;
     _prevTime = GetNowCount();
@@ -127,7 +126,7 @@ void Player::CheckHitMap(Rect& chipRect)
     }
 
 }
-void Player::CheckObstacleHitMap(Rect& obstacleRect) {
+void Player::CheckObstacleHitMap(Rect& obstacleRect,bool isSpring) {
     // “–‚½‚è‹éŒ`
     //_collisionRect.SetCenter(_pos.x, _pos.y, _scale , _scale);
     if (!_collisionRect.IsCollision(obstacleRect)) return;
@@ -170,6 +169,9 @@ void Player::CheckObstacleHitMap(Rect& obstacleRect) {
                 _verticalY = 0.0f;
                 _isGround = true;
             }
+            if (isSpring) {
+                _jumpAddres->SpringJumpProtocol(*this);
+            }
         }
     }
 }
@@ -208,14 +210,13 @@ Vector2 Player::GetPos() {
 	return _pos;
 }
 
-void Player::JumpProtocol(Jump& jump) {
+void Player::JumpProtocol() {
 	if (!_isGround) {
 		return;
 	}
-	jump.JumpProtocol(*this);
+    _jumpAddres->JumpProtocol(*this);
 	_isGround = false;
 }
-
 void Player::ResetPosition() {
     _pos.x = _initX;
     _pos.y = _initY;

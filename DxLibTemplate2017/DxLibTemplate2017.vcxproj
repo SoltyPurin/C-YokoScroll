@@ -127,6 +127,7 @@
     <ClCompile Include="Pad.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rect.cpp" />
+    <ClCompile Include="Spring.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="ThrowAxe.cpp" />
     <ClCompile Include="ThrowKnife.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="Pad.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rect.h" />
+    <ClInclude Include="Spring.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="ThrowAxe.h" />
     <ClInclude Include="ThrowKnife.h" />

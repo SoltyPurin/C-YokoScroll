@@ -4,7 +4,7 @@
 
 
 
-Enemy::Enemy() {
+Enemy::Enemy(){
     _prevTime = GetNowCount();
 	_imageHandle = LoadGraph("Image/RedEnemy.png");
     _initX = _enInitX;
@@ -23,6 +23,7 @@ void Enemy::Update() {
 
 	Gravity(_deltaTime);
 	_pos.y -= _verticalY * _oneMinuteMovePixel * _deltaTime;
+    //_collisionRect.SetCenter(_pos.x, _pos.y, _scale, _scale);
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _enemyScale, _enemyScale);
 }
 
@@ -41,6 +42,7 @@ void Enemy::Draw() {
 void Enemy::SetPosition(float x, float y) {
     _initX = x;
     _initY = y;
+    _verticalY = 0;
     ResetPosition();
 }
 

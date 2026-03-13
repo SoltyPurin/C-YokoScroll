@@ -14,13 +14,14 @@ public:
     virtual void Update() override;
     virtual void Draw() override;
     virtual void CheckHitMap(Rect& chipRect) override;
-    void CheckObstacleHitMap(Rect& obstacleRect);
+    void CheckObstacleHitMap(Rect& obstacleRect,bool isSpring);
     virtual void ResetPosition() override;
     void Move(float moveValue,bool isRight);
     void SetVY(float vy);
     float ReturnVY();
     Vector2 GetPos();
-    void JumpProtocol(Jump& jump);
+    void JumpProtocol();
+    void SetJumpAddres(Jump* jump) { _jumpAddres = jump; }
     void ChangeWeapon();
     Axe* CreateAxe();
     ThrowKnife* CreateKnife();
@@ -32,7 +33,7 @@ private:
         Max
     };
     Vector2 _move;
-    Jump* jump;
+    Jump* _jumpAddres;
     int _weaponIndex;
     int _weaponCount = 0;
     bool _isGround = false;

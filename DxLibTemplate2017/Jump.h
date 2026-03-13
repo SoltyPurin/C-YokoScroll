@@ -4,5 +4,6 @@ class Jump
 {
 public:
 	void JumpProtocol(Player& player);
+	void SpringJumpProtocol(Player& player);
 };
 

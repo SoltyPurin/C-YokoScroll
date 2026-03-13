@@ -28,6 +28,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Jump _jump;
 	Stage _stage(&_player);
 	_player.SetStagePointer(&_stage);
+	_player.SetJumpAddres(&_jump);
 	while (ProcessMessage() == 0)
 	{
 		GetHitKeyStateAll(keyState);
@@ -49,7 +50,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		if (Pad::IsPress(PAD_INPUT_1) || keyState[KEY_INPUT_SPACE])
 		{
-			_player.JumpProtocol(_jump);
+			_player.JumpProtocol();
 			_isJumping = true;
 		}
 
