@@ -63,6 +63,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		ClearDrawScreen();//裏画面消す
 		_stage.Update();
 		_player.Update();
+		_player.Draw();
 		//_obstacle.Update();
 		ScreenFlip();//裏画面を表画面にコピー
 	}

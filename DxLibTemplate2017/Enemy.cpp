@@ -23,18 +23,37 @@ void Enemy::Update() {
 
 	Gravity(_deltaTime);
 	_pos.y -= _verticalY * _oneMinuteMovePixel * _deltaTime;
-    //_collisionRect.SetCenter(_pos.x, _pos.y, _scale, _scale);
-	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _enemyScale, _enemyScale);
+    _collisionRect.SetCenter(
+        _pos.x + _scale * 0.5f,
+        _pos.y + _scale * 0.5f,
+        _scale,
+        _scale
+    );
+    //_centerX = _pos.x  + _scale * 0.5f;
+    //_centerY = _pos.y +  _scale * 0.5f;
+    //_collisionRect.SetCenter(_centerX , _centerY , _scale, _scale);
 }
 
 void Enemy::Draw() {
-	_draw.x = _pos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
-	_draw.y = _pos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
+    int scrollX = _stagePointer->GetScrollX();
+    int scrollY = _stagePointer->GetScrollY();
+    int drawX = static_cast<int>(_pos.x - _stagePointer->GetScrollX());
+    int drawY = static_cast<int>(_pos.y - _stagePointer->GetScrollY());
+    int sizeX = drawX + _scale;
+    int sizeY = drawY + _scale;
+    DrawExtendGraph(drawX, drawY, sizeX, sizeY, _imageHandle, TRUE);
 
-	DrawExtendGraph(_draw.x, _draw.y, _draw.x + _enemyScale, _draw.y + _enemyScale, _imageHandle, true);
 #ifdef _DEBUG
-	// 当たり判定を表示
-	_collisionRect.Draw(0x0000ff, false);
+    DrawBoxAA(
+        _collisionRect.GetLeft() - scrollX,
+        _collisionRect.GetTop() - scrollY,
+        _collisionRect.GetRight() - scrollX,
+        _collisionRect.GetBottom() - scrollY,
+        0x0000ff,
+        false
+    );
+	//// 当たり判定を表示
+	//_collisionRect.Draw(0x0000ff, false);
 #endif
 
 }
@@ -47,6 +66,14 @@ void Enemy::SetPosition(float x, float y) {
 }
 
 void Enemy::CheckHitMap(Rect& chipRect) {
+
+    _collisionRect.SetCenter(
+        _pos.x + _scale * 0.5f,
+        _pos.y + _scale * 0.5f,
+        _scale,
+        _scale
+    );
+  /*  _collisionRect.SetCenter(_centerX, _centerY, _scale, _scale);*/
 
     // めり込み量（左右・上下）
     float overlapL = _collisionRect.GetRight() - chipRect.GetLeft();   // 左へ押す量
@@ -87,5 +114,16 @@ void Enemy::CheckHitMap(Rect& chipRect) {
             }
         }
     }
+    _collisionRect.SetCenter(
+        _pos.x + _scale * 0.5f,
+        _pos.y + _scale * 0.5f,
+        _scale,
+        _scale
+    );
+    //_collisionRect.SetCenter(_centerX, _centerY, _scale, _scale);
+
+    //_collisionRect.SetCenter(_pos.x + _scale * 0.5f, _pos.y + _scale * 0.5f, _scale, _scale);
+
+    //_collisionRect.SetCenter(_pos.x - _stagePointer->GetScrollX() - _scale * 0.5f, _pos.y - _stagePointer->GetScrollY() - _scale * 0.5f, _scale, _scale);
 
 }

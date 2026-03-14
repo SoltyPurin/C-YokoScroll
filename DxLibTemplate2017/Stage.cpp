@@ -25,7 +25,7 @@ namespace
 
 	// チップを置く数
 	constexpr int CHIP_NUM_X = MAP_WIDTH / CHIP_SIZE;
-	constexpr int CHIP_NUM_Y = SCREEN_HEIGHT / CHIP_SIZE;
+	constexpr int CHIP_NUM_Y = MAP_HEIGHT / CHIP_SIZE;
 
 	// マップチップの配列情報
 	int CHIP_DATA[CHIP_NUM_Y][CHIP_NUM_X];
@@ -87,18 +87,15 @@ void Stage::LoadMap() {
 			// 文字列をint型に変換してm_chipDataに追加する
 			CHIP_DATA[y][x] = std::stoi(field);
 			if (CHIP_DATA[y][x] == 5) { // 5番を敵配置チップとする
-				// チップの左上座標を計算
-				float leftX = x * CHIP_SIZE * kChipScale;
+				//// チップの左上座標を計算
+				//float leftX = x * CHIP_SIZE * kChipScale;
+				//float centerX = leftX + (CHIP_SIZE * kChipScale * 0.5f);
+				//float topY = y * CHIP_SIZE * kChipScale;
 
-				// 敵のサイズ（99）の半分を足して、中心座標を計算する
-				float centerX = leftX + (CHIP_SIZE * kChipScale * 0.5f);
-
-				float topY = y * CHIP_SIZE * kChipScale; // マップチップの上の端の座標
-
-				// topY から「敵のサイズの半分」だけ引く（＝上にずらす）
-				float adjustedY = topY - (kChipScale * 0.5f);
-
-				SpawnEnemy(0, centerX, y/* * CHIP_SIZE * kChipScale*/);
+				//SpawnEnemy(0, centerX, topY);
+				float spawnX = x * CHIP_SIZE * kChipScale;
+				float spawnY = y * CHIP_SIZE * kChipScale;
+				SpawnEnemy(0, spawnX, spawnY);
 				CHIP_DATA[y][x] = 0;
 			}
 
@@ -152,7 +149,6 @@ void Stage::Update() {
 			spring->DrawSpring(GetScrollX(), GetScrollY());
 		}
 
-	DetectPlayerToEnemyCollision();
 	DetectPlayerToObstacleCollision();
 	Rect chipRect;
 	_player->CheckHitMap(chipRect);
@@ -161,9 +157,10 @@ void Stage::Update() {
 		Enemy* enemy = *i;
 		if (enemy) {
 			enemy->Update();
-			Rect enemyChipRect;
-			if (IsCollision(enemy->GetColRect(), enemyChipRect)) {
-				enemy->CheckHitMap(enemyChipRect); // 当たっている時だけ押し戻しを実行
+			Rect enemyRect = enemy->GetColRect();
+			Rect chipRect;
+			if (IsCollision(enemyRect, chipRect)) {
+				enemy->CheckHitMap(chipRect);
 			}
 			enemy->Draw();
 			i++;
@@ -172,6 +169,8 @@ void Stage::Update() {
 			i = _enemys.erase(i);
 		}
 	}
+	DetectPlayerToEnemyCollision();
+
 	UpdateAxe();
 	UpdateKnife();
 	DrawCurrentWeapon();
@@ -258,8 +257,12 @@ void Stage::ResetGame() {
 	for (auto floor : _moveFloors) {
 		delete floor;
 	}
+	for (auto spring : _springs) {
+		delete spring;
+	}
 	_enemys.clear();
 	_moveFloors.clear();
+	_springs.clear();
 	_player->ResetPosition();
 	LoadMap();
 }

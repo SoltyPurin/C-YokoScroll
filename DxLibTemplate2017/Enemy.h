@@ -19,5 +19,7 @@ private:
 	float _enInitY = 0;
 	float _enVerticalY = 0;
 	float _enGravity = 0.1f;
+	float _centerX;
+	float _centerY;
 };
 
