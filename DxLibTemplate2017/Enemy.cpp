@@ -44,16 +44,8 @@ void Enemy::Draw() {
     DrawExtendGraph(drawX, drawY, sizeX, sizeY, _imageHandle, TRUE);
 
 #ifdef _DEBUG
-    DrawBoxAA(
-        _collisionRect.GetLeft() - scrollX,
-        _collisionRect.GetTop() - scrollY,
-        _collisionRect.GetRight() - scrollX,
-        _collisionRect.GetBottom() - scrollY,
-        0x0000ff,
-        false
-    );
 	//// “–‚½‚è”»’è‚ð•\Ž¦
-	//_collisionRect.Draw(0x0000ff, false);
+	_collisionRect.Draw(0x0000ff, false);
 #endif
 
 }

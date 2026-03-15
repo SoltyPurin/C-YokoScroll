@@ -173,6 +173,9 @@ void Stage::Update() {
 
 	UpdateAxe();
 	UpdateKnife();
+
+	DrawAxe();
+	DrawKnife();
 	DrawCurrentWeapon();
 	PlayerFallCheck();
 	if (_isResetting) {

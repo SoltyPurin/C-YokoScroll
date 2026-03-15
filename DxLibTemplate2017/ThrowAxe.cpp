@@ -21,7 +21,6 @@ void Axe::Update() {
 	_weaponPosition.y -= _axeVerticalY * _oneMinuteMovePixel * _deltaTime;
 	_weaponCollision.SetCenter(_weaponPosition.x, _weaponPosition.y, _weaponScale, _weaponScale);
 	Gravity();
-	DrawWeapon();
 }
 void Axe::SetInfo(const Vector2& playerPos, bool isRight) {
 	_weaponPosition = playerPos;

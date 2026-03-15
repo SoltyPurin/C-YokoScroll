@@ -14,7 +14,6 @@ public:
 	virtual void CheckHitMap(Rect& chipRect) override;
 	void SetPosition(float x, float y);
 private:
-	float _enemyScale = 99;
 	float _enInitX = 220;
 	float _enInitY = 0;
 	float _enVerticalY = 0;

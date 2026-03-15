@@ -15,7 +15,6 @@ void ThrowKnife::Update(){
 	Weapons::Update();
 	_weaponPosition += _move * _oneMinuteMovePixel * _deltaTime;
 	_weaponCollision.SetCenter(_weaponPosition.x, _weaponPosition.y, _weaponScale, _weaponScale);
-	DrawWeapon();
 }
 
 void ThrowKnife::SetInfo(const Vector2& playerPos, bool isRight) {
