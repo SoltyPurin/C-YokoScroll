@@ -4,21 +4,31 @@
 #include "Character.h"
 
 class Rect;
-class Enemy : public Character
+class Enemy
 {
 public:
-	Enemy();
-	virtual ~Enemy();
-	virtual void Update()override;
-	virtual void Draw()override;
-	virtual void CheckHitMap(Rect& chipRect) override;
-	void SetPosition(float x, float y);
+	Enemy(Stage* stage,float x,float y);
+	~Enemy();
+	void SetStagePointer(Stage* pStage) { _stagePointer = pStage; }
+	void Update();
+	void Draw(float scrollX, float scrollY);
+	void CheckHitMap(Rect& chipRect);
+	Rect GetColRect() const { return _collisionRect; }
+	Vector2 GetPos() const { return _currentPos; }
+	void ResetPosition();
+	void Gravity(float deltaTime);
+
 private:
-	float _enInitX = 220;
-	float _enInitY = 0;
-	float _enVerticalY = 0;
-	float _enGravity = 0.1f;
-	float _centerX;
-	float _centerY;
+	int _imageHandle;
+	int _scale = 99;
+	float _prevTime;
+	float _deltaTime;
+	float _gravity = 10.5f;
+	float _verticalY;
+	float _oneMinuteMovePixel = 100.0f;
+	Stage* _stagePointer;
+	Vector2 _currentPos;
+	Vector2 _initPos;
+	Rect _collisionRect;
 };
 

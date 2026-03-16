@@ -10,7 +10,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	Character();
+	Character(float x,float y);
 	/// <summary>
 	/// 終了時の処理
 	/// </summary>
@@ -72,9 +72,9 @@ protected:
 	//重力
 	float _gravity = 10.5f;
 	//最初のX座標
-	float _initX = 320;
+	float _initX;
 	//最初のy座標
-	float _initY = 600;
+	float _initY;
 	//1秒あたりなんピクセル進むか
 	float _oneMinuteMovePixel = 100.0f; 
 	//時間

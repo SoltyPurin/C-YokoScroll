@@ -5,10 +5,10 @@
 #include "DxLib.h"
 
 Spring::Spring(Stage* stagePointer):
-_isSpringActive(false){
+_isSpringActive(false),
+_stagePointer(stagePointer){
 	_springDeActiveHandle = LoadGraph("Image/SpringDeActive.png");
 	_springActiveHandle = LoadGraph("Image/SpringActive.png");
-	_stagePointer = stagePointer;
 	_viewSpringHandle = _springDeActiveHandle;
 }
 

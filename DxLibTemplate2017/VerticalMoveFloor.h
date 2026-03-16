@@ -12,7 +12,7 @@ public:
 	void Update();
 	void DrawFloor(float scrrolX, float scrrolY);
 	void SetPosition(float x, float y);
-	virtual void SetStagePointer(Stage* pStage) { _stagePointer = pStage; }
+	void SetStagePointer(Stage* pStage) { _stagePointer = pStage; }
 	Rect GetColRect() const { return _collisionRect; }
 	Vector2 GetPos() const { return _currentPos; }
 

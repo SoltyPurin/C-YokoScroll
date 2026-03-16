@@ -10,7 +10,7 @@
 
 
 
-Player::Player()
+Player::Player(float x,float y):Character(x,y)
 {
     _weaponIndex = 0;
     _prevTime = GetNowCount();
@@ -156,7 +156,6 @@ void Player::CheckObstacleHitMap(Rect& obstacleRect,bool isSpring) {
         else
             _pos.x += pushX; // チップの右側にいる → 右へ
 
-        // 横衝突だけでは地面判定は変えない（降りられない原因になりやすい）
     }
     else
     {

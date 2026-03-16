@@ -9,8 +9,7 @@ namespace
 	constexpr float GRAVITY = 0.5f;
 }
 
-Axe::Axe() : Weapons()
-{
+Axe::Axe() : Weapons(){
 	_move.x = AXE_SPEED;
 	_weaponHandle = LoadGraph("Image/Axe.png");
 }
@@ -19,7 +18,6 @@ void Axe::Update() {
 	Weapons::Update();
 	_weaponPosition += _move * _oneMinuteMovePixel * _deltaTime;
 	_weaponPosition.y -= _axeVerticalY * _oneMinuteMovePixel * _deltaTime;
-	_weaponCollision.SetCenter(_weaponPosition.x, _weaponPosition.y, _weaponScale, _weaponScale);
 	Gravity();
 }
 void Axe::SetInfo(const Vector2& playerPos, bool isRight) {

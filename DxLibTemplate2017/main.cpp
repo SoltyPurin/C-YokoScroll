@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 
 	SetOutApplicationLogValidFlag(FALSE);//Log.txtを生成しないように設定
-	ChangeWindowMode(TRUE);//非全画面にセット
+	ChangeWindowMode(FALSE);//非全画面にセット
 	SetGraphMode(1920, 1080, 32);//画面サイズ指定
 	SetBackgroundColor(0, 0, 0, 1);
 	if (DxLib_Init() == 1) { return -1; }//初期化に失敗時にエラーを吐かせて終了
@@ -24,10 +24,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	bool _isRight = true;
 	float _moveValue = 5;
 
-	Player _player;
+	Player _player(320,600);
 	Jump _jump;
 	Stage _stage(&_player);
-	_player.SetStagePointer(&_stage);
 	_player.SetJumpAddres(&_jump);
 	while (ProcessMessage() == 0)
 	{
@@ -62,8 +61,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		SetDrawScreen(DX_SCREEN_BACK);//描画先を裏画面に
 		ClearDrawScreen();//裏画面消す
 		_stage.Update();
-		_player.Update();
-		_player.Draw();
 		//_obstacle.Update();
 		ScreenFlip();//裏画面を表画面にコピー
 	}

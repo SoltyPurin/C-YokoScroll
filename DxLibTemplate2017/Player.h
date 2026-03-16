@@ -9,7 +9,7 @@ class Axe;
 class ThrowKnife;
 class Player : public Character {
 public:
-    Player();
+    Player(float x,float y);
     virtual ~Player();
     virtual void Update() override;
     virtual void Draw() override;

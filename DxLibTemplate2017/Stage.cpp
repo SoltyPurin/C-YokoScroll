@@ -88,14 +88,8 @@ void Stage::LoadMap() {
 			CHIP_DATA[y][x] = std::stoi(field);
 			if (CHIP_DATA[y][x] == 5) { // 5”Ô‚ð“G”z’uƒ`ƒbƒv‚Æ‚·‚é
 				//// ƒ`ƒbƒv‚Ì¶ãÀ•W‚ðŒvŽZ
-				//float leftX = x * CHIP_SIZE * kChipScale;
-				//float centerX = leftX + (CHIP_SIZE * kChipScale * 0.5f);
-				//float topY = y * CHIP_SIZE * kChipScale;
 
-				//SpawnEnemy(0, centerX, topY);
-				float spawnX = x * CHIP_SIZE * kChipScale;
-				float spawnY = y * CHIP_SIZE * kChipScale;
-				SpawnEnemy(0, spawnX, spawnY);
+				SpawnEnemy(0, x * CHIP_SIZE*kChipScale, y * CHIP_SIZE * kChipScale);
 				CHIP_DATA[y][x] = 0;
 			}
 
@@ -129,53 +123,88 @@ void Stage::SetMoveFloor(float x, float y) {
 }
 
 void Stage::SpawnEnemy(int enIndex,float x,float y) {
-	Enemy* newEnemy = new Enemy;
+	Enemy* newEnemy = new Enemy(this,x,y);
 	_enemys.push_back(newEnemy);
-	newEnemy->SetPosition(x, y);
-	newEnemy->SetStagePointer(this);
 
 }
 void Stage::Update() {
 	DrawBackGround();
 	DrawMapChip();
+	//Update‚É‚æ‚éŒvŽZˆ—
 		for (auto i = _moveFloors.begin(); i != _moveFloors.end();i++) {
 		VerticalMoveFloor* floor = *i;
 			floor->Update();
-			floor->DrawFloor(GetScrollX(),GetScrollY());
 		}
 		for (auto i = _springs.begin(); i != _springs.end(); i++) {
 			Spring* spring = *i;
 			spring->Update();
-			spring->DrawSpring(GetScrollX(), GetScrollY());
 		}
+		//“G‚ÌUpdate
+		for (auto i = _enemys.begin(); i != _enemys.end(); ) {
+			Enemy* enemy = *i;
+			if (enemy) {
+				enemy->Update();
+				i++;
+			}
+			else {
+				i = _enemys.erase(i);
+			}
+		}
+		Rect chipRect;
+		_player->CheckHitMap(chipRect);
+		_player->Update();
+		//“G‚Ì“–‚½‚è”»’è‚Ìˆ—
+		for (auto i = _enemys.begin(); i != _enemys.end(); ) {
+			Enemy* enemy = *i;
+			if (enemy) {
+				//“G–{‘Ì‚Ì“–‚½‚è”»’è‚Å‚Í‚È‚­A‰¼‚Ì¢ŠEÀ•W‚ð¶¬‚µA“G‚ÌÀ•W‚ð¢ŠEÀ•W‚É•ÏŠ·‚µ“n‚·
+				Rect worldEnemyRect;
+				worldEnemyRect.m_left = enemy->GetColRect().GetLeft() + GetScrollX();
+				worldEnemyRect.m_right = enemy->GetColRect().GetRight() + GetScrollX();
+				worldEnemyRect.m_top = enemy->GetColRect().GetTop() + GetScrollY();
+				worldEnemyRect.m_bottom = enemy->GetColRect().GetBottom() + GetScrollY();
+				Rect tempChipRect;
+				if (IsCollision(worldEnemyRect, tempChipRect)) {
+					enemy->CheckHitMap(tempChipRect);
+				}
 
+				i++;
+			}
+			else {
+				i = _enemys.erase(i);
+			}
+		}
 	DetectPlayerToObstacleCollision();
-	Rect chipRect;
-	_player->CheckHitMap(chipRect);
+	DetectPlayerToEnemyCollision();
 
+	UpdateAxe();
+	UpdateKnife();
+
+	//“G‚Ì•`‰æˆ—
 	for (auto i = _enemys.begin(); i != _enemys.end(); ) {
 		Enemy* enemy = *i;
 		if (enemy) {
-			enemy->Update();
-			Rect enemyRect = enemy->GetColRect();
-			Rect chipRect;
-			if (IsCollision(enemyRect, chipRect)) {
-				enemy->CheckHitMap(chipRect);
-			}
-			enemy->Draw();
+			enemy->Draw(GetScrollX(), GetScrollY());
 			i++;
 		}
 		else {
 			i = _enemys.erase(i);
 		}
 	}
-	DetectPlayerToEnemyCollision();
-
-	UpdateAxe();
-	UpdateKnife();
+	for (auto i = _moveFloors.begin(); i != _moveFloors.end(); i++) {
+		VerticalMoveFloor* floor = *i;
+		floor->DrawFloor(GetScrollX(), GetScrollY());
+	}
+	for (auto i = _springs.begin(); i != _springs.end(); i++) {
+		Spring* spring = *i;
+		spring->DrawSpring(GetScrollX(), GetScrollY());
+	}
+	_player->Draw();
 
 	DrawAxe();
 	DrawKnife();
+
+
 	DrawCurrentWeapon();
 	PlayerFallCheck();
 	if (_isResetting) {

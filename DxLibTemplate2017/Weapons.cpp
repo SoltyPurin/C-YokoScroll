@@ -1,9 +1,10 @@
 #include "Weapons.h"
 #include "DxLib.h"
 
-Weapons::Weapons():
+Weapons::Weapons() :
 	_weaponPosition({ 0,0 }),
-	_move({ 0,0 })
+	_move({ 0,0 }),
+	_weaponScale(80)
 {
 	_prevTime = GetNowCount();
 }
@@ -16,6 +17,7 @@ void Weapons::Update() {
 	int currentTime = GetNowCount();
 	_deltaTime = (currentTime - _prevTime) / 1000.0f;
 	_prevTime = currentTime;
+	_weaponCollision.SetCenter(_weaponPosition.x, _weaponPosition.y, _weaponScale, _weaponScale);
 }
 void Weapons::DrawWeapon() {
 	float drawX = _weaponPosition.x - _weaponScale * 0.5f;
