@@ -2,12 +2,14 @@
 #include <vector>
 #include "Vector2.h"
 #include "Rect.h"
+#include "Goal.h"
 class Player;
 class Enemy;
 class Axe;
 class ThrowKnife;
 class VerticalMoveFloor;
 class Spring;
+class Goal;
 class Stage
 {
 public:
@@ -26,6 +28,7 @@ public:
 	void UpdateKnife();
 	void DetectPlayerToEnemyCollision();
 	void DetectPlayerToObstacleCollision();
+	void DetectPlayerToGoalCollision();
 	void DeleteAxe(int index);
 	void DeleteKnife(int index);
 	void ResetGame();
@@ -41,6 +44,7 @@ private:
 	std::vector<Enemy*> _enemys;
 	std::vector<VerticalMoveFloor*> _moveFloors;
 	std::vector<Spring*> _springs;
+	Goal* _goal;
 	Axe* _axe[16];
 	ThrowKnife* _knife[16];
 	float _groundY = 900;

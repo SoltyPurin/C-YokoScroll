@@ -10,6 +10,7 @@
 #include "VerticalMoveFloor.h"
 #include <vector>
 #include "Spring.h"
+#include "Goal.h"
 
 int _backGroundHandler = 0;
 namespace
@@ -48,7 +49,7 @@ Stage::Stage(Player* player) :
 		_knife[i] = nullptr;
 	}
 	pos = { 0,0 };
-	_backGroundHandler = LoadGraph("Image/BackGround.jpg");
+	_backGroundHandler = LoadGraph("Image/BackGround.png");
 	_mapChipHandle = LoadGraph("Image/mapChip.png");
 	_axeHandle = LoadGraph("Image/Axe.png");
 	_knifeHandle = LoadGraph("Image/Knife.png");
@@ -92,6 +93,11 @@ void Stage::LoadMap() {
 				SpawnEnemy(0, x * CHIP_SIZE*kChipScale, y * CHIP_SIZE * kChipScale);
 				CHIP_DATA[y][x] = 0;
 			}
+			if (CHIP_DATA[y][x] == 6) {//6î‘ÇÉSÅ[ÉãÇ∆Ç∑ÇÈ
+				_goal = new Goal(this,x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale);
+				CHIP_DATA[y][x] = 0;
+			}
+
 
 			//à⁄ìÆè∞Çê∂ê¨
 			if (CHIP_DATA[y][x] == 8) {//8î‘Çà⁄ìÆè∞Ç∆Ç∑ÇÈ
@@ -103,6 +109,7 @@ void Stage::LoadMap() {
 				SetSpring(x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale);
 				CHIP_DATA[y][x] = 0;
 			}
+
 
 
 			x++;
@@ -176,9 +183,11 @@ void Stage::Update() {
 		}
 	DetectPlayerToObstacleCollision();
 	DetectPlayerToEnemyCollision();
+	DetectPlayerToGoalCollision();
 
 	UpdateAxe();
 	UpdateKnife();
+	_goal->Update();
 
 	//ìGÇÃï`âÊèàóù
 	for (auto i = _enemys.begin(); i != _enemys.end(); ) {
@@ -203,7 +212,7 @@ void Stage::Update() {
 
 	DrawAxe();
 	DrawKnife();
-
+	_goal->DrawGoal(GetScrollX(), GetScrollY());
 
 	DrawCurrentWeapon();
 	PlayerFallCheck();
@@ -235,7 +244,13 @@ void Stage::PlayerFallCheck() {
 		_isResetting = true;
 	}
 }
-
+void Stage::DetectPlayerToGoalCollision() {
+	bool isPlayerGoalCollision = _goal->GetColRect().IsCollision(_player->GetColRect());
+	if (isPlayerGoalCollision) {
+		printfDx("ÉSÅ[Éã");
+		_isResetting = true;
+	}
+}
 void Stage::DetectPlayerToEnemyCollision() {
 	for (auto i = _enemys.begin(); i != _enemys.end();) {
 		Enemy* enemy = *i;
