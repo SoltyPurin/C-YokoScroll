@@ -12,6 +12,7 @@ int _menuHandle;
 typedef enum {
     eScene_Menu,    //メニュー画面
     eScene_Game,    //ゲーム画面
+    eScene_Clear,
 } eScene;
 
 static int Scene = eScene_Menu;    //現在の画面(シーン)
@@ -31,12 +32,17 @@ void UpdateScene() {
 
 //メニュー画面
 void Menu() {
-    DrawString(0, 0, "メニュー画面です。", GetColor(255, 255, 255));
+    DrawGraph(0, 0, _menuHandle, TRUE);
+    DrawString(960, 540, "メニュー画面です。", GetColor(255, 255, 255));
 }
 
 //ゲーム画面のUIなどがあればここ（今回はStage側で描画しているので空でも可）
 void Game() {
-    DrawString(0, 0, "ゲーム画面です。", GetColor(255, 255, 255));
+    DrawString(960, 540, "ゲーム画面です。", GetColor(255, 255, 255));
+}
+
+void Clear() {
+    DrawString(960, 540, "クリア画面です。", GetColor(255, 255, 255));
 }
 
 
@@ -58,6 +64,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     char keyState[256];
 
+    _menuHandle = LoadGraph("Image/Title.jpg");
     Player _player(320, 600);
     Jump _jump;
     Stage _stage(&_player);
