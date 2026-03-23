@@ -1,6 +1,7 @@
 #include "DxLib.h"
 #include "ThrowAxe.h"
 #include "Weapons.h"
+#include "ShareClass.h"
 
 namespace
 {
@@ -16,8 +17,8 @@ Axe::Axe() : Weapons(){
 
 void Axe::Update() {
 	Weapons::Update();
-	_weaponPosition += _move * _oneMinuteMovePixel * _deltaTime;
-	_weaponPosition.y -= _axeVerticalY * _oneMinuteMovePixel * _deltaTime;
+	_weaponPosition += _move * _oneMinuteMovePixel * ShareClass::DeltaTime;
+	_weaponPosition.y -= _axeVerticalY * _oneMinuteMovePixel * ShareClass::DeltaTime;
 	Gravity();
 }
 void Axe::SetInfo(const Vector2& playerPos, bool isRight) {
@@ -32,5 +33,5 @@ void Axe::SetInfo(const Vector2& playerPos, bool isRight) {
 }
 
 void Axe::Gravity() {
-	_axeVerticalY -= GRAVITY * _oneMinuteMovePixel * _deltaTime;
+	_axeVerticalY -= GRAVITY * _oneMinuteMovePixel * ShareClass::DeltaTime;
 }

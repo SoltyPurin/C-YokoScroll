@@ -77,10 +77,6 @@ protected:
 	float _initY;
 	//1秒あたりなんピクセル進むか
 	float _oneMinuteMovePixel = 100.0f; 
-	//時間
-	float _deltaTime = 0;
-	//最初の時間
-	float _prevTime = 0;
 };
 
 

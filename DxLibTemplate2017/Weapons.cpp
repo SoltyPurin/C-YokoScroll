@@ -6,7 +6,6 @@ Weapons::Weapons() :
 	_move({ 0,0 }),
 	_weaponScale(80)
 {
-	_prevTime = GetNowCount();
 }
 
 Weapons::~Weapons() {
@@ -14,9 +13,6 @@ Weapons::~Weapons() {
 }
 
 void Weapons::Update() {
-	int currentTime = GetNowCount();
-	_deltaTime = (currentTime - _prevTime) / 1000.0f;
-	_prevTime = currentTime;
 	_weaponCollision.SetCenter(_weaponPosition.x, _weaponPosition.y, _weaponScale, _weaponScale);
 }
 void Weapons::DrawWeapon() {

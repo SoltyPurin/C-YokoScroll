@@ -1,14 +1,13 @@
 #include "Enemy.h"
 #include <DxLib.h>
 #include "Rect.h"
-
+#include "ShareClass.h"
 
 
 Enemy::Enemy(Stage* stage,float x,float y):
 _stagePointer(stage),
 _initPos(x,y),
 _currentPos(x, y){
-    _prevTime = GetNowCount();
 	_imageHandle = LoadGraph("Image/RedEnemy.png");
     _scale = 99;
     ResetPosition();
@@ -26,12 +25,9 @@ void Enemy::ResetPosition() {
 
 
 void Enemy::Update() {
-    int currentTime = GetNowCount();
-    _deltaTime = (currentTime - _prevTime) / 1000.0f;
-    _prevTime = currentTime;
 
-	Gravity(_deltaTime);
-	_currentPos.y -= _verticalY * _oneMinuteMovePixel * _deltaTime;
+	Gravity(ShareClass::DeltaTime);
+	_currentPos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::DeltaTime;
     float colX = _currentPos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
     float colY = _currentPos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
 

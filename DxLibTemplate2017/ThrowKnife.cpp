@@ -1,6 +1,7 @@
 #include "ThrowKnife.h"
 #include "DxLib.h"
 #include "Weapons.h" 
+#include "ShareClass.h"
 namespace
 {
 	constexpr float Knife_SPEED = 7.0f; // ˆÚ“®‘¬“x
@@ -13,7 +14,7 @@ ThrowKnife::ThrowKnife() : Weapons() {
 }
 void ThrowKnife::Update(){
 	Weapons::Update();
-	_weaponPosition += _move * _oneMinuteMovePixel * _deltaTime;
+	_weaponPosition += _move * _oneMinuteMovePixel * ShareClass::DeltaTime;
 }
 
 void ThrowKnife::SetInfo(const Vector2& playerPos, bool isRight) {

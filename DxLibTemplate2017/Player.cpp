@@ -7,13 +7,13 @@
 #include "ThrowAxe.h"
 #include "ThrowKnife.h"
 #include "Pad.h"
+#include "ShareClass.h"
 
 
 
 Player::Player(float x,float y):Character(x,y)
 {
     _weaponIndex = 0;
-    _prevTime = GetNowCount();
     ResetPosition();
 	_imageHandle = LoadGraph("Image/sample.png");
     _weaponCount = static_cast<int>(WeaponKinds::Max);
@@ -27,15 +27,13 @@ void Player::Move(float moveValue,bool isRight) {
 }
 
 void Player::Update() {
-    _deltaTime = 0.016f;
     //int currentTime = GetNowCount();
     //_deltaTime = (currentTime - _prevTime) / 1000.0f;
     //_prevTime = currentTime;
-    Gravity(_deltaTime);
-	_pos.y -= _verticalY * _oneMinuteMovePixel * _deltaTime;
-	_pos.x += _move.x * _oneMinuteMovePixel * _deltaTime;
+    Gravity(ShareClass::DeltaTime);
+	_pos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::DeltaTime;
+	_pos.x += _move.x * _oneMinuteMovePixel * ShareClass::DeltaTime;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale, _scale);
-	//Draw();
 }
 void Player::ChangeWeapon() {
     _weaponIndex++;

@@ -45,10 +45,6 @@ private:
 
 	float _downerLimit;
 
-	//ŠÔ
-	float _deltaTime = 0;
-	//Å‰‚ÌŠÔ
-	float _prevTime = 0;
 
 };
 

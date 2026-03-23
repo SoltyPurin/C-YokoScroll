@@ -21,8 +21,6 @@ public:
 private:
 	int _imageHandle;
 	int _scale = 99;
-	float _prevTime;
-	float _deltaTime;
 	float _gravity = 10.5f;
 	float _verticalY;
 	float _oneMinuteMovePixel = 100.0f;
