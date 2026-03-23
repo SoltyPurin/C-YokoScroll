@@ -27,14 +27,15 @@ void Player::Move(float moveValue,bool isRight) {
 }
 
 void Player::Update() {
-    int currentTime = GetNowCount();
-    _deltaTime = (currentTime - _prevTime) / 1000.0f;
-    _prevTime = currentTime;
+    _deltaTime = 0.016f;
+    //int currentTime = GetNowCount();
+    //_deltaTime = (currentTime - _prevTime) / 1000.0f;
+    //_prevTime = currentTime;
     Gravity(_deltaTime);
 	_pos.y -= _verticalY * _oneMinuteMovePixel * _deltaTime;
 	_pos.x += _move.x * _oneMinuteMovePixel * _deltaTime;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale, _scale);
-	Draw();
+	//Draw();
 }
 void Player::ChangeWeapon() {
     _weaponIndex++;
@@ -51,7 +52,6 @@ void Player::Draw() {
     else {
         DrawExtendGraph(_draw.x + _scale, _draw.y, _draw.x, _draw.y + _scale, _imageHandle, TRUE);
     }
-	//DrawGraph(_currentX, _currentY, _playerGraph, TRUE);
 #ifdef _DEBUG
 // “–‚½‚è”»’è‚ð•\Ž¦
 	_collisionRect.Draw(0x0000ff, false);
@@ -128,6 +128,8 @@ void Player::CheckHitMap(Rect& chipRect)
 }
 void Player::CheckObstacleHitMap(Rect& obstacleRect,bool isSpring) {
     // “–‚½‚è‹éŒ`
+    //     _collisionRect.SetCenter(_pos.x, _pos.y, _scale - 1, _scale - 1);
+
     //_collisionRect.SetCenter(_pos.x, _pos.y, _scale , _scale);
     if (!_collisionRect.IsCollision(obstacleRect)) return;
 

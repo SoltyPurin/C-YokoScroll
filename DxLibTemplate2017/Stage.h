@@ -16,7 +16,8 @@ public:
 	Stage(Player* player);
 	~Stage();
 	void LoadMap();
-	void Update();
+	bool Update();
+	void Draw();
 	void DrawBackGround();
 	void DrawMapChip();
 	int GetScrollX();
@@ -28,7 +29,7 @@ public:
 	void UpdateKnife();
 	void DetectPlayerToEnemyCollision();
 	void DetectPlayerToObstacleCollision();
-	void DetectPlayerToGoalCollision();
+	bool DetectPlayerToGoalCollision();
 	void DeleteAxe(int index);
 	void DeleteKnife(int index);
 	void ResetGame();

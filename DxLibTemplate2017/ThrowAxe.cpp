@@ -4,9 +4,9 @@
 
 namespace
 {
-	constexpr float AXE_SPEED = 7.0f; // à⁄ìÆë¨ìx
+	constexpr float AXE_SPEED = 6.0f; // à⁄ìÆë¨ìx
 	constexpr float AXE_VERTICAL = 15.5f; //êÇíºÇ…îÚÇŒÇ∑óÕ
-	constexpr float GRAVITY = 0.5f;
+	constexpr float GRAVITY = 1.0f;
 }
 
 Axe::Axe() : Weapons(){
@@ -32,5 +32,5 @@ void Axe::SetInfo(const Vector2& playerPos, bool isRight) {
 }
 
 void Axe::Gravity() {
-	_axeVerticalY -= GRAVITY;
+	_axeVerticalY -= GRAVITY * _oneMinuteMovePixel * _deltaTime;
 }

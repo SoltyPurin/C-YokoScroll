@@ -134,9 +134,8 @@ void Stage::SpawnEnemy(int enIndex,float x,float y) {
 	_enemys.push_back(newEnemy);
 
 }
-void Stage::Update() {
-	DrawBackGround();
-	DrawMapChip();
+bool Stage::Update() {
+	bool isClear = false;
 	//UpdateÇ…ÇÊÇÈåvéZèàóù
 		for (auto i = _moveFloors.begin(); i != _moveFloors.end();i++) {
 		VerticalMoveFloor* floor = *i;
@@ -183,11 +182,26 @@ void Stage::Update() {
 		}
 	DetectPlayerToObstacleCollision();
 	DetectPlayerToEnemyCollision();
-	DetectPlayerToGoalCollision();
+	if (DetectPlayerToGoalCollision()) {
+		isClear = true;
+	}
 
 	UpdateAxe();
 	UpdateKnife();
 	_goal->Update();
+
+	PlayerFallCheck();
+	if (_isResetting) {
+		ResetGame();
+		_isResetting = false;
+	}
+
+	return isClear;
+}
+
+void Stage::Draw() {
+	DrawBackGround();
+	DrawMapChip();
 
 	//ìGÇÃï`âÊèàóù
 	for (auto i = _enemys.begin(); i != _enemys.end(); ) {
@@ -215,11 +229,7 @@ void Stage::Update() {
 	_goal->DrawGoal(GetScrollX(), GetScrollY());
 
 	DrawCurrentWeapon();
-	PlayerFallCheck();
-	if (_isResetting) {
-		ResetGame();
-		_isResetting = false;
-	}
+
 }
 
 void Stage::DrawCurrentWeapon() {
@@ -244,12 +254,13 @@ void Stage::PlayerFallCheck() {
 		_isResetting = true;
 	}
 }
-void Stage::DetectPlayerToGoalCollision() {
+bool Stage::DetectPlayerToGoalCollision() {
+	bool isGoal = false;
 	bool isPlayerGoalCollision = _goal->GetColRect().IsCollision(_player->GetColRect());
 	if (isPlayerGoalCollision) {
-		printfDx("ÉSÅ[Éã");
-		_isResetting = true;
+		isGoal = true;
 	}
+	return isGoal;
 }
 void Stage::DetectPlayerToEnemyCollision() {
 	for (auto i = _enemys.begin(); i != _enemys.end();) {
