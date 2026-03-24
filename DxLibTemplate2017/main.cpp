@@ -9,6 +9,7 @@
 #include "ThrowAxe.h"
 
 int _menuHandle;
+int _clearHandle;
 char keyState[256];
 int counter = 0, FpsTime[2] = { 0, }, FpsTime_i = 0;
 int color_white;
@@ -38,8 +39,8 @@ void UpdateScene() {
 
 //メニュー画面
 void Menu() {
-    DrawString(960, 540, "メニュー画面です。", GetColor(255, 255, 255));
     DrawGraph(0, 0, _menuHandle, TRUE);
+    DrawString(960, 540, "メニュー画面です。", GetColor(0, 0, 0));
 }
 
 //ゲーム画面のUIなどがあればここ（今回はStage側で描画しているので空でも可）
@@ -48,6 +49,7 @@ void Game() {
 }
 
 void Clear() {
+    DrawGraph(0, 0, _clearHandle, TRUE);
     DrawString(960, 540, "クリア画面です。", GetColor(255, 255, 255));
 }
 
@@ -91,6 +93,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
  
 
     _menuHandle = LoadGraph("Image/Title.jpg");
+    _clearHandle = LoadGraph("Image/Clear.png");
     Player _player(320, 600);
     Jump _jump;
     Stage _stage(&_player);
@@ -164,7 +167,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         ScreenFlip();
 
     }
-
+    DeleteGraph(_menuHandle);
+    DeleteGraph(_clearHandle);
     // ループを抜けたら（×ボタン等で終了したら）ライブラリを終了する
     DxLib_End();
     return 0;
