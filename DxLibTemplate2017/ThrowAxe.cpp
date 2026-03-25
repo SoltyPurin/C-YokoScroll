@@ -21,8 +21,8 @@ void Axe::Update() {
 	_weaponPosition.y -= _axeVerticalY * _oneMinuteMovePixel * ShareClass::DeltaTime;
 	Gravity();
 }
-void Axe::SetInfo(const Vector2& playerPos, bool isRight) {
-	_weaponPosition = playerPos;
+void Axe::SetInfo(const Vector2& userPos, bool isRight) {
+	_weaponPosition = userPos;
 	if (isRight) {
 		_move.x = AXE_SPEED;
 	}

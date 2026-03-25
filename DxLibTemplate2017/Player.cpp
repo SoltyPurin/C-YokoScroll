@@ -27,9 +27,6 @@ void Player::Move(float moveValue,bool isRight) {
 }
 
 void Player::Update() {
-    //int currentTime = GetNowCount();
-    //_deltaTime = (currentTime - _prevTime) / 1000.0f;
-    //_prevTime = currentTime;
     Gravity(ShareClass::DeltaTime);
 	_pos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::DeltaTime;
 	_pos.x += _move.x * _oneMinuteMovePixel * ShareClass::DeltaTime;

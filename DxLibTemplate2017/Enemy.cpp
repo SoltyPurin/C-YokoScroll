@@ -7,7 +7,9 @@
 Enemy::Enemy(Stage* stage,float x,float y):
 _stagePointer(stage),
 _initPos(x,y),
-_currentPos(x, y){
+_currentPos(x, y),
+_flagChangeXPos(x),
+_moveRange(300){
 	_imageHandle = LoadGraph("Image/RedEnemy.png");
     _scale = 99;
     ResetPosition();
@@ -28,12 +30,23 @@ void Enemy::Update() {
 
 	Gravity(ShareClass::DeltaTime);
 	_currentPos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::DeltaTime;
+    _currentPos.x -= _oneMinuteMovePixel * ShareClass::DeltaTime * _moveFlag;
     float colX = _currentPos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
     float colY = _currentPos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
 
     //_collisionRect.SetCenter(colX  ,colY , _scale, _scale);
     _collisionRect.SetCenter(colX + _scale, colY + _scale, _scale, _scale);
 
+    float curMoveRange = abs(_currentPos.x - _flagChangeXPos);
+    if (curMoveRange > _moveRange) {
+        FlagChange();
+    }
+
+}
+
+void Enemy::FlagChange() {
+    _moveFlag *= -1;
+    _flagChangeXPos = _currentPos.x;
 }
 
 void Enemy::Draw(float scrollX,float scrollY) {

@@ -25,13 +25,16 @@ public:
 	bool IsCollision(Rect rect, Rect& chipRect);
 	void DrawAxe();
 	void UpdateAxe();
+	void DeleteAxe(int index);
+	void DrawEnemyAxe();
+	void UpdateEnemyAxe();
+	void DeleteEnemyAxe(int index);
 	void DrawKnife();
 	void UpdateKnife();
+	void DeleteKnife(int index);
 	void DetectPlayerToEnemyCollision();
 	void DetectPlayerToObstacleCollision();
 	bool DetectPlayerToGoalCollision();
-	void DeleteAxe(int index);
-	void DeleteKnife(int index);
 	void ResetGame();
 	void PlayerFallCheck();
 	void DrawCurrentWeapon();
@@ -47,6 +50,7 @@ private:
 	std::vector<Spring*> _springs;
 	Goal* _goal;
 	Axe* _axe[16];
+	Axe* _enemyAxe[16];
 	ThrowKnife* _knife[16];
 	float _groundY = 900;
 	int _mapData;

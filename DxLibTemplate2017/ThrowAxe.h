@@ -9,7 +9,7 @@ public:
 	//~Axe();
   	virtual void Update() override;
 	void Gravity();
-	virtual void SetInfo(const Vector2& playerPos, bool isRight) override;
+	virtual void SetInfo(const Vector2& userPos, bool isRight) override;
 
 private:
 	float _axeVerticalY = 0;

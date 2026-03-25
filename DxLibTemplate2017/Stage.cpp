@@ -2,6 +2,7 @@
 #include "Obstacle.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "AxeEnemy.h"
 #include <DxLib.h>
 #include <fstream>
 #include <sstream>
@@ -110,6 +111,11 @@ void Stage::LoadMap() {
 				CHIP_DATA[y][x] = 0;
 			}
 
+			if (CHIP_DATA[y][x] == 10) {//10î‘ÇïÄìGÇ∆Ç∑ÇÈ
+				SpawnEnemy(1, x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale);
+				CHIP_DATA[y][x] = 0;
+			}
+
 
 
 			x++;
@@ -130,8 +136,21 @@ void Stage::SetMoveFloor(float x, float y) {
 }
 
 void Stage::SpawnEnemy(int enIndex,float x,float y) {
-	Enemy* newEnemy = new Enemy(this,x,y);
-	_enemys.push_back(newEnemy);
+	switch (enIndex)
+	{
+	case 0:
+	{
+		Enemy* newEnemy = new Enemy(this, x, y);
+		_enemys.push_back(newEnemy);
+		break;
+	}
+	case 1: {
+		AxeEnemy* newAxeEnemy = new AxeEnemy(this, x, y);
+		newAxeEnemy->SetPlayerInfo(_player);
+		_enemys.push_back(newAxeEnemy);
+		break;
+	}
+	}
 
 }
 bool Stage::Update() {
@@ -188,6 +207,7 @@ bool Stage::Update() {
 
 	UpdateAxe();
 	UpdateKnife();
+	UpdateEnemyAxe();
 	_goal->Update();
 
 	PlayerFallCheck();
@@ -226,6 +246,7 @@ void Stage::Draw() {
 
 	DrawAxe();
 	DrawKnife();
+	DrawEnemyAxe();
 	_goal->DrawGoal(GetScrollX(), GetScrollY());
 
 	DrawCurrentWeapon();
@@ -395,6 +416,66 @@ void Stage::DeleteAxe(int index) {
 	_axe[index] = nullptr;
 }
 #pragma endregion
+
+#pragma region EnemyAxe
+void Stage::DrawEnemyAxe() {
+	if (!_enemyAxe) {
+		return;
+	}
+	for (int i = 0; i < WEAPON_MAX; i++)
+	{
+		if (!_enemyAxe[i]) continue;
+		_enemyAxe[i]->DrawWeapon();
+	}
+}
+void Stage::UpdateEnemyAxe() {
+	for (auto enemy : _enemys) {
+		AxeEnemy* axeEnemy = dynamic_cast<AxeEnemy*>(enemy);
+		if (!axeEnemy) continue;
+			Axe* newAxe = axeEnemy->CreateAxe();
+			if (newAxe != nullptr) {
+				//ïÄÇê∂ê¨Ç≈Ç´ÇΩèÍçáÇÕï€éù
+				for (int i = 0; i < WEAPON_MAX; i++)
+				{
+					if (_enemyAxe[i] == nullptr) {
+						_enemyAxe[i] = newAxe;
+						break;
+					}
+				}
+			}
+
+			for (int i = 0; i < WEAPON_MAX; i++)
+			{
+				if (!_enemyAxe[i]) continue;
+
+				_enemyAxe[i]->Update();
+
+				// âÊñ äOÇ…èoÇΩÇÁçÌèúÇ∑ÇÈ
+				bool isOutOfScreen = _enemyAxe[i]->GetPos().x < 0 || _enemyAxe[i]->GetPos().x > SCREEN_WIDTH;
+				bool isTouchPlayer = false;
+				isTouchPlayer = _enemyAxe[i]->GetColRect().IsCollision(_player->GetColRect());
+				if (isOutOfScreen || isTouchPlayer)
+				{
+					DeleteAxe(i);
+				}
+				if (isTouchPlayer) {
+					_isResetting = true;
+				}
+			}
+	}
+}
+
+void Stage::DeleteEnemyAxe(int index) {
+	if (!_enemyAxe[index]) {
+		return;
+	}
+
+	delete _enemyAxe[index];
+	_enemyAxe[index] = nullptr;
+}
+#pragma endregion
+
+
 #pragma region Knife
 
 void Stage::DrawKnife() {
