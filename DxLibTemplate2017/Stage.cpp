@@ -86,8 +86,10 @@ void Stage::LoadMap() {
 		int x = 0;
 		while (getline(stream, field, ',') && x < CHIP_NUM_X)
 		{
+
 			// 文字列をint型に変換してm_chipDataに追加する
 			CHIP_DATA[y][x] = std::stoi(field);
+
 			if (CHIP_DATA[y][x] == 5) { // 5番を敵配置チップとする
 				//// チップの左上座標を計算
 
@@ -203,6 +205,7 @@ bool Stage::Update() {
 	DetectPlayerToEnemyCollision();
 	if (DetectPlayerToGoalCollision()) {
 		isClear = true;
+		_isResetting = true;
 	}
 
 	UpdateAxe();
@@ -222,7 +225,6 @@ bool Stage::Update() {
 void Stage::Draw() {
 	DrawBackGround();
 	DrawMapChip();
-
 	//敵の描画処理
 	for (auto i = _enemys.begin(); i != _enemys.end(); ) {
 		Enemy* enemy = *i;
@@ -319,16 +321,10 @@ void Stage::DetectPlayerToObstacleCollision() {
 	}
 }
 void Stage::ResetGame() {
-	for (int i = 0; i < WEAPON_MAX; i++)
-	{
-		if (!_axe[i]) continue;
-		delete _axe[i];
-		_axe[i] = nullptr;
-	}
 	for (int i = 0; i < WEAPON_MAX; i++) {
-		if (!_knife[i])continue;
-		delete _knife[i];
-		_knife[i] = nullptr;
+		DeleteAxe(i);
+		DeleteKnife(i);
+		DeleteEnemyAxe(i);
 	}
 	for (auto enemy : _enemys) {
 		delete enemy;
@@ -338,6 +334,10 @@ void Stage::ResetGame() {
 	}
 	for (auto spring : _springs) {
 		delete spring;
+	}
+	if (_goal != nullptr) {
+		delete _goal;
+		_goal = nullptr;
 	}
 	_enemys.clear();
 	_moveFloors.clear();
@@ -432,18 +432,18 @@ void Stage::UpdateEnemyAxe() {
 	for (auto enemy : _enemys) {
 		AxeEnemy* axeEnemy = dynamic_cast<AxeEnemy*>(enemy);
 		if (!axeEnemy) continue;
-			Axe* newAxe = axeEnemy->CreateAxe();
-			if (newAxe != nullptr) {
-				//斧を生成できた場合は保持
-				for (int i = 0; i < WEAPON_MAX; i++)
-				{
-					if (_enemyAxe[i] == nullptr) {
-						_enemyAxe[i] = newAxe;
-						break;
-					}
+		Axe* newAxe = axeEnemy->CreateAxe();
+		if (newAxe != nullptr) {
+			//斧を生成できた場合は保持
+			for (int i = 0; i < WEAPON_MAX; i++)
+			{
+				if (_enemyAxe[i] == nullptr) {
+					_enemyAxe[i] = newAxe;
+					break;
 				}
 			}
-
+		}
+	}
 			for (int i = 0; i < WEAPON_MAX; i++)
 			{
 				if (!_enemyAxe[i]) continue;
@@ -456,13 +456,12 @@ void Stage::UpdateEnemyAxe() {
 				isTouchPlayer = _enemyAxe[i]->GetColRect().IsCollision(_player->GetColRect());
 				if (isOutOfScreen || isTouchPlayer)
 				{
-					DeleteAxe(i);
+					DeleteEnemyAxe(i);
 				}
 				if (isTouchPlayer) {
 					_isResetting = true;
 				}
 			}
-	}
 }
 
 void Stage::DeleteEnemyAxe(int index) {

@@ -38,4 +38,11 @@ private:
     int _weaponCount = 0;
     bool _isGround = false;
     bool _isRight = true;
+    //表示に使うハンドル
+    int _useHandle;
+    //待機状態のハンドルを保存
+    int _idleHandle;
+    //移動のハンドルを保存
+    int _moveHandle;
+
 };

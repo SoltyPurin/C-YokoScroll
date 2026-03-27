@@ -11,26 +11,37 @@
 
 
 
-Player::Player(float x,float y):Character(x,y)
+Player::Player(float x,float y) :Character(x, y)
 {
     _weaponIndex = 0;
     ResetPosition();
-	_imageHandle = LoadGraph("Image/sample.png");
+	_idleHandle = LoadGraph("Image/Player/PlayerIdle.png");
+    _moveHandle = LoadGraph("Image/Player/PlayerMove.png");
+    _useHandle = _idleHandle;
     _weaponCount = static_cast<int>(WeaponKinds::Max);
 }
 Player::~Player() {
-	DeleteGraph(_imageHandle);
+	DeleteGraph(_idleHandle);
+    DeleteGraph(_moveHandle);
+    DeleteGraph(_useHandle);
 }
 void Player::Move(float moveValue,bool isRight) {
 	_move.x = moveValue;
     _isRight = isRight;
+    if (moveValue !=0) {
+        _useHandle = _idleHandle;
+
+    }
+    else {
+        _useHandle = _idleHandle;
+    }
 }
 
 void Player::Update() {
     Gravity(ShareClass::DeltaTime);
 	_pos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::DeltaTime;
 	_pos.x += _move.x * _oneMinuteMovePixel * ShareClass::DeltaTime;
-	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale, _scale);
+	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale*0.5f, _scale);
 }
 void Player::ChangeWeapon() {
     _weaponIndex++;
@@ -42,10 +53,10 @@ void Player::Draw() {
 	_draw.x = _pos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
 	_draw.y = _pos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
     if (_isRight) {
-        DrawExtendGraph(_draw.x, _draw.y, _draw.x + _scale, _draw.y + _scale, _imageHandle, TRUE);
+        DrawExtendGraph(_draw.x, _draw.y, _draw.x + _scale, _draw.y + _scale, _useHandle, TRUE);
     }
     else {
-        DrawExtendGraph(_draw.x + _scale, _draw.y, _draw.x, _draw.y + _scale, _imageHandle, TRUE);
+        DrawExtendGraph(_draw.x + _scale, _draw.y, _draw.x, _draw.y + _scale, _useHandle, TRUE);
     }
 #ifdef _DEBUG
 // “–‚½‚è”»’è‚ð•\Ž¦

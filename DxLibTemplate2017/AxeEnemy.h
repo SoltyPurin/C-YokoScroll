@@ -9,7 +9,7 @@ public:
 	~AxeEnemy();
 	void SetPlayerInfo(Player* player) { _playerInfo = player; }
 	virtual void Update()override;
-	Axe* CreateAxe();
+    Axe* CreateAxe();
 	bool IsPlayerRight();
 
 private:

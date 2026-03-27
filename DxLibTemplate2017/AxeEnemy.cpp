@@ -4,6 +4,7 @@
 #include "ShareClass.h"
 #include "ThrowAxe.h"
 #include "Player.h"
+#include "Stage.h"
 
 
 AxeEnemy::AxeEnemy(Stage* stage, float x, float y) : Enemy(stage, x, y) {
@@ -30,11 +31,14 @@ void AxeEnemy::Update() {
 
 Axe* AxeEnemy::CreateAxe() {
 	_currentThrowingTime += ShareClass::DeltaTime;
-	if (_nextThrowTime >= _currentThrowingTime) {
+	if (_currentThrowingTime >=_nextThrowTime) {
+		_currentThrowingTime = 0;
 		Axe* axe = new Axe();
-		axe->SetInfo(_currentPos, IsPlayerRight());
+		float colX = _currentPos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
+		float colY = _currentPos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
+		Vector2 colVec = Vector2(colX + _scale, colY + _scale);
+		axe->SetInfo(colVec, IsPlayerRight());
 		return axe;
-		printfDx("•€‚ğ¶¬");
 	}
 	return nullptr;
 }
