@@ -16,25 +16,30 @@ Player::Player(float x,float y) :Character(x, y)
     _weaponIndex = 0;
     ResetPosition();
 	_idleHandle = LoadGraph("Image/Player/PlayerIdle.png");
-    _moveHandle = LoadGraph("Image/Player/PlayerMove.png");
+    _moveOneHandle = LoadGraph("Image/Player/PlayerMove1.png");
+    _moveTwoHandle = LoadGraph("Image/Player/PlayerMove2.png");
+    _jumpHandle = LoadGraph("Image/Player/PlayerJump.png");
+    _throwHandle = LoadGraph("Image/Player/PlayerThrow.png");
     _useHandle = _idleHandle;
     _weaponCount = static_cast<int>(WeaponKinds::Max);
 }
 Player::~Player() {
 	DeleteGraph(_idleHandle);
-    DeleteGraph(_moveHandle);
+    DeleteGraph(_moveOneHandle);
     DeleteGraph(_useHandle);
 }
 void Player::Move(float moveValue,bool isRight) {
 	_move.x = moveValue;
     _isRight = isRight;
-    if (moveValue !=0) {
-        _useHandle = _idleHandle;
-
+    if (moveValue == 0) {
+        _currentState = PlayerState::Idle;
     }
     else {
-        _useHandle = _idleHandle;
+        if (_isGround && !_isThrowing) {
+            _currentState = PlayerState::Move;
+        }
     }
+
 }
 
 void Player::Update() {
@@ -42,6 +47,14 @@ void Player::Update() {
 	_pos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::DeltaTime;
 	_pos.x += _move.x * _oneMinuteMovePixel * ShareClass::DeltaTime;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale*0.5f, _scale);
+    if (_isThrowing) {
+        _currentThrowingTime += ShareClass::DeltaTime;
+        _currentState = PlayerState::Throw;
+    }
+    if (_currentThrowingTime >= _throwStateTime) {
+        _currentThrowingTime = 0;
+        _isThrowing = false;
+    }
 }
 void Player::ChangeWeapon() {
     _weaponIndex++;
@@ -50,6 +63,7 @@ void Player::ChangeWeapon() {
     }
 }
 void Player::Draw() {
+    ChangeHandle();
 	_draw.x = _pos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
 	_draw.y = _pos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
     if (_isRight) {
@@ -190,6 +204,8 @@ ThrowKnife* Player::CreateKnife() {
     if (Pad::IsTrigger(PAD_INPUT_3)) {
         ThrowKnife* knife = new ThrowKnife();
         knife->SetInfo(_draw, _isRight);
+        _currentState = PlayerState::Throw;
+        _isThrowing = true;
         return knife;
     }
     return nullptr;
@@ -201,6 +217,8 @@ Axe* Player::CreateAxe() {
     if (Pad::IsTrigger(PAD_INPUT_3)) {
         Axe* axe = new Axe();
         axe->SetInfo(_draw, _isRight);
+        _currentState = PlayerState::Throw;
+        _isThrowing = true;
         return axe;
     }
 
@@ -223,8 +241,26 @@ void Player::JumpProtocol() {
 	}
     _jumpAddres->JumpProtocol(*this);
 	_isGround = false;
+    _currentState = PlayerState::Jump;
 }
 void Player::ResetPosition() {
     _pos.x = _initX;
     _pos.y = _initY;
+}
+
+void Player::ChangeHandle() {
+    switch (_currentState) {
+    case PlayerState::Idle:
+        _useHandle = _idleHandle;
+        break;
+    case PlayerState::Move:
+        _useHandle = _moveOneHandle;
+        break;
+    case PlayerState::Jump:
+        _useHandle = _jumpHandle;
+        break;
+    case PlayerState::Throw:
+        _useHandle = _throwHandle;
+        break;
+    }
 }
