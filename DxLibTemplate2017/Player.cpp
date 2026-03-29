@@ -20,6 +20,7 @@ Player::Player(float x,float y) :Character(x, y)
     _moveTwoHandle = LoadGraph("Image/Player/PlayerMove2.png");
     _jumpHandle = LoadGraph("Image/Player/PlayerJump.png");
     _throwHandle = LoadGraph("Image/Player/PlayerThrow.png");
+    _jumpSEHandle = LoadSoundMem("Audio/SE/Jump.mp3");
     _useHandle = _idleHandle;
     _weaponCount = static_cast<int>(WeaponKinds::Max);
 }
@@ -242,6 +243,7 @@ void Player::JumpProtocol() {
     _jumpAddres->JumpProtocol(*this);
 	_isGround = false;
     _currentState = PlayerState::Jump;
+    PlaySoundMem(_jumpSEHandle, DX_PLAYTYPE_NORMAL);
 }
 void Player::ResetPosition() {
     _pos.x = _initX;

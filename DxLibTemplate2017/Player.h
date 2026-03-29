@@ -65,4 +65,7 @@ private:
     //投げるモーションの再生時間
     float _throwStateTime = 0.5f;
     float _currentThrowingTime = 0;
+
+    //ジャンプの効果音のハンドル
+    int _jumpSEHandle;
 };
