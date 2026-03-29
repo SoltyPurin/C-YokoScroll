@@ -27,7 +27,11 @@ Player::Player(float x,float y) :Character(x, y)
 Player::~Player() {
 	DeleteGraph(_idleHandle);
     DeleteGraph(_moveOneHandle);
+    DeleteGraph(_moveTwoHandle);
+    DeleteGraph(_jumpHandle);
+    DeleteGraph(_throwHandle);
     DeleteGraph(_useHandle);
+    DeleteSoundMem(_jumpSEHandle);
 }
 void Player::Move(float moveValue,bool isRight) {
 	_move.x = moveValue;
@@ -243,7 +247,7 @@ void Player::JumpProtocol() {
     _jumpAddres->JumpProtocol(*this);
 	_isGround = false;
     _currentState = PlayerState::Jump;
-    PlaySoundMem(_jumpSEHandle, DX_PLAYTYPE_NORMAL);
+    PlaySoundMem(_jumpSEHandle, DX_PLAYTYPE_BACK);
 }
 void Player::ResetPosition() {
     _pos.x = _initX;
