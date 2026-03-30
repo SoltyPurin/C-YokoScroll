@@ -10,10 +10,11 @@ class ThrowKnife;
 class VerticalMoveFloor;
 class Spring;
 class Goal;
+class SoundPlayer;
 class Stage
 {
 public:
-	Stage(Player* player);
+	Stage(Player* player,SoundPlayer* sound);
 	~Stage();
 	void LoadMap();
 	bool Update();
@@ -45,6 +46,7 @@ private:
 	Vector2 pos;
 	Vector2 size;
 	Player* _player;
+	SoundPlayer* _soundPlayer;
 	std::vector<Enemy*> _enemys;
 	std::vector<VerticalMoveFloor*> _moveFloors;
 	std::vector<Spring*> _springs;

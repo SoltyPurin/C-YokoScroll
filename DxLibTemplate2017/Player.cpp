@@ -8,6 +8,7 @@
 #include "ThrowKnife.h"
 #include "Pad.h"
 #include "ShareClass.h"
+#include "SoundPlayer.h"
 
 
 
@@ -20,7 +21,6 @@ Player::Player(float x,float y) :Character(x, y)
     _moveTwoHandle = LoadGraph("Image/Player/PlayerMove2.png");
     _jumpHandle = LoadGraph("Image/Player/PlayerJump.png");
     _throwHandle = LoadGraph("Image/Player/PlayerThrow.png");
-    _jumpSEHandle = LoadSoundMem("Audio/SE/Jump.mp3");
     _useHandle = _idleHandle;
     _weaponCount = static_cast<int>(WeaponKinds::Max);
 }
@@ -31,7 +31,6 @@ Player::~Player() {
     DeleteGraph(_jumpHandle);
     DeleteGraph(_throwHandle);
     DeleteGraph(_useHandle);
-    DeleteSoundMem(_jumpSEHandle);
 }
 void Player::Move(float moveValue,bool isRight) {
 	_move.x = moveValue;
@@ -196,6 +195,7 @@ void Player::CheckObstacleHitMap(Rect& obstacleRect,bool isSpring) {
                 _isGround = true;
             }
             if (isSpring) {
+                _soundPlayer->PlayerCallSE(PlayerState::Jump);
                 _jumpAddres->SpringJumpProtocol(*this);
             }
         }
@@ -211,6 +211,7 @@ ThrowKnife* Player::CreateKnife() {
         knife->SetInfo(_draw, _isRight);
         _currentState = PlayerState::Throw;
         _isThrowing = true;
+        _soundPlayer->PlayerCallSE(PlayerState::Throw);
         return knife;
     }
     return nullptr;
@@ -224,6 +225,7 @@ Axe* Player::CreateAxe() {
         axe->SetInfo(_draw, _isRight);
         _currentState = PlayerState::Throw;
         _isThrowing = true;
+        _soundPlayer->PlayerCallSE(PlayerState::Throw);
         return axe;
     }
 
@@ -247,7 +249,7 @@ void Player::JumpProtocol() {
     _jumpAddres->JumpProtocol(*this);
 	_isGround = false;
     _currentState = PlayerState::Jump;
-    PlaySoundMem(_jumpSEHandle, DX_PLAYTYPE_BACK);
+    _soundPlayer->PlayerCallSE(PlayerState::Jump);
 }
 void Player::ResetPosition() {
     _pos.x = _initX;

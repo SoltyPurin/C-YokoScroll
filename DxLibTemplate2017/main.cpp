@@ -7,6 +7,7 @@
 #include "Stage.h"
 #include "Pad.h"
 #include "ThrowAxe.h"
+#include "SoundPlayer.h"
 
 int _menuHandle;
 int _clearHandle;
@@ -96,8 +97,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     _clearHandle = LoadGraph("Image/Clear.png");
     Player _player(320, 600);
     Jump _jump;
-    Stage _stage(&_player);
+    SoundPlayer _soundPlay;
+    Stage _stage(&_player, &_soundPlay);
     _player.SetJumpAddres(&_jump);
+    _player.SetAudioPointer(&_soundPlay);
 
     bool _isRight = true;
     float _moveValue = 5;

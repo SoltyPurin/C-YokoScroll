@@ -36,7 +36,8 @@ namespace
 }
 int _bgWidth = static_cast<int>(SCREEN_WIDTH)-1;
 int _bgHeight = static_cast<int>(SCREEN_HEIGHT)-1;
-Stage::Stage(Player* player) :
+Stage::Stage(Player* player,SoundPlayer* sound): 
+	_soundPlayer(sound),
 	_player(player),
 	_graphChipNumX(0),
 	_graphChipNumY(0)

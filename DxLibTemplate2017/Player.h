@@ -7,6 +7,13 @@ class Jump;
 class Stage;
 class Axe;
 class ThrowKnife;
+enum class PlayerState {
+    Idle,
+    Move,
+    Jump,
+    Throw,
+};
+
 class Player : public Character {
 public:
     Player(float x,float y);
@@ -27,17 +34,12 @@ public:
     ThrowKnife* CreateKnife();
     int ReturnCurrentWeaponIndex();
     void ChangeHandle();
+
 private:
     enum class WeaponKinds {
         UseAxe,
         UseKnife,
         Max
-    };
-    enum class PlayerState {
-        Idle,
-        Move,
-        Jump,
-        Throw,
     };
     PlayerState _currentState = PlayerState::Idle;
     Vector2 _move;
@@ -65,7 +67,4 @@ private:
     //投げるモーションの再生時間
     float _throwStateTime = 0.5f;
     float _currentThrowingTime = 0;
-
-    //ジャンプの効果音のハンドル
-    int _jumpSEHandle;
 };

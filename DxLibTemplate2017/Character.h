@@ -2,8 +2,9 @@
 #include "Vector2.h"
 #include "Rect.h"
 #include "Stage.h"
-class Rect;
 
+class Rect;
+class SoundPlayer;
 class Character
 {
 public:
@@ -36,6 +37,11 @@ public:
 	/// </summary>
 	/// <param name="pStage">ステージのポインター</param>
 	virtual void SetStagePointer(Stage* pStage) { _stagePointer = pStage; }
+	/// <summary>
+	/// 効果音鳴らすクラスのポインターをセット
+	/// </summary>
+	/// <param name="pSound">効果音鳴らすクラスのポインター</param>
+	virtual void SetAudioPointer(SoundPlayer* pSound) { _soundPlayer = pSound; }
 	/// <summary>
 	/// 当たり判定の処理
 	/// </summary>
@@ -77,6 +83,8 @@ protected:
 	float _initY;
 	//1秒あたりなんピクセル進むか
 	float _oneMinuteMovePixel = 100.0f; 
+	//効果音をならすクラス
+	SoundPlayer* _soundPlayer;
 };
 
 
