@@ -345,7 +345,7 @@ void Stage::ResetGame() {
 	_moveFloors.clear();
 	_springs.clear();
 	_player->ResetPosition();
-	_soundPlayer->PlayGameBGM();
+	_soundPlayer->PlayGameBGM(1);
 	LoadMap();
 }
 

@@ -4,22 +4,38 @@
 SoundPlayer::SoundPlayer() {
 	_jumpSEHandle = LoadSoundMem("Audio/SE/Jump.mp3");
 	_throwSEHandle = LoadSoundMem("Audio/SE/Throw.wav");
-	_bgmHandle = LoadSoundMem("Audio/BGM/GameBGM.wav");
 	_axeHitSound = LoadSoundMem("Audio/SE/AxeHit.mp3");
 	_knifeHitSound = LoadSoundMem("Audio/SE/KnifeHit.mp3");
+	_gameBGMHandle = LoadSoundMem("Audio/BGM/GameBGM.wav");
+	_titleBGMHandle = LoadSoundMem("Audio/BGM/TitleBGM.wav");
+	_clearBGMHandle = LoadSoundMem("Audio/BGM/ClearBGM.wav");
 }
 SoundPlayer::~SoundPlayer() {
 	DeleteSoundMem(_jumpSEHandle);
 	DeleteSoundMem(_throwSEHandle);
-	DeleteSoundMem(_bgmHandle);
 	DeleteSoundMem(_axeHitSound);
 	DeleteSoundMem(_knifeHitSound);
+	DeleteSoundMem(_gameBGMHandle);
+	DeleteSoundMem(_titleBGMHandle);
 }
-void SoundPlayer::PlayGameBGM() {
-	if (CheckSoundMem(_bgmHandle)) {
-		StopSoundMem(_bgmHandle);
+void SoundPlayer::PlayGameBGM(int index) {
+	StopSoundMem(_titleBGMHandle);
+	StopSoundMem(_gameBGMHandle);
+	StopSoundMem(_clearBGMHandle);
+	switch (index)
+	{
+	case 0:
+		PlaySoundMem(_titleBGMHandle, DX_PLAYTYPE_LOOP);
+		break;
+	case 1:
+		PlaySoundMem(_gameBGMHandle, DX_PLAYTYPE_LOOP);
+		break;
+	case 2:
+		PlaySoundMem(_clearBGMHandle, DX_PLAYTYPE_LOOP);
+		break;
+	default:
+		break;
 	}
-	PlaySoundMem(_bgmHandle, DX_PLAYTYPE_LOOP);
 }
 
 void SoundPlayer::PlayWeaponHitSound(int weaponIndex) {

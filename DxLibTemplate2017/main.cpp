@@ -29,13 +29,15 @@ void UpdateScene(SoundPlayer& sound) {
     // èÌÇ…ëÄçÏê‡ñæÇï\é¶
 
     if (CheckHitKey(KEY_INPUT_G) != 0) {
-        sound.PlayGameBGM();
+        sound.PlayGameBGM(1);
         Scene = eScene_Game;
     }
     if (CheckHitKey(KEY_INPUT_M) != 0) {
+        sound.PlayGameBGM(0);
         Scene = eScene_Menu;
     }
     if (CheckHitKey(KEY_INPUT_T) != 0) {
+        sound.PlayGameBGM(2);
         Scene = eScene_Clear;
     }
 }
@@ -108,6 +110,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     float _moveValue = 5;
 
     int frameStartTime;
+
+    _soundPlay.PlayGameBGM(0);
+
 
     while (ProcessMessage() == 0 && ClearDrawScreen() == 0) {
         RefreshTime = GetNowCount();
