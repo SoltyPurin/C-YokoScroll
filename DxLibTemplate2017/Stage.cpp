@@ -12,6 +12,7 @@
 #include <vector>
 #include "Spring.h"
 #include "Goal.h"
+#include "SoundPlayer.h"
 
 int _backGroundHandler = 0;
 namespace
@@ -344,6 +345,7 @@ void Stage::ResetGame() {
 	_moveFloors.clear();
 	_springs.clear();
 	_player->ResetPosition();
+	_soundPlayer->PlayGameBGM();
 	LoadMap();
 }
 
@@ -392,6 +394,7 @@ void Stage::UpdateAxe() {
 					delete enemy;
 					//—v‘f‚Ì’†g‚ð‘O‚É‚Â‚ß‚é
 					j = _enemys.erase(j);
+					_soundPlayer->PlayWeaponHitSound(0);
 					break;
 
 				}
@@ -517,6 +520,7 @@ void Stage::UpdateKnife() {
 				if (isTouchEnemy) {
 					delete enemy;
 					j = _enemys.erase(j);
+					_soundPlayer->PlayWeaponHitSound(1);
 					break;
 
 				}

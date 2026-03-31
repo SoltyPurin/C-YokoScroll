@@ -35,7 +35,7 @@ Player::~Player() {
 void Player::Move(float moveValue,bool isRight) {
 	_move.x = moveValue;
     _isRight = isRight;
-    if (moveValue == 0) {
+    if (moveValue == 0 && _isGround && !_isThrowing) {
         _currentState = PlayerState::Idle;
     }
     else {
@@ -195,8 +195,10 @@ void Player::CheckObstacleHitMap(Rect& obstacleRect,bool isSpring) {
                 _isGround = true;
             }
             if (isSpring) {
+                _currentState = PlayerState::Jump;
                 _soundPlayer->PlayerCallSE(PlayerState::Jump);
                 _jumpAddres->SpringJumpProtocol(*this);
+                _isGround = false;
             }
         }
     }

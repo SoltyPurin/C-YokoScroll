@@ -21,13 +21,15 @@ typedef enum {
     eScene_Clear,
 } eScene;
 
+
 static int Scene = eScene_Menu;    //現在の画面(シーン)
 
 //シーンを更新する
-void UpdateScene() {
+void UpdateScene(SoundPlayer& sound) {
     // 常に操作説明を表示
 
     if (CheckHitKey(KEY_INPUT_G) != 0) {
+        sound.PlayGameBGM();
         Scene = eScene_Game;
     }
     if (CheckHitKey(KEY_INPUT_M) != 0) {
@@ -113,7 +115,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         Pad::Update();
         frameStartTime = GetNowCount();
 
-        UpdateScene();
+        UpdateScene(_soundPlay);
 
         switch (Scene) {
         case eScene_Menu:
