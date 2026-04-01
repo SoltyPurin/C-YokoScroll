@@ -654,7 +654,7 @@ bool Stage::IsCollision(Rect rect, Rect& chipRect)
 
 }
 int Stage::GetScrollX() {
-	int result = static_cast<int>(_player->GetPos().x - SCREEN_WIDTH * 0.5);
+	int result = static_cast<int>(_player->GetPos().x - SCREEN_WIDTH * 0.3f);
 	if (result < 0)
 	{
 		result = 0;
@@ -668,7 +668,7 @@ int Stage::GetScrollX() {
 }
 
 int Stage::GetScrollY() {
-	int result = static_cast<int>(_player->GetPos().y - SCREEN_HEIGHT * 0.5f);
+	int result = static_cast<int>(_player->GetPos().y - SCREEN_HEIGHT /** 0.5f*/);
 	if (result < 0) {
 		result = 0;
 	}

@@ -5,7 +5,7 @@
 
 namespace
 {
-	constexpr float AXE_SPEED = 6.0f; // ˆÚ“®‘¬“x
+	constexpr float AXE_SPEED = 12.0f; // ˆÚ“®‘¬“x
 	constexpr float AXE_VERTICAL = 15.5f; //‚’¼‚É”ò‚Î‚·—Í
 	constexpr float GRAVITY = 1.0f;
 }

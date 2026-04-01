@@ -4,7 +4,7 @@
 #include "ShareClass.h"
 namespace
 {
-	constexpr float Knife_SPEED = 7.0f; // ˆÚ“®‘¬“x
+	constexpr float Knife_SPEED = 14.0f; // ˆÚ“®‘¬“x
 }
 
 
