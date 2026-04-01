@@ -21,7 +21,8 @@ public:
     virtual void Update() override;
     virtual void Draw() override;
     virtual void CheckHitMap(Rect& chipRect) override;
-    void CheckObstacleHitMap(Rect& obstacleRect,bool isSpring);
+    void CheckSpringHitMap(Rect& springRect);
+    void CheckMoveFloorHitMap(Rect& moveFloorRect, VerticalMoveFloor* floor);
     virtual void ResetPosition() override;
     void Move(float moveValue,bool isRight);
     void SetVY(float vy);

@@ -15,6 +15,7 @@ public:
 	void SetStagePointer(Stage* pStage) { _stagePointer = pStage; }
 	Rect GetColRect() const { return _collisionRect; }
 	Vector2 GetPos() const { return _currentPos; }
+	float GetMoveY() const { return _moveDeltaY; }
 
 private:
 	int _floorHandle;
@@ -45,6 +46,6 @@ private:
 
 	float _downerLimit;
 
-
+	float _moveDeltaY;
 };
 

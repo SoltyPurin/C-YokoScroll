@@ -9,7 +9,8 @@
 #include "Pad.h"
 #include "ShareClass.h"
 #include "SoundPlayer.h"
-
+#include "VerticalMoveFloor.h"
+ 
 
 
 Player::Player(float x,float y) :Character(x, y)
@@ -150,18 +151,14 @@ void Player::CheckHitMap(Rect& chipRect)
     }
 
 }
-void Player::CheckObstacleHitMap(Rect& obstacleRect,bool isSpring) {
-    // 当たり矩形
-    //     _collisionRect.SetCenter(_pos.x, _pos.y, _scale - 1, _scale - 1);
-
-    //_collisionRect.SetCenter(_pos.x, _pos.y, _scale , _scale);
-    if (!_collisionRect.IsCollision(obstacleRect)) return;
+void Player::CheckSpringHitMap(Rect& springRect) {
+    if (!_collisionRect.IsCollision(springRect)) return;
 
     // めり込み量（左右・上下）
-    float overlapL = _collisionRect.GetRight() - obstacleRect.GetLeft();   // 左へ押す量
-    float overlapR = obstacleRect.GetRight() - _collisionRect.GetLeft(); // 右へ押す量
-    float overlapT = _collisionRect.GetBottom() - obstacleRect.GetTop();    // 上へ押す量
-    float overlapB = obstacleRect.GetBottom() - _collisionRect.GetTop();  // 下へ押す量
+    float overlapL = _collisionRect.GetRight() - springRect.GetLeft();   // 左へ押す量
+    float overlapR = springRect.GetRight() - _collisionRect.GetLeft(); // 右へ押す量
+    float overlapT = _collisionRect.GetBottom() - springRect.GetTop();    // 上へ押す量
+    float overlapB = springRect.GetBottom() - _collisionRect.GetTop();  // 下へ押す量
 
     // X/Yそれぞれ最小の押し戻し量
     float pushX = (overlapL < overlapR) ? overlapL : overlapR;
@@ -170,10 +167,10 @@ void Player::CheckObstacleHitMap(Rect& obstacleRect,bool isSpring) {
     // 中心でどっち側にいるか判定
     float rcx = (_collisionRect.GetLeft() + _collisionRect.GetRight()) * 0.5f;
     float rcy = (_collisionRect.GetTop() + _collisionRect.GetBottom()) * 0.5f;
-    float ccx = (obstacleRect.GetLeft() + obstacleRect.GetRight()) * 0.5f;
-    float ccy = (obstacleRect.GetTop() + obstacleRect.GetBottom()) * 0.5f;
+    float ccx = (springRect.GetLeft() + springRect.GetRight()) * 0.5f;
+    float ccy = (springRect.GetTop() + springRect.GetBottom()) * 0.5f;
 
-    // 重要：小さい軸だけ解決（壁に当たったのに縦へ押し戻す…を防ぐ）
+    // 壁に当たったのに縦へ押し戻すのを防ぐ
     if (pushX < pushY)
     {
         // 横解決
@@ -194,14 +191,61 @@ void Player::CheckObstacleHitMap(Rect& obstacleRect,bool isSpring) {
                 _verticalY = 0.0f;
                 _isGround = true;
             }
-            if (isSpring) {
                 _currentState = PlayerState::Jump;
                 _soundPlayer->PlayerCallSE(PlayerState::Jump);
                 _jumpAddres->SpringJumpProtocol(*this);
                 _isGround = false;
-            }
         }
     }
+}
+
+void Player::CheckMoveFloorHitMap(Rect& moveFloorRect, VerticalMoveFloor* floor) {
+        if (!_collisionRect.IsCollision(moveFloorRect)) return;
+
+    // めり込み量（左右・上下）
+    float overlapL = _collisionRect.GetRight() - moveFloorRect.GetLeft();   // 左へ押す量
+    float overlapR = moveFloorRect.GetRight() - _collisionRect.GetLeft(); // 右へ押す量
+    float overlapT = _collisionRect.GetBottom() - moveFloorRect.GetTop();    // 上へ押す量
+    float overlapB = moveFloorRect.GetBottom() - _collisionRect.GetTop();  // 下へ押す量
+
+    // X/Yそれぞれ最小の押し戻し量
+    float pushX = (overlapL < overlapR) ? overlapL : overlapR;
+    float pushY = (overlapT < overlapB) ? overlapT : overlapB;
+
+    // 中心でどっち側にいるか判定
+    float rcx = (_collisionRect.GetLeft() + _collisionRect.GetRight()) * 0.5f;
+    float rcy = (_collisionRect.GetTop() + _collisionRect.GetBottom()) * 0.5f;
+    float ccx = (moveFloorRect.GetLeft() + moveFloorRect.GetRight()) * 0.5f;
+    float ccy = (moveFloorRect.GetTop() + moveFloorRect.GetBottom()) * 0.5f;
+
+    // 壁に当たったのに縦へ押し戻すのを防ぐ
+    if (pushX < pushY)
+    {
+        // 横解決
+        if (rcx < ccx)
+            _pos.x -= pushX; // チップの左側にいる → 左へ
+        else
+            _pos.x += pushX; // チップの右側にいる → 右へ
+
+    }
+    else
+    {
+        //_isGround = true;
+        // 縦解決
+        if (rcy < ccy)
+        {
+            // 上から乗った（着地）
+            _pos.y -= pushY ;
+            _pos.y += floor->GetMoveY();
+            //_pos.y = floor->GetPos().y - _scale;
+            if (_verticalY <= 0) {
+                _verticalY = 0.0f;
+                _isGround = true;
+            }
+
+        }
+    }
+
 }
 
 ThrowKnife* Player::CreateKnife() {

@@ -306,10 +306,7 @@ void Stage::DetectPlayerToEnemyCollision() {
 void Stage::DetectPlayerToObstacleCollision() {
 	for (auto i = _moveFloors.begin(); i != _moveFloors.end(); i++) { 
 		VerticalMoveFloor* floor = *i;
-			bool isPlayerFloorCollision = floor->GetColRect().IsCollision(_player->GetColRect());
-			if (isPlayerFloorCollision) {
-				_player->CheckObstacleHitMap(floor->GetColRect(),false);
-			}
+				_player->CheckMoveFloorHitMap(floor->GetColRect(),floor);
 
 	}
 
@@ -317,7 +314,7 @@ void Stage::DetectPlayerToObstacleCollision() {
 		Spring* spring = *i;
 		bool isPlayerFloorCollision = spring->GetColRect().IsCollision(_player->GetColRect());
 		if (isPlayerFloorCollision) {
-			_player->CheckObstacleHitMap(spring->GetColRect(), true);
+			_player->CheckSpringHitMap(spring->GetColRect());
 			spring->ActiveSpring();
 		}
 	}
