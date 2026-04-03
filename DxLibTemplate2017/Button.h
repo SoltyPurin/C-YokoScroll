@@ -10,13 +10,15 @@ enum class ButtonJob {
 class Button
 {
 public:
-	Button(ButtonJob job,int buttonImageHandle,CHAR* message,Vector2 pos);
+	Button(ButtonJob job, int buttonImageHandle, int selectButtonHandle, CHAR* message, Vector2 pos);
 	~Button();
 	bool IsTouch(Vector2 mousePos);
 	void DrawButton();
 private:
 	ButtonJob _job;
 	int _buttonHandle;
+	int _selectButtonHandle;
+	int _useButtonHandle;
 	CHAR* _message;
 	Vector2 _startPos;
 	Vector2 _endPos;
