@@ -131,6 +131,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="ShareClass.cpp" />
+    <ClCompile Include="Skate.cpp" />
     <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="Spring.cpp" />
     <ClCompile Include="Stage.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="ShareClass.h" />
+    <ClInclude Include="Skate.h" />
     <ClInclude Include="SoundPlayer.h" />
     <ClInclude Include="Spring.h" />
     <ClInclude Include="Stage.h" />

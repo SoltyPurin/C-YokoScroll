@@ -3,5 +3,6 @@ class Skate
 {
 	Skate();
 	~Skate();
+
 };
 
