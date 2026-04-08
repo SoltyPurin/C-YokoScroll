@@ -38,10 +38,12 @@ void Player::Move(float moveValue,bool isRight) {
     _isRight = isRight;
     if (moveValue == 0 && _isGround && !_isThrowing) {
         _currentState = PlayerState::Idle;
+        _isMoveing = false;
     }
     else {
         if (_isGround && !_isThrowing) {
             _currentState = PlayerState::Move;
+            _isMoveing = true;
         }
     }
 
@@ -292,7 +294,7 @@ void Player::JumpProtocol() {
 	if (!_isGround) {
 		return;
 	}
-    _jumpAddres->JumpProtocol(*this);
+    _jumpAddres->JumpProtocol(*this,_isMoveing);
 	_isGround = false;
     _currentState = PlayerState::Jump;
     _soundPlayer->PlayerCallSE(PlayerState::Jump);

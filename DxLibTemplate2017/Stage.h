@@ -51,9 +51,9 @@ private:
 	std::vector<VerticalMoveFloor*> _moveFloors;
 	std::vector<Spring*> _springs;
 	Goal* _goal;
-	Axe* _axe[16];
+	Axe* _axe[3];
 	Axe* _enemyAxe[16];
-	ThrowKnife* _knife[16];
+	ThrowKnife* _knife[3];
 	float _groundY = 900;
 	int _mapData;
 	int _mapChipHandle;

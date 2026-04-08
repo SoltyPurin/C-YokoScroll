@@ -64,7 +64,6 @@ void Game() {
 
 void Clear(Button* returnTitleButton,Button* gameExitButton,Vector2 mousePos,SoundPlayer& sound) {
     DrawGraph(0, 0, _clearHandle, TRUE);
-    DrawString(960, 540, "ƒNƒŠƒA‰æ–Ê‚Å‚·B", GetColor(255, 255, 255));
     returnTitleButton->DrawButton();
     gameExitButton->DrawButton();
     if (returnTitleButton->IsTouch(mousePos)) {

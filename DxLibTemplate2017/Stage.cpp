@@ -33,7 +33,7 @@ namespace
 	// マップチップの配列情報
 	int CHIP_DATA[CHIP_NUM_Y][CHIP_NUM_X];
 
-	constexpr int WEAPON_MAX = 16;
+	constexpr int WEAPON_MAX = 2;
 }
 int _bgWidth = static_cast<int>(SCREEN_WIDTH)-1;
 int _bgHeight = static_cast<int>(SCREEN_HEIGHT)-1;

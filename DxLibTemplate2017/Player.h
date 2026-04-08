@@ -51,6 +51,8 @@ private:
     bool _isGround = false;
     //右向きか
     bool _isRight = true;
+    //移動中か
+    bool _isMoveing = false;
     //武器を投げてる最中かどうか
     bool _isThrowing = false;
     //表示に使うハンドル

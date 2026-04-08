@@ -1,9 +1,12 @@
 #include "Jump.h"
 
-float _jumpPower = 5.5f;
-float _springJumpPower = 10.0f;
-void Jump::JumpProtocol(Player& player) {
-	player.SetVY(_jumpPower);
+void Jump::JumpProtocol(Player& player, bool isMove) {
+	if (isMove) {
+		player.SetVY(_moveingJumpPower);
+	}
+	else {
+		player.SetVY(_idlingJumpPower);
+	}
 }
 
 void Jump::SpringJumpProtocol(Player& player) {
