@@ -22,11 +22,12 @@ public:
 protected:
 	int _imageHandle;
 	int _scale = 99;
+	int _colScale = 70;
 	//ˆÚ“®•ûŒüA1‚Å¶A-1‚Å‰E
 	int _moveFlag = 1;
 	float _gravity = 10.5f;
 	float _verticalY;
-	float _oneMinuteMovePixel = 100.0f;
+	float _oneMinuteMovePixel = 1.0f;
 	float _moveRange;
 	float _flagChangeXPos;
 	Stage* _stagePointer;

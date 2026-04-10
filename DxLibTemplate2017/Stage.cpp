@@ -1,6 +1,7 @@
 #include "Stage.h"
 #include "Obstacle.h"
 #include "Player.h"
+#include "SkatePlayer.h"
 #include "Enemy.h"
 #include "AxeEnemy.h"
 #include <DxLib.h>
@@ -13,11 +14,16 @@
 #include "Spring.h"
 #include "Goal.h"
 #include "SoundPlayer.h"
+#include "Skate.h"
+#include "PlayerInputManager.h"
+#include "Jump.h"
+#include "ShareClass.h"
+#include "Stone.h"
 
 int _backGroundHandler = 0;
 namespace
 {
-	constexpr float MAP_WIDTH = 10000.0f;	 // マップ全体の幅
+	constexpr float MAP_WIDTH = 30000.0f;	 // マップ全体の幅
 	constexpr float MAP_HEIGHT = 2080.0f;	 // マップ全体の高さ
 	constexpr float SCREEN_WIDTH = 1920.0f;	 // スクリーンの幅
 	constexpr float SCREEN_HEIGHT = 1080.0f; // スクリーンの高さ
@@ -37,13 +43,18 @@ namespace
 }
 int _bgWidth = static_cast<int>(SCREEN_WIDTH)-1;
 int _bgHeight = static_cast<int>(SCREEN_HEIGHT)-1;
-Stage::Stage(Player* player,SoundPlayer* sound): 
+Stage::Stage(SoundPlayer* sound): 
 	_soundPlayer(sound),
-	_player(player),
 	_graphChipNumX(0),
-	_graphChipNumY(0)
+	_graphChipNumY(0),
+	_goal(nullptr)
 {
+	_player = new Player(320, 600,ShareClass::_normalImage);
+	_jump = new Jump();
 	_player->SetStagePointer(this);
+	_player->SetAudioPointer(_soundPlayer);
+	_player->SetJumpAddres(_jump);
+	_inputManager = new PlayerInputManager(_player);
 	for (int i = 0; i < WEAPON_MAX; i++)
 	{
 		_axe[i] = nullptr;
@@ -56,6 +67,7 @@ Stage::Stage(Player* player,SoundPlayer* sound):
 	_mapChipHandle = LoadGraph("Image/mapChip.png");
 	_axeHandle = LoadGraph("Image/Axe.png");
 	_knifeHandle = LoadGraph("Image/Knife.png");
+	_stoneHandle = LoadGraph("Image/Stone.png");
 
 	int graphW = 0;
 	int graphH = 0;
@@ -71,6 +83,42 @@ Stage::~Stage() {
 	DeleteGraph(_mapChipHandle);
 	DeleteGraph(_axeHandle);
 	DeleteGraph(_knifeHandle);
+	DeleteGraph(_rideSkateIndex);
+	DeleteGraph(_brakeSkateIndex);
+	// その他、new したオブジェクトの解放漏れがないか確認
+	delete _player;
+	delete _jump;
+	delete _inputManager;
+	for (int i = 0; i < WEAPON_MAX; i++) {
+		DeleteAxe(i);
+		DeleteKnife(i);
+		DeleteEnemyAxe(i);
+	}
+	for (auto enemy : _enemys) {
+		delete enemy;
+	}
+	for (auto floor : _moveFloors) {
+		delete floor;
+	}
+	for (auto spring : _springs) {
+		delete spring;
+	}
+	for (auto skate : _skates) {
+		delete skate;
+	}
+	for (auto stone : _stones) {
+		delete stone;
+	}
+	if (_goal != nullptr) {
+		delete _goal;
+		_goal = nullptr;
+	}
+	_enemys.clear();
+	_moveFloors.clear();
+	_springs.clear();
+	_skates.clear();
+	_stones.clear();
+
 }
 
 void Stage::LoadMap() {
@@ -102,8 +150,6 @@ void Stage::LoadMap() {
 				_goal = new Goal(this,x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale);
 				CHIP_DATA[y][x] = 0;
 			}
-
-
 			//移動床を生成
 			if (CHIP_DATA[y][x] == 8) {//8番を移動床とする
 				SetMoveFloor(x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale);
@@ -120,18 +166,32 @@ void Stage::LoadMap() {
 				CHIP_DATA[y][x] = 0;
 			}
 
+			if (CHIP_DATA[y][x] == 11) {//11番はスケボーとする
+				SetSkate(x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale);
+				CHIP_DATA[y][x] = 0;
+			}
 
+			if (CHIP_DATA[y][x] == 4) {//4番はこける岩とする
+				SetFellStone(x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale);
+				CHIP_DATA[y][x] = 0;
+			}
 
 			x++;
 		}
 		y++;
 	}
 }
-
+void Stage::SetFellStone(float x, float y) {
+	Stone* newStone = new Stone(_stoneHandle, this,Vector2(x,y));
+	_stones.push_back(newStone);
+}
+void Stage::SetSkate(float x,float y) {
+	Skate* newSkate = new Skate(this, x, y);
+	_skates.push_back(newSkate);
+}
 void Stage::SetSpring(float x, float y) {
-	Spring* newSpring = new Spring(this);
+	Spring* newSpring = new Spring(this,x,y);
 	_springs.push_back(newSpring);
-	newSpring->SetPosition(x, y);
 }
 void Stage::SetMoveFloor(float x, float y) {
 	VerticalMoveFloor* newFloor = new VerticalMoveFloor(this);
@@ -162,11 +222,27 @@ bool Stage::Update() {
 	//Updateによる計算処理
 		for (auto i = _moveFloors.begin(); i != _moveFloors.end();i++) {
 		VerticalMoveFloor* floor = *i;
+		if (floor) {
 			floor->Update();
+		}
 		}
 		for (auto i = _springs.begin(); i != _springs.end(); i++) {
 			Spring* spring = *i;
-			spring->Update();
+			if (spring) {
+				spring->Update();
+			}
+		}
+		for (auto i = _skates.begin(); i != _skates.end(); i++) {
+			Skate* skate = *i;
+			if (skate) {
+				skate->Update();
+			}
+		}
+		for (auto i = _stones.begin(); i != _stones.end(); i++) {
+			Stone* stone = *i;
+			if (stone) {
+				stone->Update();
+			}
 		}
 		//敵のUpdate
 		for (auto i = _enemys.begin(); i != _enemys.end(); ) {
@@ -180,6 +256,7 @@ bool Stage::Update() {
 			}
 		}
 		Rect chipRect;
+		_inputManager->Update();
 		_player->CheckHitMap(chipRect);
 		_player->Update();
 		//敵の当たり判定の処理
@@ -219,9 +296,53 @@ bool Stage::Update() {
 	if (_isResetting) {
 		ResetGame();
 		_isResetting = false;
+		return isClear;
+	}
+
+	if (DetectPlayerToSkateCollision()) {
+		SwitchPlayerState(true,_player->GetPos());
 	}
 
 	return isClear;
+}
+
+void Stage::SwitchPlayerState(bool isSkatePlayer,Vector2 pos) {
+	if (isSkatePlayer) {
+		_isSkateing = true;
+		delete _player;
+		_player = new SkatePlayer(pos.x, pos.y,ShareClass::_normalImage,ShareClass::_skateImage);
+		_player->SetStagePointer(this);
+		_player->SetAudioPointer(_soundPlayer);
+		_player->SetJumpAddres(_jump);
+		_inputManager->ResetPointer(_player);
+
+		for (auto enemy : _enemys) {
+			// AxeEnemy 以外の敵もいる可能性があるため、必ず NULL チェック
+			AxeEnemy* axeEnemy = dynamic_cast<AxeEnemy*>(enemy);
+			if (axeEnemy != nullptr) {
+				axeEnemy->SetPlayerInfo(_player);
+			}
+		}
+
+	}
+	else {
+		_isSkateing = false;
+		delete _player;
+		_player = new Player(pos.x, pos.y, ShareClass::_normalImage);
+		_player->SetStagePointer(this);
+		_player->SetAudioPointer(_soundPlayer);
+		_player->SetJumpAddres(_jump);
+		_inputManager->ResetPointer(_player);
+
+
+		for (auto enemy : _enemys) {
+			// AxeEnemy 以外の敵もいる可能性があるため、必ず NULL チェック
+			AxeEnemy* axeEnemy = dynamic_cast<AxeEnemy*>(enemy);
+			if (axeEnemy != nullptr) {
+				axeEnemy->SetPlayerInfo(_player);
+			}
+		}
+	}
 }
 
 void Stage::Draw() {
@@ -240,11 +361,27 @@ void Stage::Draw() {
 	}
 	for (auto i = _moveFloors.begin(); i != _moveFloors.end(); i++) {
 		VerticalMoveFloor* floor = *i;
-		floor->DrawFloor(GetScrollX(), GetScrollY());
+		if (floor) {
+			floor->DrawFloor(GetScrollX(), GetScrollY());
+		}
 	}
 	for (auto i = _springs.begin(); i != _springs.end(); i++) {
 		Spring* spring = *i;
-		spring->DrawSpring(GetScrollX(), GetScrollY());
+		if (spring) {
+			spring->DrawSpring(GetScrollX(), GetScrollY());
+		}
+	}
+	for (auto i = _skates.begin(); i != _skates.end(); i++) {
+		Skate* skate = *i;
+		if (skate) {
+			skate->DrawSkateBoard(GetScrollX(), GetScrollY());
+		}
+	}
+	for (auto i = _stones.begin(); i != _stones.end(); i++) {
+		Stone* stone = *i;
+		if (stone) {
+			stone->Draw(GetScrollX(), GetScrollY());
+		}
 	}
 	_player->Draw();
 
@@ -255,6 +392,8 @@ void Stage::Draw() {
 
 	DrawCurrentWeapon();
 
+	DrawExtendGraph(0, 0, 100, 100, _rideSkateIndex, TRUE);
+	DrawExtendGraph(0, 100, 100, 200, _brakeSkateIndex, TRUE);
 }
 
 void Stage::DrawCurrentWeapon() {
@@ -287,14 +426,42 @@ bool Stage::DetectPlayerToGoalCollision() {
 	}
 	return isGoal;
 }
+
+bool Stage::DetectPlayerToSkateCollision() {
+	bool isCollisionSkate = false;
+	for (auto i = _skates.begin(); i != _skates.end();i++) {
+		Skate* skate = *i;
+		if (!skate) {
+			i = _skates.erase(i); // 無効なポインタなら削除して次へ
+			continue;
+		}
+		bool isPlayerSkateCollision = skate->GetColRect().IsCollision(_player->GetColRect());
+
+		if (isPlayerSkateCollision) {
+				delete skate;
+				i = _skates.erase(i);
+				isCollisionSkate = true;
+				break;
+		}
+	}
+	return isCollisionSkate;
+}
 void Stage::DetectPlayerToEnemyCollision() {
 	for (auto i = _enemys.begin(); i != _enemys.end();) {
 		Enemy* enemy = *i;
 		if (enemy) {
 			bool isPlayerEnemyCollision = enemy->GetColRect().IsCollision(_player->GetColRect());
 			if (isPlayerEnemyCollision) {
-				_isResetting = true;
-				break;
+				if (_isSkateing) {
+					delete enemy;
+					_enemys.erase(i);
+					SwitchPlayerState(false, _player->GetPos());
+					break;
+				}
+				else {
+					_isResetting = true;
+					break;
+				}
 			}
 			i++;
 		}
@@ -334,6 +501,9 @@ void Stage::ResetGame() {
 	for (auto spring : _springs) {
 		delete spring;
 	}
+	for (auto skate : _skates) {
+		delete skate;
+	}
 	if (_goal != nullptr) {
 		delete _goal;
 		_goal = nullptr;
@@ -341,6 +511,8 @@ void Stage::ResetGame() {
 	_enemys.clear();
 	_moveFloors.clear();
 	_springs.clear();
+	_skates.clear();
+	SwitchPlayerState(false,Vector2(320,600));
 	_player->ResetPosition();
 	_soundPlayer->PlayGameBGM(1);
 	LoadMap();
@@ -400,6 +572,7 @@ void Stage::UpdateAxe() {
 				}
 			}
 		}
+
 		if (isOutOfScreen || isTouchEnemy)
 		{
 			DeleteAxe(i);
@@ -460,7 +633,13 @@ void Stage::UpdateEnemyAxe() {
 					DeleteEnemyAxe(i);
 				}
 				if (isTouchPlayer) {
-					_isResetting = true;
+					if (_isSkateing) {
+						DeleteEnemyAxe(i);
+						SwitchPlayerState(false, _player->GetPos());
+					}
+					else {
+						_isResetting = true;
+					}
 				}
 			}
 }
@@ -665,7 +844,7 @@ int Stage::GetScrollX() {
 }
 
 int Stage::GetScrollY() {
-	int result = static_cast<int>(_player->GetPos().y - SCREEN_HEIGHT /** 0.5f*/);
+	int result = static_cast<int>(_player->GetPos().y - SCREEN_HEIGHT /** 0.6f*/);
 	if (result < 0) {
 		result = 0;
 	}

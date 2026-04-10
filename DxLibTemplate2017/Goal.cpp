@@ -13,7 +13,7 @@ Goal::~Goal() {
 void Goal::Update() {
 	float colX = _currentPos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
 	float colY = _currentPos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
-	_collisionRect.SetCenter(colX + _scale * 1, colY + _scale * 1, _scale, _scale);
+	_collisionRect.SetCenter(colX + _scale * 1, colY + _scale * 1, _scale, _scale+500);
 
 }
 

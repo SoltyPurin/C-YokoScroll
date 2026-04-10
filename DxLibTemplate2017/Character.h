@@ -15,7 +15,7 @@ public:
 	/// <summary>
 	/// I—¹‚Ìˆ—
 	/// </summary>
-	~Character();
+	virtual ~Character();
 	/// <summary>
 	/// Å‰‚ÉŒÄ‚Ño‚·
 	/// </summary>

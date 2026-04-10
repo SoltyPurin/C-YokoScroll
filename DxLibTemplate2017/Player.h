@@ -2,6 +2,7 @@
 #include "Character.h"
 #include "Vector2.h"
 #include "Rect.h"
+#include "ShareClass.h"
 class Rect;
 class Jump;
 class Stage;
@@ -16,15 +17,15 @@ enum class PlayerState {
 
 class Player : public Character {
 public:
-    Player(float x,float y);
-    virtual ~Player();
+    Player(float x,float y,NormalPlayerImages images);
+    virtual ~Player() override;
     virtual void Update() override;
     virtual void Draw() override;
     virtual void CheckHitMap(Rect& chipRect) override;
     void CheckSpringHitMap(Rect& springRect);
     void CheckMoveFloorHitMap(Rect& moveFloorRect, VerticalMoveFloor* floor);
     virtual void ResetPosition() override;
-    void Move(float moveValue,bool isRight);
+    virtual void Move(float moveValue,bool isRight);
     void SetVY(float vy);
     float ReturnVY();
     Vector2 GetPos();
@@ -34,9 +35,9 @@ public:
     Axe* CreateAxe();
     ThrowKnife* CreateKnife();
     int ReturnCurrentWeaponIndex();
-    void ChangeHandle();
+    virtual void ChangeHandle();
 
-private:
+protected:
     enum class WeaponKinds {
         UseAxe,
         UseKnife,

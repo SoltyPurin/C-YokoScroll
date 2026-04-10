@@ -1,18 +1,17 @@
 #include <DxLib.h>
 #include <stdio.h>
 #include "Player.h"
+#include "SkatePlayer.h"
 #include "Enemy.h"
 #include "Jump.h"
 #include "Obstacle.h"
 #include "Stage.h"
-#include "Pad.h"
 #include "ThrowAxe.h"
 #include "SoundPlayer.h"
 #include "Button.h"
 
 int _menuHandle;
 int _clearHandle;
-char keyState[256];
 int counter = 0, FpsTime[2] = { 0, }, FpsTime_i = 0;
 int color_white;
 double Fps = 0.0;
@@ -112,13 +111,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     // 【修正】裏画面設定はループの前に1回だけ行う
     SetDrawScreen(DX_SCREEN_BACK);
 
+    ShareClass share;
+    share.GetImages();
+
     int x, y;
     int _buttonHandle = LoadGraph("Image/Button.png");
     int _seletButtonHandle = LoadGraph("Image/ButtonSelect.png");
  
-    Vector2 _gameStartButtonPos = Vector2(500, 500);
-    Vector2 _gameExitButtonPos = Vector2(500, 800);
-    Vector2 _returnTitleButtonPos = Vector2(500, 650);
+    Vector2 _gameStartButtonPos = Vector2(500, 300);
+    Vector2 _gameExitButtonPos = Vector2(500, 600);
+    Vector2 _returnTitleButtonPos = Vector2(500, 400);
 
     Button _gameStartButton(ButtonJob::LoadGameScene, _buttonHandle,_seletButtonHandle, "ゲームスタート", _gameStartButtonPos);
     Button _gameExitButton(ButtonJob::GameExit, _buttonHandle, _seletButtonHandle, "ゲーム終了", _gameExitButtonPos);
@@ -126,15 +128,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     _menuHandle = LoadGraph("Image/Title.jpg");
     _clearHandle = LoadGraph("Image/Clear.png");
-    Player _player(320, 600);
-    Jump _jump;
-    SoundPlayer _soundPlay;
-    Stage _stage(&_player, &_soundPlay);
-    _player.SetJumpAddres(&_jump);
-    _player.SetAudioPointer(&_soundPlay);
 
-    bool _isRight = true;
-    float _moveValue = 5;
+    SoundPlayer _soundPlay;
+    Stage _stage(&_soundPlay);
+
 
     int frameStartTime;
 
@@ -143,8 +140,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     while (ProcessMessage() == 0 && ClearDrawScreen() == 0) {
         RefreshTime = GetNowCount();
-        GetHitKeyStateAll(keyState);
-        Pad::Update();
         frameStartTime = GetNowCount();
         GetMousePoint(&x, &y);
         UpdateScene(_soundPlay);
@@ -157,28 +152,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         case eScene_Game:
             Game();
 
-            // プレイヤーの移動処理
-            if (Pad::IsPress(PAD_INPUT_RIGHT) || keyState[KEY_INPUT_RIGHT]) {
-                _isRight = true;
-                _player.Move(_moveValue, _isRight);
-            }
-            else if (Pad::IsPress(PAD_INPUT_LEFT) || keyState[KEY_INPUT_LEFT]) {
-                _isRight = false;
-                _player.Move(-_moveValue, _isRight);
-            }
-            else {
-                _player.Move(0, _isRight);
-            }
-
-            // プレイヤーのジャンプ・攻撃処理
-            if (Pad::IsPress(PAD_INPUT_1) || keyState[KEY_INPUT_SPACE]) {
-                _player.JumpProtocol();
-            }
-            if (Pad::IsTrigger(PAD_INPUT_2)) {
-                _player.ChangeWeapon();
-            }
             _stage.Draw();
-
             // ステージ（と敵・プレイヤー）の更新と描画
             if (_stage.Update()) {
                 Scene = eScene_Clear;
@@ -208,6 +182,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     DeleteGraph(_menuHandle);
     DeleteGraph(_clearHandle);
     DeleteGraph(_buttonHandle);
+    share.ReleaseImages();
     // ループを抜けたら（×ボタン等で終了したら）ライブラリを終了する
     DxLib_End();
     return 0;

@@ -7,11 +7,10 @@ class Rect;
 class Spring
 {
 public:
-	Spring(Stage* stagePointer);
+	Spring(Stage* stagePointer,float x,float y);
 	~Spring();
 	void Update();
 	void DrawSpring(float scrrolX, float scrrolY);
-	void SetPosition(float x, float y);
 	void ActiveSpring();
 	virtual void SetStagePointer(Stage* pStage) { _stagePointer = pStage; }
 	Rect GetColRect() const { return _collisionRect; }
@@ -43,7 +42,7 @@ private:
 
 	float _springActiveTime = 1.5f;
 
-	float _currentActiveTime;
+	float _currentActiveTime =0;
 
 };
 

@@ -4,9 +4,10 @@
 #include "Rect.h"
 #include "DxLib.h"
 
-Spring::Spring(Stage* stagePointer):
+Spring::Spring(Stage* stagePointer, float x, float y) :
 _isSpringActive(false),
-_stagePointer(stagePointer){
+_stagePointer(stagePointer),
+_currentPos(x,y){
 	_springDeActiveHandle = LoadGraph("Image/SpringDeActive.png");
 	_springActiveHandle = LoadGraph("Image/SpringActive.png");
 	_viewSpringHandle = _springDeActiveHandle;
@@ -47,10 +48,6 @@ void Spring::DrawSpring(float scrrolX, float scrrolY) {
 	// “–‚½‚è”»’è‚ð•\Ž¦
 	_collisionRect.Draw(0x0000ff, false);
 #endif
-}
-void Spring::SetPosition(float x, float y) {
-	_currentPos.x = x;
-	_currentPos.y = y;
 }
 
 void Spring::ActiveSpring() {

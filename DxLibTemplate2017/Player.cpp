@@ -13,25 +13,19 @@
  
 
 
-Player::Player(float x,float y) :Character(x, y)
+Player::Player(float x, float y, NormalPlayerImages images) :Character(x, y),
+_idleHandle(images._idle),
+_moveOneHandle(images._move1),
+_moveTwoHandle(images._move2),
+_jumpHandle(images._jump),
+_throwHandle(images._throw)
 {
     _weaponIndex = 0;
     ResetPosition();
-	_idleHandle = LoadGraph("Image/Player/PlayerIdle.png");
-    _moveOneHandle = LoadGraph("Image/Player/PlayerMove1.png");
-    _moveTwoHandle = LoadGraph("Image/Player/PlayerMove2.png");
-    _jumpHandle = LoadGraph("Image/Player/PlayerJump.png");
-    _throwHandle = LoadGraph("Image/Player/PlayerThrow.png");
     _useHandle = _idleHandle;
     _weaponCount = static_cast<int>(WeaponKinds::Max);
 }
 Player::~Player() {
-	DeleteGraph(_idleHandle);
-    DeleteGraph(_moveOneHandle);
-    DeleteGraph(_moveTwoHandle);
-    DeleteGraph(_jumpHandle);
-    DeleteGraph(_throwHandle);
-    DeleteGraph(_useHandle);
 }
 void Player::Move(float moveValue,bool isRight) {
 	_move.x = moveValue;
@@ -317,6 +311,9 @@ void Player::ChangeHandle() {
         break;
     case PlayerState::Throw:
         _useHandle = _throwHandle;
+        break;
+    default:
+        _useHandle = _idleHandle;
         break;
     }
 }

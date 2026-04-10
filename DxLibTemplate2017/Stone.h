@@ -1,25 +1,22 @@
 #pragma once
 #include "Rect.h"
 #include "Vector2.h"
-
-class Rect;
 class Stage;
-class Skate
+class Stone
 {
 public:
-	Skate(Stage* stage,float x,float y);
-	~Skate();
+	Stone(int stoneHandle,Stage* stagePointer, Vector2 pos);
+	~Stone();
 	void Update();
-	void DrawSkateBoard(float scrollX, float scrollY);
+	void Draw(float scrrolX, float scrrolY);
 	Rect GetColRect() const { return _collisionRect; }
 	Vector2 GetPos() const { return _currentPos; }
 
 private:
-	int _skateBoardHandle;
-	float _scale;
-	Stage* _stagePointer;
 	Rect _collisionRect;
 	Vector2 _currentPos;
-	Vector2 _initPos;
+	Stage* _stagePointer;
+	int _stoneHandle;
+	int _scale = 80;
 };
 
