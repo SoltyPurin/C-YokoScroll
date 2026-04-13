@@ -17,8 +17,8 @@ Axe::Axe() : Weapons(){
 
 void Axe::Update() {
 	Weapons::Update();
-	_weaponPosition += _move * _oneMinuteMovePixel * ShareClass::DeltaTime;
-	_weaponPosition.y -= _axeVerticalY * _oneMinuteMovePixel * ShareClass::DeltaTime;
+	_weaponPosition += _move * _oneMinuteMovePixel * ShareClass::KoteiValue;
+	_weaponPosition.y -= _axeVerticalY * _oneMinuteMovePixel * ShareClass::KoteiValue;
 	Gravity();
 }
 void Axe::SetInfo(const Vector2& userPos, bool isRight) {
@@ -33,5 +33,5 @@ void Axe::SetInfo(const Vector2& userPos, bool isRight) {
 }
 
 void Axe::Gravity() {
-	_axeVerticalY -= GRAVITY * _oneMinuteMovePixel * ShareClass::DeltaTime;
+	_axeVerticalY -= GRAVITY * _oneMinuteMovePixel * ShareClass::KoteiValue;
 }

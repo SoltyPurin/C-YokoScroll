@@ -153,7 +153,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             Game();
 
             _stage.Draw();
-            // ステージ（と敵・プレイヤー）の更新と描画
+            // ステージの更新と描画
             if (_stage.Update()) {
                 Scene = eScene_Clear;
                 _soundPlay.PlayGameBGM(2);

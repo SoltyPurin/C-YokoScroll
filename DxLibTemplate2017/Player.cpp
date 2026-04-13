@@ -44,12 +44,12 @@ void Player::Move(float moveValue,bool isRight) {
 }
 
 void Player::Update() {
-    Gravity(ShareClass::DeltaTime);
-	_pos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::DeltaTime;
-	_pos.x += _move.x * _oneMinuteMovePixel * ShareClass::DeltaTime;
+    Gravity(ShareClass::KoteiValue);
+	_pos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::KoteiValue;
+	_pos.x += _move.x * _oneMinuteMovePixel * ShareClass::KoteiValue;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale*0.5f, _scale);
     if (_isThrowing) {
-        _currentThrowingTime += ShareClass::DeltaTime;
+        _currentThrowingTime += ShareClass::KoteiValue;
         _currentState = PlayerState::Throw;
     }
     if (_currentThrowingTime >= _throwStateTime) {

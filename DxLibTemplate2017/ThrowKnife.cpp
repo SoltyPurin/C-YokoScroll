@@ -14,7 +14,7 @@ ThrowKnife::ThrowKnife() : Weapons() {
 }
 void ThrowKnife::Update(){
 	Weapons::Update();
-	_weaponPosition += _move * _oneMinuteMovePixel * ShareClass::DeltaTime;
+	_weaponPosition += _move * _oneMinuteMovePixel * ShareClass::KoteiValue;
 }
 
 void ThrowKnife::SetInfo(const Vector2& playerPos, bool isRight) {

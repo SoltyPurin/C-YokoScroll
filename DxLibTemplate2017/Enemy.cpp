@@ -28,9 +28,9 @@ void Enemy::ResetPosition() {
 
 void Enemy::Update() {
 
-	Gravity(ShareClass::DeltaTime);
-	_currentPos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::DeltaTime;
-    _currentPos.x -= _oneMinuteMovePixel * ShareClass::DeltaTime * _moveFlag;
+	Gravity(ShareClass::KoteiValue);
+	_currentPos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::KoteiValue;
+    _currentPos.x -= _oneMinuteMovePixel * ShareClass::KoteiValue * _moveFlag;
     float colX = _currentPos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
     float colY = _currentPos.y - _stagePointer->GetScrollY() - _colScale * 0.5f;
 

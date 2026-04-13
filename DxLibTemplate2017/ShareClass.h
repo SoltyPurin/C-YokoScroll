@@ -19,7 +19,7 @@ public:
     ~ShareClass();
     static void GetImages();
     static void ReleaseImages();
-	static float DeltaTime;
+	static float KoteiValue;
     static NormalPlayerImages _normalImage;
     static SkatePlayerImages _skateImage;
 };

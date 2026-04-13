@@ -18,8 +18,8 @@ AxeEnemy::~AxeEnemy() {
 }
 
 void AxeEnemy::Update() {
-	Gravity(ShareClass::DeltaTime);
-	_currentPos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::DeltaTime;
+	Gravity(ShareClass::KoteiValue);
+	_currentPos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::KoteiValue;
 	float colX = _currentPos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
 	float colY = _currentPos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
 
@@ -30,7 +30,7 @@ void AxeEnemy::Update() {
 
 
 Axe* AxeEnemy::CreateAxe() {
-	_currentThrowingTime += ShareClass::DeltaTime;
+	_currentThrowingTime += ShareClass::KoteiValue;
 	if (_currentThrowingTime >=_nextThrowTime) {
 		_currentThrowingTime = 0;
 		Axe* axe = new Axe();

@@ -81,8 +81,10 @@ protected:
 	float _initX;
 	//最初のy座標
 	float _initY;
+
 	//1秒あたりなんピクセル進むか
 	float _oneMinuteMovePixel = 100.0f; 
+
 	//効果音をならすクラス
 	SoundPlayer* _soundPlayer;
 };

@@ -1,6 +1,6 @@
 #include "ShareClass.h"
 #include "DxLib.h"
-float ShareClass::DeltaTime = 0.016f;
+float ShareClass::KoteiValue = 0.016f;
 
 NormalPlayerImages ShareClass::_normalImage;
 SkatePlayerImages ShareClass::_skateImage;
