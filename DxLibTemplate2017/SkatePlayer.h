@@ -4,7 +4,7 @@
 class SkatePlayer : public Player
 {
 public:
-	SkatePlayer(float x,float y, NormalPlayerImages nImage,SkatePlayerImages images);
+	SkatePlayer(float x,float y, PlayerImages image);
 	virtual ~SkatePlayer() override;
 	virtual void Update() override;
 	virtual void Draw() override;

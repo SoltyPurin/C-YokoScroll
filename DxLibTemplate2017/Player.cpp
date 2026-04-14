@@ -13,12 +13,14 @@
  
 
 
-Player::Player(float x, float y, NormalPlayerImages images) :Character(x, y),
+Player::Player(float x, float y, PlayerImages images) :Character(x, y),
 _idleHandle(images._idle),
 _moveOneHandle(images._move1),
 _moveTwoHandle(images._move2),
 _jumpHandle(images._jump),
-_throwHandle(images._throw)
+_throwHandle(images._throw),
+_blowAwayHandle(images._blowAway),
+_initBlowAwayPower(_blowAwayPower)
 {
     _weaponIndex = 0;
     ResetPosition();
@@ -28,6 +30,9 @@ _throwHandle(images._throw)
 Player::~Player() {
 }
 void Player::Move(float moveValue,bool isRight) {
+    if (_isBlowing) {
+        return;
+    }
 	_move.x = moveValue;
     _isRight = isRight;
     if (moveValue == 0 && _isGround && !_isThrowing) {
@@ -45,8 +50,14 @@ void Player::Move(float moveValue,bool isRight) {
 
 void Player::Update() {
     Gravity(ShareClass::KoteiValue);
+    if (_isBlowing) {
+        BlowAway();
+        _blowTime += ShareClass::KoteiValue;
+    }
+    else {
+        _pos.x += _move.x * _oneMinuteMovePixel * ShareClass::KoteiValue;
+    }
 	_pos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::KoteiValue;
-	_pos.x += _move.x * _oneMinuteMovePixel * ShareClass::KoteiValue;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale*0.5f, _scale);
     if (_isThrowing) {
         _currentThrowingTime += ShareClass::KoteiValue;
@@ -89,9 +100,7 @@ void Player::CheckHitMap(Rect& chipRect)
     // まずは当たってるか
     if (!_stagePointer->IsCollision(_collisionRect, chipRect))
     {
-        if (!_isGround) {
-            _isGround = false;
-        }
+        _isGround = false; 
         return;
     }
 
@@ -114,14 +123,11 @@ void Player::CheckHitMap(Rect& chipRect)
     // 重要：小さい軸だけ解決（壁に当たったのに縦へ押し戻す…を防ぐ）
     if (pushX < pushY)
     {
-        // 横解決
-        if (rcx < ccx)
-            _pos.x -= pushX; // チップの左側にいる → 左へ
-        else
-            _pos.x += pushX; // チップの右側にいる → 右へ
-
-        //_move.x = 0.0f;
-        // 横衝突だけでは地面判定は変えない（降りられない原因になりやすい）
+            // 横解決
+            if (rcx < ccx)
+                _pos.x -= pushX; // チップの左側にいる → 左へ
+            else
+                _pos.x += pushX; // チップの右側にいる → 右へ
     }
     else
     {
@@ -245,6 +251,9 @@ void Player::CheckMoveFloorHitMap(Rect& moveFloorRect, VerticalMoveFloor* floor)
 }
 
 ThrowKnife* Player::CreateKnife() {
+    if (_isBlowing) {
+        return nullptr;
+    }
     if (_weaponIndex != static_cast<int>(WeaponKinds::UseKnife)) {
         return nullptr;
     }
@@ -259,6 +268,9 @@ ThrowKnife* Player::CreateKnife() {
     return nullptr;
 }
 Axe* Player::CreateAxe() {
+    if (_isBlowing) {
+        return nullptr;
+    }
     if (_weaponIndex != static_cast<int>(WeaponKinds::UseAxe)) {
         return nullptr;
     }
@@ -312,8 +324,33 @@ void Player::ChangeHandle() {
     case PlayerState::Throw:
         _useHandle = _throwHandle;
         break;
-    default:
-        _useHandle = _idleHandle;
-        break;
+    case PlayerState::BlowAway:
+        _useHandle = _blowAwayHandle;
+    //default:
+    //    _useHandle = _idleHandle;
+        //break;
     }
+}
+
+void Player::BlowAway() {
+    if (_isBlowRight) {
+        _pos.x += _blowAwayPower * _blowAwayMovePixel * ShareClass::KoteiValue;
+    }
+    else {
+        _pos.x -= _blowAwayPower * _blowAwayMovePixel * ShareClass::KoteiValue;
+    }
+    if (_isGround && _blowTime >0.5f) {
+        _isBlowing = false;
+    }
+    _currentState = PlayerState::BlowAway;
+}
+
+void Player::CallBlowAway(bool isRight) {
+    _isBlowing = true;
+    _blowAwayPower = _initBlowAwayPower;
+    _jumpAddres->JumpProtocol(*this, _isMoveing);
+    _isGround = false;
+    _currentState = PlayerState::BlowAway;
+    _isBlowRight = isRight;
+    _blowTime = 0;
 }

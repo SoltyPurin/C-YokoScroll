@@ -15,8 +15,8 @@ _startPos(pos)
 	_useButtonHandle = _buttonHandle;
 	_endPos.x = _startPos.x + _xScale;
 	_endPos.y = _startPos.y + _yScale;
-	_textPos.x = _startPos.x;
-	_textPos.y = _startPos.y;
+	_textPos.x = _startPos.x*1.05f;
+	_textPos.y = _startPos.y*1.05f;
 	_fontHandle = CreateFontToHandle(NULL, FONT_SIZE, 0, DX_FONTTYPE_ANTIALIASING);
 }
 

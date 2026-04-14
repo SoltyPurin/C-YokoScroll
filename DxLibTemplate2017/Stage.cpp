@@ -49,7 +49,7 @@ Stage::Stage(SoundPlayer* sound):
 	_graphChipNumY(0),
 	_goal(nullptr)
 {
-	_player = new Player(320, 600,ShareClass::_normalImage);
+	_player = new Player(320, 600,ShareClass::_playerImage);
 	_jump = new Jump();
 	_player->SetStagePointer(this);
 	_player->SetAudioPointer(_soundPlayer);
@@ -310,7 +310,7 @@ void Stage::SwitchPlayerState(bool isSkatePlayer,Vector2 pos) {
 	if (isSkatePlayer) {
 		_isSkateing = true;
 		delete _player;
-		_player = new SkatePlayer(pos.x, pos.y,ShareClass::_normalImage,ShareClass::_skateImage);
+		_player = new SkatePlayer(pos.x, pos.y,ShareClass::_playerImage);
 		_player->SetStagePointer(this);
 		_player->SetAudioPointer(_soundPlayer);
 		_player->SetJumpAddres(_jump);
@@ -328,7 +328,7 @@ void Stage::SwitchPlayerState(bool isSkatePlayer,Vector2 pos) {
 	else {
 		_isSkateing = false;
 		delete _player;
-		_player = new Player(pos.x, pos.y, ShareClass::_normalImage);
+		_player = new Player(pos.x, pos.y, ShareClass::_playerImage);
 		_player->SetStagePointer(this);
 		_player->SetAudioPointer(_soundPlayer);
 		_player->SetJumpAddres(_jump);
@@ -342,6 +342,7 @@ void Stage::SwitchPlayerState(bool isSkatePlayer,Vector2 pos) {
 				axeEnemy->SetPlayerInfo(_player);
 			}
 		}
+
 	}
 }
 
@@ -456,6 +457,7 @@ void Stage::DetectPlayerToEnemyCollision() {
 					delete enemy;
 					_enemys.erase(i);
 					SwitchPlayerState(false, _player->GetPos());
+					_player->CallBlowAway(!_player->IsPlayerRight());
 					break;
 				}
 				else {
@@ -474,7 +476,6 @@ void Stage::DetectPlayerToObstacleCollision() {
 	for (auto i = _moveFloors.begin(); i != _moveFloors.end(); i++) { 
 		VerticalMoveFloor* floor = *i;
 				_player->CheckMoveFloorHitMap(floor->GetColRect(),floor);
-
 	}
 
 	for (auto i = _springs.begin(); i != _springs.end(); i++) {
@@ -483,6 +484,16 @@ void Stage::DetectPlayerToObstacleCollision() {
 		if (isPlayerFloorCollision) {
 			_player->CheckSpringHitMap(spring->GetColRect());
 			spring->ActiveSpring();
+		}
+	}
+	for (auto i = _stones.begin(); i != _stones.end(); i++) {
+		Stone* stone = *i;
+		bool isStoneCollision = stone->GetColRect().IsCollision(_player->GetColRect());
+		if (isStoneCollision) {
+			if (_isSkateing) {
+				SwitchPlayerState(false, _player->GetPos());
+			}
+			_player->CallBlowAway(_player->IsPlayerRight());
 		}
 	}
 }
@@ -636,6 +647,7 @@ void Stage::UpdateEnemyAxe() {
 					if (_isSkateing) {
 						DeleteEnemyAxe(i);
 						SwitchPlayerState(false, _player->GetPos());
+						_player->CallBlowAway(!_player->IsPlayerRight());
 					}
 					else {
 						_isResetting = true;
@@ -689,6 +701,7 @@ void Stage::UpdateKnife() {
 		// ‰æ–ÊŠO‚Éo‚½‚çíœ‚·‚é
 		bool isOutOfScreen = _knife[i]->GetPos().x < 0 || _knife[i]->GetPos().x > SCREEN_WIDTH;
 		bool isTouchEnemy = false;
+		bool isTouchStone = false;
 		for (auto j = _enemys.begin(); j != _enemys.end();) {
 			Enemy* enemy = *j;
 			if (enemy) {
@@ -705,8 +718,17 @@ void Stage::UpdateKnife() {
 				}
 			}
 		}
+		for (auto j = _stones.begin(); j != _stones.end();j++) {
+			Stone* stone = *j;
+			if (stone) {
+				isTouchStone = _knife[i]->GetColRect().IsCollision(stone->GetColRect());
 
-		if (isOutOfScreen || isTouchEnemy)
+			}
+			if (isTouchStone) {
+				break;
+			}
+		}
+		if (isOutOfScreen || isTouchEnemy || isTouchStone)
 		{
 			DeleteKnife(i);
 		}

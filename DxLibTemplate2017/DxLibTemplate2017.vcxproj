@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AxeEnemy.h" />
+    <ClInclude Include="BlowAway.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Enemy.h" />

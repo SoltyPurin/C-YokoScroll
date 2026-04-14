@@ -123,7 +123,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     Vector2 _returnTitleButtonPos = Vector2(500, 400);
 
     Button _gameStartButton(ButtonJob::LoadGameScene, _buttonHandle,_seletButtonHandle, "ゲームスタート", _gameStartButtonPos);
-    Button _gameExitButton(ButtonJob::GameExit, _buttonHandle, _seletButtonHandle, "ゲーム終了", _gameExitButtonPos);
+    Button _gameExitButton(ButtonJob::GameExit, _buttonHandle, _seletButtonHandle, "　ゲーム終了", _gameExitButtonPos);
     Button _returnTitleButton(ButtonJob::ReturnTitle, _buttonHandle, _seletButtonHandle, "タイトルに戻る", _returnTitleButtonPos);
 
     _menuHandle = LoadGraph("Image/Title.jpg");

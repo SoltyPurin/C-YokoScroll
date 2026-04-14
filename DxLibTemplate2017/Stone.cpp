@@ -6,7 +6,7 @@ Stone::Stone(int stoneHandle, Stage* stagePointer,Vector2 pos):
 _stoneHandle(stoneHandle),
 _stagePointer(stagePointer),
 _currentPos(pos){
-
+	_currentPos.y += 32.0f;
 }
 
 Stone::~Stone() {
@@ -16,7 +16,7 @@ Stone::~Stone() {
 void Stone::Update() {
 	float colX = _currentPos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
 	float colY = _currentPos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
-	_collisionRect.SetCenter(colX + _scale * 1, colY + _scale * 1, _scale, _scale);
+	_collisionRect.SetCenter(colX + _scale * 1, colY + _scale * 1, _scale * 0.5f, _scale);
 
 }
 void Stone::Draw(float scrrolX, float scrrolY) {

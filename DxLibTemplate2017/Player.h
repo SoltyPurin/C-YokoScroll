@@ -13,11 +13,12 @@ enum class PlayerState {
     Move,
     Jump,
     Throw,
+    BlowAway,
 };
 
 class Player : public Character {
 public:
-    Player(float x,float y,NormalPlayerImages images);
+    Player(float x,float y,PlayerImages images);
     virtual ~Player() override;
     virtual void Update() override;
     virtual void Draw() override;
@@ -36,6 +37,9 @@ public:
     ThrowKnife* CreateKnife();
     int ReturnCurrentWeaponIndex();
     virtual void ChangeHandle();
+    void BlowAway();
+    void CallBlowAway(bool isRight);
+    bool IsPlayerRight() { return _isRight; }
 
 protected:
     enum class WeaponKinds {
@@ -66,9 +70,18 @@ protected:
     int _moveTwoHandle;
     //ジャンプのハンドルを保存
     int _jumpHandle;
+    //吹き飛ぶハンドル
+    int _blowAwayHandle;
     //武器を投げるハンドルを保存
     int _throwHandle;
     //投げるモーションの再生時間
     float _throwStateTime = 0.5f;
     float _currentThrowingTime = 0;
+
+    float _blowAwayPower = 1.0f;
+    float _initBlowAwayPower;
+    float _blowAwayMovePixel = 300.0f;
+    bool _isBlowing = false;
+    bool _isBlowRight;
+    float _blowTime = 0;
 };

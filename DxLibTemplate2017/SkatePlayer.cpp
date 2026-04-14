@@ -2,10 +2,10 @@
 #include "SkatePlayer.h"
 #include "Player.h"
 #include "ShareClass.h"
-SkatePlayer::SkatePlayer(float x,float y,NormalPlayerImages nImage,SkatePlayerImages images)
-	:Player(x,y,nImage),
-_rideSkateHandle(images._ride),
-_brakeSkateHandle(images._brake),
+SkatePlayer::SkatePlayer(float x,float y,PlayerImages image)
+	:Player(x,y,image),
+_rideSkateHandle(image._skateRide),
+_brakeSkateHandle(image._skateBrake),
 _moveUseValue(_notInputOnePixelMoveValue){
 	_isMoveing = true;
 }
@@ -17,9 +17,14 @@ SkatePlayer::~SkatePlayer() {
 }
 
 void SkatePlayer::Update() {
+	if (_isBlowing) {
+		BlowAway();
+	}
+	else {
+		_pos.x += _move.x * _moveUseValue * ShareClass::KoteiValue;
+	}
 	Gravity(ShareClass::KoteiValue);
 	_pos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::KoteiValue;
-	_pos.x += _move.x * _moveUseValue* ShareClass::KoteiValue;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale * 0.5f, _scale);
 	if (_isThrowing) {
 		_currentThrowingTime += ShareClass::KoteiValue;
@@ -41,6 +46,9 @@ void SkatePlayer::Draw() {
 }
 
 void SkatePlayer::Move(float moveValue, bool isRight) {
+	if (_isBlowing) {
+		return;
+	}
 	_move.x = abs(moveValue);
 	if (moveValue > 0) { //‰E“ü—Í
 		_moveUseValue = _inputOnePixelMoveValue;
