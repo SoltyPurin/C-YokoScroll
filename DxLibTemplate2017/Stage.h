@@ -3,6 +3,7 @@
 #include "Vector2.h"
 #include "Rect.h"
 #include "Goal.h"
+#include <memory>
 class Player;
 class Jump;
 class Enemy;
@@ -57,7 +58,7 @@ private:
 	Jump* _jump;
 	SoundPlayer* _soundPlayer;
 	PlayerInputManager* _inputManager;
-	std::vector<Enemy*> _enemys;
+	std::vector<std::unique_ptr<Enemy>> _enemys;
 	std::vector<VerticalMoveFloor*> _moveFloors;
 	std::vector<Spring*> _springs;
 	std::vector<Skate*> _skates;

@@ -19,6 +19,7 @@
 #include "Jump.h"
 #include "ShareClass.h"
 #include "Stone.h"
+#include "memory.h"
 
 int _backGroundHandler = 0;
 namespace
@@ -94,9 +95,10 @@ Stage::~Stage() {
 		DeleteKnife(i);
 		DeleteEnemyAxe(i);
 	}
-	for (auto enemy : _enemys) {
-		delete enemy;
-	}
+	//for (auto enemy : _enemys) {
+	//	delete enemy;
+	//}
+	_enemys.clear();
 	for (auto floor : _moveFloors) {
 		delete floor;
 	}
@@ -204,14 +206,15 @@ void Stage::SpawnEnemy(int enIndex,float x,float y) {
 	{
 	case 0:
 	{
-		Enemy* newEnemy = new Enemy(this, x, y);
-		_enemys.push_back(newEnemy);
+		//Enemy* newEnemy = new Enemy(this, x, y);
+		_enemys.push_back(std::make_unique<Enemy>(this, x, y));
 		break;
 	}
 	case 1: {
-		AxeEnemy* newAxeEnemy = new AxeEnemy(this, x, y);
+		auto newAxeEnemy = std::make_unique<AxeEnemy>(this, x, y);
 		newAxeEnemy->SetPlayerInfo(_player);
-		_enemys.push_back(newAxeEnemy);
+		_enemys.push_back(std::move(newAxeEnemy));
+		//AxeEnemy* newAxeEnemy = new ;
 		break;
 	}
 	}
@@ -246,9 +249,10 @@ bool Stage::Update() {
 		}
 		//敵のUpdate
 		for (auto i = _enemys.begin(); i != _enemys.end(); ) {
-			Enemy* enemy = *i;
-			if (enemy) {
-				enemy->Update();
+			//Enemy* enemy = (*i).get();
+			if (*i) {
+				(*i)->Update();
+				//enemy->Update();
 				i++;
 			}
 			else {
@@ -261,17 +265,16 @@ bool Stage::Update() {
 		_player->Update();
 		//敵の当たり判定の処理
 		for (auto i = _enemys.begin(); i != _enemys.end(); ) {
-			Enemy* enemy = *i;
-			if (enemy) {
+			if (*i) {
 				//敵本体の当たり判定ではなく、仮の世界座標を生成し、敵の座標を世界座標に変換し渡す
 				Rect worldEnemyRect;
-				worldEnemyRect.m_left = enemy->GetColRect().GetLeft() + GetScrollX();
-				worldEnemyRect.m_right = enemy->GetColRect().GetRight() + GetScrollX();
-				worldEnemyRect.m_top = enemy->GetColRect().GetTop() + GetScrollY();
-				worldEnemyRect.m_bottom = enemy->GetColRect().GetBottom() + GetScrollY();
+				worldEnemyRect.m_left = (*i)->GetColRect().GetLeft() + GetScrollX();
+				worldEnemyRect.m_right = (*i)->GetColRect().GetRight() + GetScrollX();
+				worldEnemyRect.m_top = (*i)->GetColRect().GetTop() + GetScrollY();
+				worldEnemyRect.m_bottom = (*i)->GetColRect().GetBottom() + GetScrollY();
 				Rect tempChipRect;
 				if (IsCollision(worldEnemyRect, tempChipRect)) {
-					enemy->CheckHitMap(tempChipRect);
+					(*i)->CheckHitMap(tempChipRect);
 				}
 
 				i++;
@@ -316,9 +319,9 @@ void Stage::SwitchPlayerState(bool isSkatePlayer,Vector2 pos) {
 		_player->SetJumpAddres(_jump);
 		_inputManager->ResetPointer(_player);
 
-		for (auto enemy : _enemys) {
+		for (auto& enemy : _enemys) {
 			// AxeEnemy 以外の敵もいる可能性があるため、必ず NULL チェック
-			AxeEnemy* axeEnemy = dynamic_cast<AxeEnemy*>(enemy);
+			AxeEnemy* axeEnemy = dynamic_cast<AxeEnemy*>(enemy.get());
 			if (axeEnemy != nullptr) {
 				axeEnemy->SetPlayerInfo(_player);
 			}
@@ -335,9 +338,9 @@ void Stage::SwitchPlayerState(bool isSkatePlayer,Vector2 pos) {
 		_inputManager->ResetPointer(_player);
 
 
-		for (auto enemy : _enemys) {
+		for (auto& enemy : _enemys) {
 			// AxeEnemy 以外の敵もいる可能性があるため、必ず NULL チェック
-			AxeEnemy* axeEnemy = dynamic_cast<AxeEnemy*>(enemy);
+			AxeEnemy* axeEnemy = dynamic_cast<AxeEnemy*>(enemy.get());
 			if (axeEnemy != nullptr) {
 				axeEnemy->SetPlayerInfo(_player);
 			}
@@ -351,9 +354,9 @@ void Stage::Draw() {
 	DrawMapChip();
 	//敵の描画処理
 	for (auto i = _enemys.begin(); i != _enemys.end(); ) {
-		Enemy* enemy = *i;
-		if (enemy) {
-			enemy->Draw(GetScrollX(), GetScrollY());
+		//Enemy* enemy = (*i).get();
+		if (*i) {
+			(*i)->Draw(GetScrollX(), GetScrollY());
 			i++;
 		}
 		else {
@@ -449,12 +452,12 @@ bool Stage::DetectPlayerToSkateCollision() {
 }
 void Stage::DetectPlayerToEnemyCollision() {
 	for (auto i = _enemys.begin(); i != _enemys.end();) {
-		Enemy* enemy = *i;
-		if (enemy) {
-			bool isPlayerEnemyCollision = enemy->GetColRect().IsCollision(_player->GetColRect());
+		//Enemy* enemy = (*i).get();
+		if ((*i)) {
+			bool isPlayerEnemyCollision = (*i)->GetColRect().IsCollision(_player->GetColRect());
 			if (isPlayerEnemyCollision) {
 				if (_isSkateing) {
-					delete enemy;
+					//delete enemy;
 					_enemys.erase(i);
 					SwitchPlayerState(false, _player->GetPos());
 					_player->CallBlowAway(!_player->IsPlayerRight());
@@ -503,9 +506,10 @@ void Stage::ResetGame() {
 		DeleteKnife(i);
 		DeleteEnemyAxe(i);
 	}
-	for (auto enemy : _enemys) {
-		delete enemy;
-	}
+	//for (auto enemy : _enemys) {
+	//	delete enemy;
+	//}
+	_enemys.clear();
 	for (auto floor : _moveFloors) {
 		delete floor;
 	}
@@ -566,12 +570,12 @@ void Stage::UpdateAxe() {
 		bool isOutOfScreen = _axe[i]->GetPos().x < 0 || _axe[i]->GetPos().x > SCREEN_WIDTH;
 		bool isTouchEnemy = false;
 		for (auto j = _enemys.begin(); j != _enemys.end();) {
-			Enemy* enemy = *j;
-			if (enemy) {
-				isTouchEnemy = _axe[i]->GetColRect().IsCollision(enemy->GetColRect());
+			//Enemy* enemy = (*j).get();
+			if ((*j)) {
+				isTouchEnemy = _axe[i]->GetColRect().IsCollision((*j)->GetColRect());
 				if (isTouchEnemy) {
 					//敵を削除
-					delete enemy;
+					//delete enemy;
 					//要素の中身を前につめる
 					j = _enemys.erase(j);
 					_soundPlayer->PlayWeaponHitSound(0);
@@ -614,8 +618,8 @@ void Stage::DrawEnemyAxe() {
 	}
 }
 void Stage::UpdateEnemyAxe() {
-	for (auto enemy : _enemys) {
-		AxeEnemy* axeEnemy = dynamic_cast<AxeEnemy*>(enemy);
+	for (auto& enemy : _enemys) {
+		AxeEnemy* axeEnemy = dynamic_cast<AxeEnemy*>(enemy.get());
 		if (!axeEnemy) continue;
 		Axe* newAxe = axeEnemy->CreateAxe();
 		if (newAxe != nullptr) {
@@ -703,11 +707,11 @@ void Stage::UpdateKnife() {
 		bool isTouchEnemy = false;
 		bool isTouchStone = false;
 		for (auto j = _enemys.begin(); j != _enemys.end();) {
-			Enemy* enemy = *j;
-			if (enemy) {
-				isTouchEnemy = _knife[i]->GetColRect().IsCollision(enemy->GetColRect());
+			//Enemy* enemy = (*j).get();
+			if ((*j)) {
+				isTouchEnemy = _knife[i]->GetColRect().IsCollision((*j)->GetColRect());
 				if (isTouchEnemy) {
-					delete enemy;
+					//delete enemy;
 					j = _enemys.erase(j);
 					_soundPlayer->PlayWeaponHitSound(1);
 					break;
