@@ -9,6 +9,7 @@
 #include "ThrowAxe.h"
 #include "SoundPlayer.h"
 #include "Button.h"
+#include "OutGameInputManager.h"
 
 int _menuHandle;
 int _clearHandle;
@@ -49,6 +50,7 @@ void Menu(Button* loadGameButton,Button* gameExitButton,Vector2 mousePos,SoundPl
     gameExitButton->DrawButton();
     if (loadGameButton->IsTouch(mousePos)) {
         Scene = eScene_Game;
+        loadGameButton->Reset();
         sound.PlayGameBGM(1);
     }
     if (gameExitButton->IsTouch(mousePos)) {
@@ -67,6 +69,7 @@ void Clear(Button* returnTitleButton,Button* gameExitButton,Vector2 mousePos,Sou
     gameExitButton->DrawButton();
     if (returnTitleButton->IsTouch(mousePos)) {
         Scene = eScene_Title;
+        returnTitleButton->Reset();
         sound.PlayGameBGM(0);
     }
     if (gameExitButton->IsTouch(mousePos)) {
@@ -126,8 +129,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     Button _gameExitButton(ButtonJob::GameExit, _buttonHandle, _seletButtonHandle, "　ゲーム終了", _gameExitButtonPos);
     Button _returnTitleButton(ButtonJob::ReturnTitle, _buttonHandle, _seletButtonHandle, "タイトルに戻る", _returnTitleButtonPos);
 
+    share.SetButtons(&_gameStartButton, &_gameExitButton, &_returnTitleButton);
     _menuHandle = LoadGraph("Image/Title.jpg");
     _clearHandle = LoadGraph("Image/Clear.png");
+
+    OutGameInputManager _outGame(share._buttons);
 
     SoundPlayer _soundPlay;
     Stage _stage(&_soundPlay);
@@ -147,6 +153,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         switch (Scene) {
         case eScene_Title:
             Menu(&_gameStartButton,&_gameExitButton,Vector2((float)x,(float)y),_soundPlay);
+            _outGame.TitleInput();
             break;
 
         case eScene_Game:
@@ -163,6 +170,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
         case eScene_Clear:
             Clear(&_returnTitleButton,&_gameExitButton,Vector2((float)x, (float)y),_soundPlay);
+            _outGame.ResultInput();
             break;
         }
         DrawString(0, 20, "Gキーでゲーム画面、Mキーでメニュー画面,Tキーでクリア画面", GetColor(255, 255, 255));

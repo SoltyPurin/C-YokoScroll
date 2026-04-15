@@ -1,13 +1,21 @@
 #include "ShareClass.h"
 #include "DxLib.h"
+#include "Button.h"
 float ShareClass::KoteiValue = 0.016f;
 
 PlayerImages ShareClass::_playerImage;
+Buttons ShareClass::_buttons;
 
 ShareClass::ShareClass() {
 }
 ShareClass::~ShareClass() {
 
+}
+
+void ShareClass::SetButtons(Button* start, Button* exit, Button* returnTitle) {
+	_buttons._gameStartButton = start;
+	_buttons._exitButton = exit;
+	_buttons._returnTitleButton = returnTitle;
 }
 
 void ShareClass::GetImages() {

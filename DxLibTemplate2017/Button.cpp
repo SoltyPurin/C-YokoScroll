@@ -23,9 +23,16 @@ _startPos(pos)
 Button::~Button() {
 
 }
+void Button::Reset() {
+	_isControllSelecting = false;
+	_curState = ButtonState::None;
+}
 
 bool Button::IsTouch(Vector2 mousePos) 
 {
+	if (_isControllSelecting) {
+		return true;
+	}
 	bool isTouch = false;
 	if (mousePos.x >_startPos.x && mousePos.x <_endPos.x &&
 		mousePos.y > _startPos.y && mousePos.y < _endPos.y&& (GetMouseInput() & MOUSE_INPUT_LEFT)) {
@@ -33,12 +40,30 @@ bool Button::IsTouch(Vector2 mousePos)
 	}
 	if (mousePos.x > _startPos.x && mousePos.x <_endPos.x &&
 		mousePos.y > _startPos.y && mousePos.y < _endPos.y ) {
+		if (_curState != ButtonState::Selected) {
+			SwitchButtonColor(true);
+			_curState = ButtonState::Selected;
+		}
+	}
+	else {
+		if (_curState != ButtonState::None) {
+			SwitchButtonColor(false);
+			_curState = ButtonState::None;
+		}
+	}
+	return isTouch;
+}
+
+void Button::SwitchButtonColor(bool isSelecting) {
+	if (isSelecting) {
 		_useButtonHandle = _selectButtonHandle;
 	}
 	else {
 		_useButtonHandle = _buttonHandle;
 	}
-	return isTouch;
+}
+void Button::ControllTap() {
+	_isControllSelecting = true;
 }
 
 void Button::DrawButton() 

@@ -127,6 +127,7 @@
     <ClCompile Include="Jump.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="OutGameInputManager.cpp" />
     <ClCompile Include="Pad.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerInputManager.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Goal.h" />
     <ClInclude Include="Jump.h" />
     <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="OutGameInputManager.h" />
     <ClInclude Include="Pad.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerInputManager.h" />

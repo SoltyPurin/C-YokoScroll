@@ -1,4 +1,5 @@
 #pragma once
+#include "Button.h"
 struct PlayerImages {
     int _idle;
     int _move1;
@@ -10,15 +11,24 @@ struct PlayerImages {
     int _blowAway;
 };
 
+struct Buttons
+{
+    Button* _gameStartButton;
+    Button* _exitButton;
+    Button* _returnTitleButton;
+};
+
 
 class ShareClass
 {
 public:
     ShareClass();
     ~ShareClass();
+    static void SetButtons(Button* start, Button* exit, Button* returnTitle);
     static void GetImages();
     static void ReleaseImages();
 	static float KoteiValue;
     static PlayerImages _playerImage;
+    static Buttons _buttons;
 };
 

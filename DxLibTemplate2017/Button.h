@@ -14,6 +14,9 @@ public:
 	~Button();
 	bool IsTouch(Vector2 mousePos);
 	void DrawButton();
+	void ControllTap();
+	void SwitchButtonColor(bool isSelecting);
+	void Reset();
 private:
 	ButtonJob _job;
 	int _buttonHandle;
@@ -26,5 +29,12 @@ private:
 	int _yScale = 100;
 	int _fontHandle;
 	Vector2 _textPos;
+	bool _isControllSelecting = false;
+	enum ButtonState {
+		None,
+		Selected,
+	};
+
+	ButtonState _curState = ButtonState::None;
 };
 
