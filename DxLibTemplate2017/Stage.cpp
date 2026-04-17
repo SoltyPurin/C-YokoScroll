@@ -98,22 +98,20 @@ Stage::~Stage() {
 	//for (auto enemy : _enemys) {
 	//	delete enemy;
 	//}
-	_enemys.clear();
-	for (auto floor : _moveFloors) {
-		delete floor;
-	}
-	for (auto spring : _springs) {
-		delete spring;
-	}
-	for (auto skate : _skates) {
-		delete skate;
-	}
-	for (auto stone : _stones) {
-		delete stone;
-	}
+	//for (auto floor : _moveFloors) {
+	//	delete floor;
+	//}
+	//for (auto spring : _springs) {
+	//	delete spring;
+	//}
+	//for (auto skate : _skates) {
+	//	delete skate;
+	//}
+	//for (auto stone : _stones) {
+	//	delete stone;
+	//}
 	if (_goal != nullptr) {
-		delete _goal;
-		_goal = nullptr;
+		_goal.reset();
 	}
 	_enemys.clear();
 	_moveFloors.clear();
@@ -149,7 +147,7 @@ void Stage::LoadMap() {
 				CHIP_DATA[y][x] = 0;
 			}
 			if (CHIP_DATA[y][x] == 6) {//6番をゴールとする
-				_goal = new Goal(this,x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale);
+				_goal = std::make_unique<Goal>(this, x * CHIP_SIZE * kChipScale, y * CHIP_SIZE * kChipScale);
 				CHIP_DATA[y][x] = 0;
 			}
 			//移動床を生成
@@ -184,21 +182,19 @@ void Stage::LoadMap() {
 	}
 }
 void Stage::SetFellStone(float x, float y) {
-	Stone* newStone = new Stone(_stoneHandle, this,Vector2(x,y));
-	_stones.push_back(newStone);
+	_stones.push_back(std::make_unique<Stone>(_stoneHandle, this, Vector2(x, y)));
 }
 void Stage::SetSkate(float x,float y) {
-	Skate* newSkate = new Skate(this, x, y);
-	_skates.push_back(newSkate);
+	_skates.push_back(std::make_unique<Skate>(this, x, y));
 }
 void Stage::SetSpring(float x, float y) {
-	Spring* newSpring = new Spring(this,x,y);
-	_springs.push_back(newSpring);
+	_springs.push_back(std::make_unique<Spring>(this,x,y));
 }
 void Stage::SetMoveFloor(float x, float y) {
-	VerticalMoveFloor* newFloor = new VerticalMoveFloor(this);
-	_moveFloors.push_back(newFloor);
+
+	auto newFloor = std::make_unique<VerticalMoveFloor>(this);
 	newFloor->SetPosition(x, y);
+	_moveFloors.push_back(std::move(newFloor));
 }
 
 void Stage::SpawnEnemy(int enIndex,float x,float y) {
@@ -224,27 +220,25 @@ bool Stage::Update() {
 	bool isClear = false;
 	//Updateによる計算処理
 		for (auto i = _moveFloors.begin(); i != _moveFloors.end();i++) {
-		VerticalMoveFloor* floor = *i;
-		if (floor) {
-			floor->Update();
+		if (*i) {
+			//floor->Update();
+			(*i)->Update();
 		}
 		}
 		for (auto i = _springs.begin(); i != _springs.end(); i++) {
-			Spring* spring = *i;
-			if (spring) {
-				spring->Update();
+			if (*i) {
+				(*i)->Update();
 			}
 		}
 		for (auto i = _skates.begin(); i != _skates.end(); i++) {
-			Skate* skate = *i;
-			if (skate) {
-				skate->Update();
+			//Skate* skate = *i;
+			if (*i) {
+				(*i)->Update();
 			}
 		}
 		for (auto i = _stones.begin(); i != _stones.end(); i++) {
-			Stone* stone = *i;
-			if (stone) {
-				stone->Update();
+			if (*i) {
+				(*i)->Update();
 			}
 		}
 		//敵のUpdate
@@ -364,27 +358,23 @@ void Stage::Draw() {
 		}
 	}
 	for (auto i = _moveFloors.begin(); i != _moveFloors.end(); i++) {
-		VerticalMoveFloor* floor = *i;
-		if (floor) {
-			floor->DrawFloor(GetScrollX(), GetScrollY());
+		if (*i) {
+			(*i)->DrawFloor(GetScrollX(), GetScrollY());
 		}
 	}
 	for (auto i = _springs.begin(); i != _springs.end(); i++) {
-		Spring* spring = *i;
-		if (spring) {
-			spring->DrawSpring(GetScrollX(), GetScrollY());
+		if (*i) {
+			(*i)->DrawSpring(GetScrollX(), GetScrollY());
 		}
 	}
 	for (auto i = _skates.begin(); i != _skates.end(); i++) {
-		Skate* skate = *i;
-		if (skate) {
-			skate->DrawSkateBoard(GetScrollX(), GetScrollY());
+		if (*i) {
+			(*i)->DrawSkateBoard(GetScrollX(), GetScrollY());
 		}
 	}
 	for (auto i = _stones.begin(); i != _stones.end(); i++) {
-		Stone* stone = *i;
-		if (stone) {
-			stone->Draw(GetScrollX(), GetScrollY());
+		if (*i) {
+			(*i)->Draw(GetScrollX(), GetScrollY());
 		}
 	}
 	_player->Draw();
@@ -434,18 +424,18 @@ bool Stage::DetectPlayerToGoalCollision() {
 bool Stage::DetectPlayerToSkateCollision() {
 	bool isCollisionSkate = false;
 	for (auto i = _skates.begin(); i != _skates.end();i++) {
-		Skate* skate = *i;
-		if (!skate) {
-			i = _skates.erase(i); // 無効なポインタなら削除して次へ
-			continue;
-		}
-		bool isPlayerSkateCollision = skate->GetColRect().IsCollision(_player->GetColRect());
+		if (*i) {
+			bool isPlayerSkateCollision = (*i)->GetColRect().IsCollision(_player->GetColRect());
 
-		if (isPlayerSkateCollision) {
-				delete skate;
+			if (isPlayerSkateCollision) {
 				i = _skates.erase(i);
 				isCollisionSkate = true;
 				break;
+			}
+
+		}
+		else {
+			i = _skates.erase(i); // 無効なポインタなら削除して次へ
 		}
 	}
 	return isCollisionSkate;
@@ -477,21 +467,19 @@ void Stage::DetectPlayerToEnemyCollision() {
 }
 void Stage::DetectPlayerToObstacleCollision() {
 	for (auto i = _moveFloors.begin(); i != _moveFloors.end(); i++) { 
-		VerticalMoveFloor* floor = *i;
-				_player->CheckMoveFloorHitMap(floor->GetColRect(),floor);
+		//VerticalMoveFloor* floor = *i;
+		_player->CheckMoveFloorHitMap((*i)->GetColRect(), (*i).get());
 	}
 
 	for (auto i = _springs.begin(); i != _springs.end(); i++) {
-		Spring* spring = *i;
-		bool isPlayerFloorCollision = spring->GetColRect().IsCollision(_player->GetColRect());
+		bool isPlayerFloorCollision = (*i)->GetColRect().IsCollision(_player->GetColRect());
 		if (isPlayerFloorCollision) {
-			_player->CheckSpringHitMap(spring->GetColRect());
-			spring->ActiveSpring();
+			_player->CheckSpringHitMap((*i)->GetColRect());
+			(*i)->ActiveSpring();
 		}
 	}
 	for (auto i = _stones.begin(); i != _stones.end(); i++) {
-		Stone* stone = *i;
-		bool isStoneCollision = stone->GetColRect().IsCollision(_player->GetColRect());
+		bool isStoneCollision = (*i)->GetColRect().IsCollision(_player->GetColRect());
 		if (isStoneCollision) {
 			if (_isSkateing) {
 				SwitchPlayerState(false, _player->GetPos());
@@ -509,19 +497,17 @@ void Stage::ResetGame() {
 	//for (auto enemy : _enemys) {
 	//	delete enemy;
 	//}
-	_enemys.clear();
-	for (auto floor : _moveFloors) {
-		delete floor;
-	}
-	for (auto spring : _springs) {
-		delete spring;
-	}
-	for (auto skate : _skates) {
-		delete skate;
-	}
+	//for (auto floor : _moveFloors) {
+	//	delete floor;
+	//}
+	//for (auto spring : _springs) {
+	//	delete spring;
+	//}
+	//for (auto skate : _skates) {
+	//	delete skate;
+	//}
 	if (_goal != nullptr) {
-		delete _goal;
-		_goal = nullptr;
+		_goal.reset();
 	}
 	_enemys.clear();
 	_moveFloors.clear();
@@ -548,13 +534,14 @@ void Stage::DrawAxe() {
 }
 
 void Stage::UpdateAxe() {
-	Axe* newAxe = _player->CreateAxe();
+	//Axe* newAxe = _player->CreateAxe();
+	auto newAxe = _player->CreateAxe();
 	if (newAxe != nullptr) {
 		//斧を生成できた場合は保持
 		for (int i = 0; i < WEAPON_MAX; i++)
 		{
 			if (_axe[i] == nullptr) {
-				_axe[i] = newAxe;
+				_axe[i] = std::move(newAxe);
 				break;
 			}
 		}
@@ -601,8 +588,8 @@ void Stage::DeleteAxe(int index) {
 		return;
 	}
 
-	delete _axe[index];
-	_axe[index] = nullptr;
+	_axe[index].reset();
+	//_axe[index] = nullptr;
 }
 #pragma endregion
 
@@ -621,13 +608,13 @@ void Stage::UpdateEnemyAxe() {
 	for (auto& enemy : _enemys) {
 		AxeEnemy* axeEnemy = dynamic_cast<AxeEnemy*>(enemy.get());
 		if (!axeEnemy) continue;
-		Axe* newAxe = axeEnemy->CreateAxe();
+		auto newAxe = axeEnemy->CreateAxe();
 		if (newAxe != nullptr) {
 			//斧を生成できた場合は保持
 			for (int i = 0; i < WEAPON_MAX; i++)
 			{
 				if (_enemyAxe[i] == nullptr) {
-					_enemyAxe[i] = newAxe;
+					_enemyAxe[i] = std::move(newAxe);
 					break;
 				}
 			}
@@ -665,8 +652,8 @@ void Stage::DeleteEnemyAxe(int index) {
 		return;
 	}
 
-	delete _enemyAxe[index];
-	_enemyAxe[index] = nullptr;
+	_enemyAxe[index].reset();
+	//_enemyAxe[index] = nullptr;
 }
 #pragma endregion
 
@@ -684,13 +671,13 @@ void Stage::DrawKnife() {
 	}
 }
 void Stage::UpdateKnife() {
-	ThrowKnife* newKnife = _player->CreateKnife();
+	auto newKnife = _player->CreateKnife();
 	if (newKnife != nullptr) {
 		//ナイフを生成できた場合は保持
 		for (int i = 0; i < WEAPON_MAX; i++)
 		{
 			if (_knife[i] == nullptr) {
-				_knife[i] = newKnife;
+				_knife[i] = std::move(newKnife);
 				break;
 			}
 		}
@@ -723,9 +710,8 @@ void Stage::UpdateKnife() {
 			}
 		}
 		for (auto j = _stones.begin(); j != _stones.end();j++) {
-			Stone* stone = *j;
-			if (stone) {
-				isTouchStone = _knife[i]->GetColRect().IsCollision(stone->GetColRect());
+			if (*j) {
+				isTouchStone = _knife[i]->GetColRect().IsCollision((*j).get()->GetColRect());
 
 			}
 			if (isTouchStone) {
@@ -745,8 +731,7 @@ void Stage::DeleteKnife(int index) {
 		return;
 	}
 
-	delete _knife[index];
-	_knife[index] = nullptr;
+	_knife[index].reset();
 }
 #pragma endregion
 

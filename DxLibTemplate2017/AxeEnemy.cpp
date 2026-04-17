@@ -29,11 +29,11 @@ void AxeEnemy::Update() {
 }
 
 
-Axe* AxeEnemy::CreateAxe() {
+std::unique_ptr<Axe> AxeEnemy::CreateAxe() {
 	_currentThrowingTime += ShareClass::KoteiValue;
 	if (_currentThrowingTime >=_nextThrowTime) {
 		_currentThrowingTime = 0;
-		Axe* axe = new Axe();
+		auto axe = std::make_unique<Axe>();
 		float colX = _currentPos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
 		float colY = _currentPos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
 		Vector2 colVec = Vector2(colX + _scale, colY + _scale);

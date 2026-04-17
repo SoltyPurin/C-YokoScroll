@@ -66,7 +66,7 @@ void Button::ControllTap() {
 	_isControllSelecting = true;
 }
 
-void Button::DrawButton() 
+void Button::DrawButton() const 
 {
 	DrawExtendGraph(_startPos.x, _startPos.y, _endPos.x,_endPos.y , _useButtonHandle, TRUE);
 	DrawStringFToHandle(_textPos.x, _textPos.y, _message, GetColor(0, 0, 0), _fontHandle);

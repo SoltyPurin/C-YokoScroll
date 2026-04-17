@@ -89,7 +89,7 @@ void Player::Draw() {
 	_collisionRect.Draw(0x0000ff, false);
 #endif
 }
-int Player::ReturnCurrentWeaponIndex() {
+int Player::ReturnCurrentWeaponIndex()const {
     return _weaponIndex;
 }
 void Player::CheckHitMap(Rect& chipRect)
@@ -250,7 +250,7 @@ void Player::CheckMoveFloorHitMap(Rect& moveFloorRect, VerticalMoveFloor* floor)
 
 }
 
-ThrowKnife* Player::CreateKnife() {
+std::unique_ptr<ThrowKnife> Player::CreateKnife() {
     if (_isBlowing) {
         return nullptr;
     }
@@ -258,7 +258,8 @@ ThrowKnife* Player::CreateKnife() {
         return nullptr;
     }
     if (Pad::IsTrigger(PAD_INPUT_3)) {
-        ThrowKnife* knife = new ThrowKnife();
+        //ThrowKnife* knife = new ThrowKnife();
+        auto knife = std::make_unique<ThrowKnife>();
         knife->SetInfo(_draw, _isRight);
         _currentState = PlayerState::Throw;
         _isThrowing = true;
@@ -267,7 +268,7 @@ ThrowKnife* Player::CreateKnife() {
     }
     return nullptr;
 }
-Axe* Player::CreateAxe() {
+std::unique_ptr<Axe> Player::CreateAxe() {
     if (_isBlowing) {
         return nullptr;
     }
@@ -275,7 +276,7 @@ Axe* Player::CreateAxe() {
         return nullptr;
     }
     if (Pad::IsTrigger(PAD_INPUT_3)) {
-        Axe* axe = new Axe();
+        auto axe = std::make_unique<Axe>();
         axe->SetInfo(_draw, _isRight);
         _currentState = PlayerState::Throw;
         _isThrowing = true;

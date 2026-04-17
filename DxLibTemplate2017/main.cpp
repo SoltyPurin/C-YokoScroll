@@ -99,7 +99,7 @@ void FpsTimeFanction() {
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     int RefreshTime = 0;
-    SetOutApplicationLogValidFlag(FALSE);
+    SetOutApplicationLogValidFlag(TRUE);
 
     // 【修正】FALSEは全画面です。非全画面（ウィンドウ）なら TRUE にします
     ChangeWindowMode(TRUE);

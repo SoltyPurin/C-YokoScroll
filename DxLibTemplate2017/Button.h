@@ -13,7 +13,7 @@ public:
 	Button(ButtonJob job, int buttonImageHandle, int selectButtonHandle, CHAR* message, Vector2 pos);
 	~Button();
 	bool IsTouch(Vector2 mousePos);
-	void DrawButton();
+	void DrawButton() const;
 	void ControllTap();
 	void SwitchButtonColor(bool isSelecting);
 	void Reset();

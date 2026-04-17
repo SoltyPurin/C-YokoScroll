@@ -3,6 +3,7 @@
 #include "Vector2.h"
 #include "Rect.h"
 #include "ShareClass.h"
+#include <memory>
 class Rect;
 class Jump;
 class Stage;
@@ -33,13 +34,14 @@ public:
     void JumpProtocol();
     void SetJumpAddres(Jump* jump) { _jumpAddres = jump; }
     void ChangeWeapon();
-    Axe* CreateAxe();
-    ThrowKnife* CreateKnife();
-    int ReturnCurrentWeaponIndex();
+    std::unique_ptr<Axe> CreateAxe();
+    //ThrowKnife* CreateKnife();
+    std::unique_ptr<ThrowKnife> CreateKnife();
+    int ReturnCurrentWeaponIndex()const;
     virtual void ChangeHandle();
     void BlowAway();
     void CallBlowAway(bool isRight);
-    bool IsPlayerRight() { return _isRight; }
+    bool IsPlayerRight()const { return _isRight; }
 
 protected:
     enum class WeaponKinds {
