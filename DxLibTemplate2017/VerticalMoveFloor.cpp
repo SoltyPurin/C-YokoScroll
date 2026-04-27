@@ -1,9 +1,12 @@
+#include "Precompile.h"
 #include "VerticalMoveFloor.h"
-#include "DxLib.h"
 #include "ShareClass.h"
-VerticalMoveFloor::VerticalMoveFloor(Stage* stage) :
+VerticalMoveFloor::VerticalMoveFloor(Stage* stage, float x, float y) :
 	_stagePointer(stage),
-	_upperFlagValue(-1)
+	_upperFlagValue(-1),
+	_currentPos(x, y),
+	_upperLimit(_currentPos.y - _moveRange),
+	_downerLimit(_currentPos.y + _moveRange)
 {
 	_floorHandle = LoadGraph("Image/moveFloor.png");
 }
@@ -17,7 +20,7 @@ void VerticalMoveFloor::Update() {
 	// 1. 更新前の座標を覚えておく
 	float oldY = _currentPos.y;
 
-	// 2. 本来の移動処理（サイン波や速度加算など）
+	// 2. 移動処理
 	if (_currentPos.y < _upperLimit) {
 		_currentPos.y = _upperLimit;
 		_upperFlagValue = 1;
@@ -27,7 +30,7 @@ void VerticalMoveFloor::Update() {
 		_upperFlagValue = -1;
 	}
 
-	_currentPos.y += _floorMoveSpeed * _oneMinuteMovePixel * ShareClass::KoteiValue * _upperFlagValue;
+	_currentPos.y += _floorMoveSpeed * _oneMinuteMovePixel * ShareClass::ConstValue * _upperFlagValue;
 	float colX = _currentPos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
 	float colY = _currentPos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
 	_collisionRect.SetCenter(colX + _scale * 1, colY + _scale * 1, _scale, _scale);
@@ -43,13 +46,5 @@ void VerticalMoveFloor::DrawFloor(float scrolX,float scrolY) {
 	// 当たり判定を表示
 	_collisionRect.Draw(0x0000ff, false);
 #endif
-
-}
-
-void VerticalMoveFloor::SetPosition(float x, float y) {
-	_currentPos.x = x;
-	_currentPos.y = y;
-	_upperLimit = _currentPos.y - _moveRange;
-	_downerLimit = _currentPos.y + _moveRange;
 
 }

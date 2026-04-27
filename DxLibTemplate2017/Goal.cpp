@@ -1,5 +1,5 @@
+#include "Precompile.h"
 #include "Goal.h"
-#include "DxLib.h"
 Goal::Goal(Stage* stagePointer,float x, float y):
 _stagePointer(stagePointer),
 _currentPos(x,y){

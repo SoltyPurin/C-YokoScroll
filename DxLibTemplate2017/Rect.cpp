@@ -1,6 +1,5 @@
+#include "Precompile.h"
 #include "Rect.h"
-#include "DxLib.h"
-#include <cassert>
 
 Rect::Rect() :
 	m_left(0.0f),

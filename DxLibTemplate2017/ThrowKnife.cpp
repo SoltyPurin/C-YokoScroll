@@ -1,5 +1,5 @@
+#include "Precompile.h"
 #include "ThrowKnife.h"
-#include "DxLib.h"
 #include "Weapons.h" 
 #include "ShareClass.h"
 namespace
@@ -14,7 +14,7 @@ ThrowKnife::ThrowKnife() : Weapons() {
 }
 void ThrowKnife::Update(){
 	Weapons::Update();
-	_weaponPosition += _move * _oneMinuteMovePixel * ShareClass::KoteiValue;
+	_weaponPosition += _move * _oneMinuteMovePixel * ShareClass::ConstValue;
 }
 
 void ThrowKnife::SetInfo(const Vector2& playerPos, bool isRight) {

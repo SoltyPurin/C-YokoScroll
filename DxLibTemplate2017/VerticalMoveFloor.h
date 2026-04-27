@@ -7,11 +7,10 @@ class Rect;
 class VerticalMoveFloor
 {
 public:
-	VerticalMoveFloor(Stage* stage);
+	VerticalMoveFloor(Stage* stage,float x,float y);
 	~VerticalMoveFloor();
 	void Update();
 	void DrawFloor(float scrrolX, float scrrolY);
-	void SetPosition(float x, float y);
 	void SetStagePointer(Stage* pStage) { _stagePointer = pStage; }
 	Rect GetColRect() const { return _collisionRect; }
 	Vector2 GetPos() const { return _currentPos; }

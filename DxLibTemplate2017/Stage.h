@@ -1,12 +1,12 @@
 #pragma once
 #include <vector>
+#include <memory>
 #include "Vector2.h"
 #include "Rect.h"
-#include "Goal.h"
-#include <memory>
 class Player;
 class Jump;
 class Enemy;
+class AxeEnemy;
 class Axe;
 class ThrowKnife;
 class VerticalMoveFloor;
@@ -51,9 +51,33 @@ public:
 	void SetSkate(float x, float y);
 	void SetFellStone(float x, float y);
 	void SwitchPlayerState(bool isSkatePlayer,Vector2 pos);
+	static constexpr float MAP_WIDTH = 30000.0f;	 // マップ全体の幅
+	static constexpr float MAP_HEIGHT = 2080.0f;	 // マップ全体の高さ
+	static constexpr float SCREEN_WIDTH = 1920.0f;	 // スクリーンの幅
+	static constexpr float SCREEN_HEIGHT = 1080.0f; // スクリーンの高さ
+	static constexpr float CHIP_SIZE = 64;
+
+
+	static constexpr float kChipScale = 1.5f; 	// マップチップ拡大率
+
+	// チップを置く数
+	static constexpr int CHIP_NUM_X = MAP_WIDTH / CHIP_SIZE;
+	static constexpr int CHIP_NUM_Y = MAP_HEIGHT / CHIP_SIZE;
+
 private:
+	const int WEAPON_MAX = 2;
+
+	// マップチップの配列情報
+	int CHIP_DATA[CHIP_NUM_Y][CHIP_NUM_X];
+
+	int _bgWidth = static_cast<int>(SCREEN_WIDTH) - 1;
+	int _bgHeight = static_cast<int>(SCREEN_HEIGHT) - 1;
+
+	int _backGroundHandler = 0;
+
 	Vector2 pos;
 	Vector2 size;
+	Vector2 _playerInitPos = Vector2(320, 600);
 	Player* _player;
 	Jump* _jump;
 	SoundPlayer* _soundPlayer;
@@ -82,4 +106,3 @@ private:
 	bool _isResetting = false;
 	bool _isSkateing = false;
 };
-

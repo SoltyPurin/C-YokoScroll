@@ -1,6 +1,8 @@
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\AxeEnemy.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\AxeEnemy.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Button.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Button.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Character.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Character.obj
+C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Stage_Collision.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Stage_Collision.obj
+C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Stage_Draw.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Stage_Draw.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Enemy.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Enemy.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Goal.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Goal.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Jump.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Jump.obj
@@ -10,13 +12,15 @@ C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\OutGameInputManag
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Pad.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Pad.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Player.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Player.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\PlayerInputManager.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\PlayerInputManager.obj
+C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Precompile.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Precompile.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Rect.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Rect.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\ShareClass.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\ShareClass.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Skate.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Skate.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\SkatePlayer.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\SkatePlayer.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\SoundPlayer.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\SoundPlayer.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Spring.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Spring.obj
-C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Stage.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Stage.obj
+C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Stage_Update.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Stage_Update.obj
+C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Stage_Weapons.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Stage_Weapons.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Stone.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\Stone.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\ThrowAxe.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\ThrowAxe.obj
 C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\ThrowKnife.cpp;C:\Users\Shout\Documents\GitHub\C-YokoScroll\DxLibTemplate2017\Debug\ThrowKnife.obj

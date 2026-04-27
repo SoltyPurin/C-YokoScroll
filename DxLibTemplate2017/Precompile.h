@@ -1,0 +1,15 @@
+#pragma once
+#include <DxLib.h>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include "ShareClass.h"
+#include <memory>
+#include <stdio.h>
+#include <cassert>
+
+
+class Precompile
+{
+};
+

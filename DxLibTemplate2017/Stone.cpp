@@ -1,6 +1,6 @@
+#include "Precompile.h"
 #include "Stone.h"
 #include "Stage.h"
-#include "DxLib.h"
 
 Stone::Stone(int stoneHandle, Stage* stagePointer,Vector2 pos):
 _stoneHandle(stoneHandle),

@@ -1,4 +1,4 @@
-#include "DxLib.h"
+#include "Precompile.h"
 #include "SkatePlayer.h"
 #include "Player.h"
 #include "ShareClass.h"
@@ -11,9 +11,6 @@ _moveUseValue(_notInputOnePixelMoveValue){
 }
 
 SkatePlayer::~SkatePlayer() {
-	//DeleteGraph(_brakeSkateHandle);
-	//DeleteGraph(_rideSkateHandle);
-	//DeleteGraph(_useHandle);
 }
 
 void SkatePlayer::Update() {
@@ -21,13 +18,13 @@ void SkatePlayer::Update() {
 		BlowAway();
 	}
 	else {
-		_pos.x += _move.x * _moveUseValue * ShareClass::KoteiValue;
+		_pos.x += _move.x * _moveUseValue * ShareClass::ConstValue;
 	}
-	Gravity(ShareClass::KoteiValue);
-	_pos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::KoteiValue;
+	Gravity(ShareClass::ConstValue);
+	_pos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::ConstValue;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale * 0.5f, _scale);
 	if (_isThrowing) {
-		_currentThrowingTime += ShareClass::KoteiValue;
+		_currentThrowingTime += ShareClass::ConstValue;
 		_currentState = PlayerState::Throw;
 	}
 	if (_currentThrowingTime >= _throwStateTime) {

@@ -1,6 +1,4 @@
 #pragma once
-#include "Vector2.h"
-#include "Rect.h"
 #include "Weapons.h"
 class Axe : public Weapons
 {

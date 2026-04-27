@@ -1,6 +1,6 @@
+#include "Precompile.h"
 #include "PlayerInputManager.h"
 #include "Pad.h"
-#include <DxLib.h>
 #include "Player.h"
 
 PlayerInputManager::PlayerInputManager(Player* player):

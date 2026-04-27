@@ -1,3 +1,4 @@
+#include "Precompile.h"
 #include "Jump.h"
 
 void Jump::JumpProtocol(Player& player, bool isMove) {

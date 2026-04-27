@@ -1,5 +1,5 @@
+#include "Precompile.h"
 #include "Player.h"
-#include <DxLib.h>
 #include "Vector2.h"
 #include "Stage.h"
 #include "Rect.h"
@@ -49,18 +49,18 @@ void Player::Move(float moveValue,bool isRight) {
 }
 
 void Player::Update() {
-    Gravity(ShareClass::KoteiValue);
+    Gravity(ShareClass::ConstValue);
     if (_isBlowing) {
         BlowAway();
-        _blowTime += ShareClass::KoteiValue;
+        _blowTime += ShareClass::ConstValue;
     }
     else {
-        _pos.x += _move.x * _oneMinuteMovePixel * ShareClass::KoteiValue;
+        _pos.x += _move.x * _oneMinuteMovePixel * ShareClass::ConstValue;
     }
-	_pos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::KoteiValue;
+	_pos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::ConstValue;
 	_collisionRect.SetCenter(_draw.x + _scale * 0.5f, _draw.y + _scale * 0.5f, _scale*0.5f, _scale);
     if (_isThrowing) {
-        _currentThrowingTime += ShareClass::KoteiValue;
+        _currentThrowingTime += ShareClass::ConstValue;
         _currentState = PlayerState::Throw;
     }
     if (_currentThrowingTime >= _throwStateTime) {
@@ -335,10 +335,10 @@ void Player::ChangeHandle() {
 
 void Player::BlowAway() {
     if (_isBlowRight) {
-        _pos.x += _blowAwayPower * _blowAwayMovePixel * ShareClass::KoteiValue;
+        _pos.x += _blowAwayPower * _blowAwayMovePixel * ShareClass::ConstValue;
     }
     else {
-        _pos.x -= _blowAwayPower * _blowAwayMovePixel * ShareClass::KoteiValue;
+        _pos.x -= _blowAwayPower * _blowAwayMovePixel * ShareClass::ConstValue;
     }
     if (_isGround && _blowTime >0.5f) {
         _isBlowing = false;

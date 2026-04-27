@@ -1,7 +1,7 @@
+#include "Precompile.h"
 #include "ShareClass.h"
-#include "DxLib.h"
 #include "Button.h"
-float ShareClass::KoteiValue = 0.016f;
+float ShareClass::ConstValue = 0.016f;
 
 PlayerImages ShareClass::_playerImage;
 Buttons ShareClass::_buttons;

@@ -1,8 +1,8 @@
+#include "Precompile.h"
 #include "Spring.h"
 #include "Stage.h"
 #include "Vector2.h"
 #include "Rect.h"
-#include "DxLib.h"
 
 Spring::Spring(Stage* stagePointer, float x, float y) :
 _isSpringActive(false),

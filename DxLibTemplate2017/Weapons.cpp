@@ -1,5 +1,5 @@
+#include "Precompile.h"
 #include "Weapons.h"
-#include "DxLib.h"
 
 Weapons::Weapons() :
 	_weaponPosition({ 0,0 }),

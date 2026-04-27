@@ -1,6 +1,6 @@
+#include "Precompile.h"
 #include "Character.h"
 #include "Stage.h"
-#include "DxLib.h"
 
 Character::Character(float x,float y) :
 _stagePointer(nullptr),

@@ -1,7 +1,6 @@
 #pragma once
-#include "Vector2.h"
+#include "Precompile.h"
 #include "Rect.h"
-
 class Weapons
 {
 public:

@@ -1,5 +1,5 @@
+#include "Precompile.h"
 #include "Button.h"
-#include "DxLib.h"
 
 namespace {
 	constexpr int FONT_SIZE = 64;

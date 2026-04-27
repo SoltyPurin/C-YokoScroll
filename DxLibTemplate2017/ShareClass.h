@@ -27,7 +27,7 @@ public:
     static void SetButtons(Button* start, Button* exit, Button* returnTitle);
     static void GetImages();
     static void ReleaseImages();
-	static float KoteiValue;
+	static float ConstValue;
     static PlayerImages _playerImage;
     static Buttons _buttons;
 };

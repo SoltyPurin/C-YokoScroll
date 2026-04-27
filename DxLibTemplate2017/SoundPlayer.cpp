@@ -1,5 +1,5 @@
+#include "Precompile.h"
 #include "SoundPlayer.h"
-#include "DxLib.h"
 #include "Player.h"
 SoundPlayer::SoundPlayer() {
 	_jumpSEHandle = LoadSoundMem("Audio/SE/Jump.mp3");

@@ -1,7 +1,5 @@
+#include "Precompile.h"
 #include "Enemy.h"
-#include <DxLib.h>
-#include "Rect.h"
-#include "ShareClass.h"
 
 
 Enemy::Enemy(Stage* stage,float x,float y):
@@ -28,13 +26,12 @@ void Enemy::ResetPosition() {
 
 void Enemy::Update() {
 
-	Gravity(ShareClass::KoteiValue);
-	_currentPos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::KoteiValue;
-    _currentPos.x -= _oneMinuteMovePixel * ShareClass::KoteiValue * _moveFlag;
+	Gravity(ShareClass::ConstValue);
+	_currentPos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::ConstValue;
+    _currentPos.x -= _oneMinuteMovePixel * ShareClass::ConstValue * _moveFlag;
     float colX = _currentPos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
     float colY = _currentPos.y - _stagePointer->GetScrollY() - _colScale * 0.5f;
 
-    //_collisionRect.SetCenter(colX  ,colY , _scale, _scale);
     _collisionRect.SetCenter(colX + _scale, colY + _scale, _colScale, _colScale);
 
     float curMoveRange = abs(_currentPos.x - _flagChangeXPos);
@@ -60,6 +57,11 @@ void Enemy::Draw(float scrollX,float scrollY) {
 #ifdef _DEBUG
 	//// “–‚½‚è”»’è‚ð•\Ž¦
 	_collisionRect.Draw(0x0000ff, false);
+    float colX = _currentPos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
+    float colY = _currentPos.y - _stagePointer->GetScrollY() - _colScale * 0.5f;
+
+    printfDx("%f,%f\n",colX,colY);
+    printfDx("%f,%f\n", drawX, drawY);
 #endif
 
 }

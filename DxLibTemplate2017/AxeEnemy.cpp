@@ -1,13 +1,15 @@
+#include "Precompile.h"
 #include "AxeEnemy.h"
 #include "Enemy.h"
-#include <DxLib.h>
 #include "ShareClass.h"
 #include "ThrowAxe.h"
 #include "Player.h"
 #include "Stage.h"
 
 
-AxeEnemy::AxeEnemy(Stage* stage, float x, float y) : Enemy(stage, x, y) {
+AxeEnemy::AxeEnemy(Stage* stage, float x, float y) : 
+	Enemy(stage, x, y)
+{
 	_imageHandle = LoadGraph("Image/AxeEnemy.png");
 	_scale = 99;
 	ResetPosition();
@@ -18,8 +20,8 @@ AxeEnemy::~AxeEnemy() {
 }
 
 void AxeEnemy::Update() {
-	Gravity(ShareClass::KoteiValue);
-	_currentPos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::KoteiValue;
+	Gravity(ShareClass::ConstValue);
+	_currentPos.y -= _verticalY * _oneMinuteMovePixel * ShareClass::ConstValue;
 	float colX = _currentPos.x - _stagePointer->GetScrollX() - _scale * 0.5f;
 	float colY = _currentPos.y - _stagePointer->GetScrollY() - _scale * 0.5f;
 
@@ -30,7 +32,7 @@ void AxeEnemy::Update() {
 
 
 std::unique_ptr<Axe> AxeEnemy::CreateAxe() {
-	_currentThrowingTime += ShareClass::KoteiValue;
+	_currentThrowingTime += ShareClass::ConstValue;
 	if (_currentThrowingTime >=_nextThrowTime) {
 		_currentThrowingTime = 0;
 		auto axe = std::make_unique<Axe>();

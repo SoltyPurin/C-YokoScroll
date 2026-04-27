@@ -1,5 +1,4 @@
-#include <DxLib.h>
-#include <stdio.h>
+#include "Precompile.h"
 #include "Player.h"
 #include "SkatePlayer.h"
 #include "Enemy.h"

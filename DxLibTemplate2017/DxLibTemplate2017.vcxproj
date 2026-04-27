@@ -77,6 +77,8 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>c:\DxLib_VC\プロジェクトに追加すべきファイル_VC用</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompile.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>c:\DxLib_VC\プロジェクトに追加すべきファイル_VC用</AdditionalLibraryDirectories>
@@ -87,6 +89,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompile.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -122,6 +126,8 @@
     <ClCompile Include="AxeEnemy.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="Stage_Collision.cpp" />
+    <ClCompile Include="Stage_Draw.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Jump.cpp" />
@@ -131,13 +137,18 @@
     <ClCompile Include="Pad.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerInputManager.cpp" />
+    <ClCompile Include="Precompile.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="ShareClass.cpp" />
     <ClCompile Include="Skate.cpp" />
     <ClCompile Include="SkatePlayer.cpp" />
     <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="Spring.cpp" />
-    <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="Stage_Update.cpp" />
+    <ClCompile Include="Stage_Weapons.cpp" />
     <ClCompile Include="Stone.cpp" />
     <ClCompile Include="ThrowAxe.cpp" />
     <ClCompile Include="ThrowKnife.cpp" />
@@ -147,7 +158,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AxeEnemy.h" />
-    <ClInclude Include="BlowAway.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Enemy.h" />
@@ -158,6 +168,7 @@
     <ClInclude Include="Pad.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerInputManager.h" />
+    <ClInclude Include="Precompile.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="ShareClass.h" />
     <ClInclude Include="Skate.h" />

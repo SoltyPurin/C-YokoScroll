@@ -1,4 +1,4 @@
-#include "DxLib.h"
+#include "Precompile.h"
 #include "ThrowAxe.h"
 #include "Weapons.h"
 #include "ShareClass.h"
@@ -17,8 +17,8 @@ Axe::Axe() : Weapons(){
 
 void Axe::Update() {
 	Weapons::Update();
-	_weaponPosition += _move * _oneMinuteMovePixel * ShareClass::KoteiValue;
-	_weaponPosition.y -= _axeVerticalY * _oneMinuteMovePixel * ShareClass::KoteiValue;
+	_weaponPosition += _move * _oneMinuteMovePixel * ShareClass::ConstValue;
+	_weaponPosition.y -= _axeVerticalY * _oneMinuteMovePixel * ShareClass::ConstValue;
 	Gravity();
 }
 void Axe::SetInfo(const Vector2& userPos, bool isRight) {
@@ -33,5 +33,5 @@ void Axe::SetInfo(const Vector2& userPos, bool isRight) {
 }
 
 void Axe::Gravity() {
-	_axeVerticalY -= GRAVITY * _oneMinuteMovePixel * ShareClass::KoteiValue;
+	_axeVerticalY -= GRAVITY * _oneMinuteMovePixel * ShareClass::ConstValue;
 }

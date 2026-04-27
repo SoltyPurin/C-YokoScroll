@@ -1,5 +1,5 @@
+#include "Precompile.h"
 #include "Skate.h"
-#include <DxLib.h>
 #include "Stage.h"
 
 Skate::Skate(Stage* stage, float x, float y):

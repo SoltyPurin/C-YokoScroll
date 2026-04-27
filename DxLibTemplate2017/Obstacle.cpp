@@ -1,3 +1,4 @@
+#include "Precompile.h"
 #include "Obstacle.h"
 #include <DxLib.h>
 #include "Vector2.h"

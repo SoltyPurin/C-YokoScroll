@@ -1,6 +1,6 @@
+#include "Precompile.h"
 #include "OutGameInputManager.h"
 #include "Pad.h"
-#include <DxLib.h>
 #include "ShareClass.h"
 
 OutGameInputManager::OutGameInputManager(Buttons buttons):
