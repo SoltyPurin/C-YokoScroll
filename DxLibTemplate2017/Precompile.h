@@ -7,8 +7,8 @@
 #include <memory>
 #include <stdio.h>
 #include <cassert>
-
-
+#include "Vector2.h"
+#include "Rect.h"
 class Precompile
 {
 };

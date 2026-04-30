@@ -5,3 +5,7 @@
 #include <vector>
 #include "ShareClass.h"
 #include <memory>
+#include <stdio.h>
+#include <cassert>
+#include "Vector2.h"
+#include "Rect.h"

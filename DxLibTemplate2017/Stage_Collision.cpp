@@ -1,13 +1,12 @@
 #include "Precompile.h"
 #include "Stage.h"
 #include "Player.h"
+#include "VerticalMoveFloor.h"
+#include "Skate.h"
 #include "Enemy.h"
 #include "Goal.h"
-#include "Skate.h"
-#include "Spring.h"
 #include "Stone.h"
-#include "VerticalMoveFloor.h"
-
+#include "Spring.h"
 
 bool Stage::DetectPlayerToGoalCollision() {
 	bool isGoal = false;

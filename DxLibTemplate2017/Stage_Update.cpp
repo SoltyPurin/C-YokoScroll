@@ -1,15 +1,15 @@
 #include "Precompile.h"
 #include "Stage.h"
-#include "Goal.h"
-#include "VerticalMoveFloor.h"
-#include "Spring.h"
-#include "SoundPlayer.h"
-#include "AxeEnemy.h"
-#include "Skate.h"
-#include "Stone.h"
+#include "Player.h"
 #include "SkatePlayer.h"
 #include "PlayerInputManager.h"
-
+#include "VerticalMoveFloor.h"
+#include "Skate.h"
+#include "Enemy.h"
+#include "AxeEnemy.h"
+#include "Goal.h"
+#include "Stone.h"
+#include "Spring.h"
 
 bool Stage::Update() {
 	bool isClear = false;

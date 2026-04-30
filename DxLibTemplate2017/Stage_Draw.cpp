@@ -1,15 +1,14 @@
 #include "Precompile.h"
 #include "Stage.h"
-#include "Enemy.h"
-#include "VerticalMoveFloor.h"
-#include "Spring.h"
-#include "Skate.h"
-#include "Stone.h"
 #include "Player.h"
-#include "Goal.h"
-#include "ThrowAxe.h"
+#include "VerticalMoveFloor.h"
 #include "ThrowKnife.h"
-
+#include "ThrowAxe.h"
+#include "Skate.h"
+#include "Enemy.h"
+#include "Goal.h"
+#include "Stone.h"
+#include "Spring.h"
 
 void Stage::Draw() {
 	DrawBackGround();
@@ -124,8 +123,8 @@ void Stage::DrawMapChip() {
 			int posY = static_cast<int>(y * CHIP_SIZE * kChipScale - GetScrollY());
 
 			// ‰æ–ÊŠO‚Í•`‰æ‚µ‚È‚¢
-			if (posX < 0 - CHIP_SIZE) continue;
-			if (posX > SCREEN_WIDTH) continue;
+			if (posX < 0 - CHIP_SIZE-CHIP_SIZE) continue;
+			if (posX > SCREEN_WIDTH+CHIP_SIZE) continue;
 			if (posY < 0 - CHIP_SIZE) continue;
 			if (posY > SCREEN_HEIGHT) continue;
 

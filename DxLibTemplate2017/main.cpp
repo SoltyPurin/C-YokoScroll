@@ -56,14 +56,14 @@ void Menu(Button* loadGameButton,Button* gameExitButton,Vector2 mousePos,SoundPl
         DxLib_End();
     }
 }
-
-//ゲーム画面のUIなどがあればここ（今回はStage側で描画しているので空でも可）
+//ほんへ
 void Game() {
     DrawString(960, 540, "ゲーム画面です。", GetColor(255, 255, 255));
 }
-
+//クリア画面
 void Clear(Button* returnTitleButton,Button* gameExitButton,Vector2 mousePos,SoundPlayer& sound) {
-    DrawGraph(0, 0, _clearHandle, TRUE);
+    //DrawGraph(0, 0, _clearHandle, TRUE);
+    DrawExtendGraph(0, 0, 1920, 1080, _clearHandle, TRUE);
     returnTitleButton->DrawButton();
     gameExitButton->DrawButton();
     if (returnTitleButton->IsTouch(mousePos)) {
@@ -101,7 +101,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetOutApplicationLogValidFlag(TRUE);
 
     // 【修正】FALSEは全画面です。非全画面（ウィンドウ）なら TRUE にします
-    ChangeWindowMode(TRUE);
+    ChangeWindowMode(FALSE);
 
     SetGraphMode(1920, 1080, 32);
     SetBackgroundColor(0, 0, 0, 1);
@@ -120,9 +120,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     int _buttonHandle = LoadGraph("Image/Button.png");
     int _seletButtonHandle = LoadGraph("Image/ButtonSelect.png");
  
-    Vector2 _gameStartButtonPos = Vector2(500, 300);
-    Vector2 _gameExitButtonPos = Vector2(500, 600);
-    Vector2 _returnTitleButtonPos = Vector2(500, 400);
+    Vector2 _gameStartButtonPos = Vector2(700, 300);
+    Vector2 _gameExitButtonPos = Vector2(700, 600);
+    Vector2 _returnTitleButtonPos = Vector2(700, 400);
 
     Button _gameStartButton(ButtonJob::LoadGameScene, _buttonHandle,_seletButtonHandle, "ゲームスタート", _gameStartButtonPos);
     Button _gameExitButton(ButtonJob::GameExit, _buttonHandle, _seletButtonHandle, "　ゲーム終了", _gameExitButtonPos);

@@ -1,6 +1,12 @@
 #include "Precompile.h"
 #include "Stage.h"
+#include "Player.h"
+#include "VerticalMoveFloor.h"
+#include "Skate.h"
 #include "AxeEnemy.h"
+#include "Goal.h"
+#include "Stone.h"
+#include "Spring.h"
 void Stage::LoadMap() {
 	std::ifstream file("CSV/TestMapData.csv");
 	std::string line;

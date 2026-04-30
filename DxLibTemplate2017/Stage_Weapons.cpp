@@ -1,9 +1,10 @@
 #include "Precompile.h"
 #include "Stage.h"
 #include "Player.h"
-#include "ThrowAxe.h"
 #include "ThrowKnife.h"
+#include "ThrowAxe.h"
 #include "SoundPlayer.h"
+#include "Enemy.h"
 #include "AxeEnemy.h"
 #include "Stone.h"
 #pragma region Axe
