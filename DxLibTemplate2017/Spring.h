@@ -11,6 +11,9 @@ public:
 	~Spring();
 	void Update();
 	void DrawSpring(float scrrolX, float scrrolY);
+	/// <summary>
+	/// ƒoƒl‚ğ”­“®ó‘Ô‚ÉØ‚è‘Ö‚¦‚é
+	/// </summary>
 	void ActiveSpring();
 	virtual void SetStagePointer(Stage* pStage) { _stagePointer = pStage; }
 	Rect GetColRect() const { return _collisionRect; }

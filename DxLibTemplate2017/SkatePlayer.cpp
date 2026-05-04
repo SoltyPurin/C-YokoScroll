@@ -43,6 +43,7 @@ void SkatePlayer::Draw() {
 }
 
 void SkatePlayer::Move(float moveValue, bool isRight) {
+	//スケボーの場合は自動で横に移動するため左を入力してもブレーキがかかるだけ
 	if (_isBlowing) {
 		return;
 	}

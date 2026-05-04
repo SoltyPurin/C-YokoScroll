@@ -17,6 +17,9 @@ public:
 	Vector2 GetPos() const { return _currentPos; }
 	void ResetPosition();
 	void Gravity(float deltaTime);
+	/// <summary>
+	/// ˆê’è—ÊˆÚ“®‚µ‚½‚çˆÚ“®‚Ìƒtƒ‰ƒO‚ğØ‚è‘Ö‚¦‚éˆ—
+	/// </summary>
 	void FlagChange();
 
 protected:

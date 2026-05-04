@@ -312,6 +312,7 @@ void Player::ResetPosition() {
 }
 
 void Player::ChangeHandle() {
+    //プレイヤーの見た目を変える
     switch (_currentState) {
     case PlayerState::Idle:
         _useHandle = _idleHandle;
@@ -327,9 +328,6 @@ void Player::ChangeHandle() {
         break;
     case PlayerState::BlowAway:
         _useHandle = _blowAwayHandle;
-    //default:
-    //    _useHandle = _idleHandle;
-        //break;
     }
 }
 
@@ -347,6 +345,8 @@ void Player::BlowAway() {
 }
 
 void Player::CallBlowAway(bool isRight) {
+    //isBlowingがtrueの間は操作が効かなくなる
+    //ジャンプ処理を呼び、横移動を呼び続けることで転ぶのを表現
     _isBlowing = true;
     _blowAwayPower = _initBlowAwayPower;
     _jumpAddres->JumpProtocol(*this, _isMoveing);

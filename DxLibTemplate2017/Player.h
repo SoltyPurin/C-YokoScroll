@@ -23,23 +23,58 @@ public:
     virtual ~Player() override;
     virtual void Update() override;
     virtual void Draw() override;
+    /// <summary>
+    /// 通常の当たり判定検知
+    /// </summary>
+    /// <param name="chipRect">マップチップの当たり判定</param>
     virtual void CheckHitMap(Rect& chipRect) override;
+    /// <summary>
+    /// バネとの当たり判定検知
+    /// </summary>
+    /// <param name="springRect"></param>
     void CheckSpringHitMap(Rect& springRect);
+    /// <summary>
+    /// 移動床との当たり判定検知
+    /// </summary>
+    /// <param name="moveFloorRect"></param>
+    /// <param name="floor"></param>
     void CheckMoveFloorHitMap(Rect& moveFloorRect, VerticalMoveFloor* floor);
+    /// <summary>
+    /// 座標をリセット
+    /// </summary>
     virtual void ResetPosition() override;
+    /// <summary>
+    /// 移動
+    /// </summary>
+    /// <param name="moveValue">移動量</param>
+    /// <param name="isRight">入力が右かどうか</param>
     virtual void Move(float moveValue,bool isRight);
+    /// <summary>
+    /// ジャンプの際に上に行く力を設定
+    /// </summary>
+    /// <param name="vy">上昇力をセット</param>
     void SetVY(float vy);
+    /// <summary>
+    /// 現在の上昇力を返す
+    /// </summary>
+    /// <returns>上昇力</returns>
     float ReturnVY();
     Vector2 GetPos();
     void JumpProtocol();
     void SetJumpAddres(Jump* jump) { _jumpAddres = jump; }
     void ChangeWeapon();
     std::unique_ptr<Axe> CreateAxe();
-    //ThrowKnife* CreateKnife();
     std::unique_ptr<ThrowKnife> CreateKnife();
     int ReturnCurrentWeaponIndex()const;
     virtual void ChangeHandle();
+    /// <summary>
+    /// 転んだ時の吹き飛び処理
+    /// </summary>
     void BlowAway();
+    /// <summary>
+    /// 転ぶ処理を呼び出す
+    /// </summary>
+    /// <param name="isRight">転ぶ際にどちらに転ばせるか</param>
     void CallBlowAway(bool isRight);
     bool IsPlayerRight()const { return _isRight; }
 

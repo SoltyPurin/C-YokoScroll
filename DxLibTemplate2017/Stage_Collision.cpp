@@ -42,7 +42,6 @@ void Stage::DetectPlayerToEnemyCollision() {
 			bool isPlayerEnemyCollision = (*i)->GetColRect().IsCollision(_player->GetColRect());
 			if (isPlayerEnemyCollision) {
 				if (_isSkateing) {
-					//delete enemy;
 					_enemys.erase(i);
 					SwitchPlayerState(false, _player->GetPos());
 					_player->CallBlowAway(!_player->IsPlayerRight());

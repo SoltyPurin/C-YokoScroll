@@ -11,6 +11,10 @@ public:
 	void SetPlayerInfo(Player* player) { _playerInfo = player; }
 	virtual void Update()override;
 	std::unique_ptr<Axe> CreateAxe();
+	/// <summary>
+	/// プレイヤーが敵から見て左右どちらにいるか
+	/// </summary>
+	/// <returns>右にいたらtrueを返す</returns>
 	bool IsPlayerRight();
 
 private:

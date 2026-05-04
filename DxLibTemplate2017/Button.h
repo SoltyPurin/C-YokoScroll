@@ -12,10 +12,28 @@ class Button
 public:
 	Button(ButtonJob job, int buttonImageHandle, int selectButtonHandle, CHAR* message, Vector2 pos);
 	~Button();
+	/// <summary>
+	/// ボタンをクリックしたかどうかを返す
+	/// </summary>
+	/// <param name="mousePos">マウスの画面座標</param>
+	/// <returns>クリックしたかどうか</returns>
 	bool IsTouch(Vector2 mousePos);
+	/// <summary>
+	/// ボタンを描画する
+	/// </summary>
 	void DrawButton() const;
+	/// <summary>
+	/// コントローラーの選択判定
+	/// </summary>
 	void ControllTap();
+	/// <summary>
+	/// ボタンの色を切り替える
+	/// </summary>
+	/// <param name="isSelecting">ボタンが選択されてるか否か</param>
 	void SwitchButtonColor(bool isSelecting);
+	/// <summary>
+	/// ボタンの状態をリセットする。これが走らないとボタンがおしっぱになる
+	/// </summary>
 	void Reset();
 private:
 	ButtonJob _job;

@@ -7,7 +7,13 @@ class OutGameInputManager
 public:
 	OutGameInputManager(Buttons buttons);
 	~OutGameInputManager();
+	/// <summary>
+	/// タイトル画面の入力処理
+	/// </summary>
 	void TitleInput();
+	/// <summary>
+	/// クリア画面の入力処理
+	/// </summary>
 	void ResultInput();
 
 private:

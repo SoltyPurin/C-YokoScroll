@@ -26,8 +26,22 @@ public:
 	void Draw();
 	void DrawBackGround();
 	void DrawMapChip();
+	/// <summary>
+	/// 描画範囲内のプレイヤーの現在のX座標を返す
+	/// </summary>
+	/// <returns>プレイヤーのX座標</returns>
 	int GetScrollX();
+	/// <summary>
+    /// 描画範囲内のプレイヤーの現在のY座標を返す
+	/// </summary>
+	/// <returns>プレイヤーのY座標</returns>
 	int GetScrollY();
+	/// <summary>
+	/// 渡された当たり判定の持ち主がマップチップと接触したかどうかを返す
+	/// </summary>
+	/// <param name="rect">接触を判定したいものの当たり判定</param>
+	/// <param name="chipRect">マップチップの当たり判定</param>
+	/// <returns></returns>
 	bool IsCollision(Rect rect, Rect& chipRect);
 	void DrawAxe();
 	void UpdateAxe();
@@ -42,14 +56,25 @@ public:
 	void DetectPlayerToObstacleCollision();
 	bool DetectPlayerToSkateCollision();
 	bool DetectPlayerToGoalCollision();
+	/// <summary>
+	/// 全てをリセットする
+	/// </summary>
 	void ResetGame();
 	void PlayerFallCheck();
+	/// <summary>
+	/// プレイヤーが現在選択している武器を表示する
+	/// </summary>
 	void DrawCurrentWeapon();
 	void SpawnEnemy(int enIndex, float x, float y);
 	void SetMoveFloor(float x, float y);
 	void SetSpring(float x, float y);
 	void SetSkate(float x, float y);
 	void SetFellStone(float x, float y);
+	/// <summary>
+	/// プレイヤーの状態を切り替える
+	/// </summary>
+	/// <param name="isSkatePlayer">スケボー状態にするかどうか</param>
+	/// <param name="pos">状態を変える時の座標</param>
 	void SwitchPlayerState(bool isSkatePlayer,Vector2 pos);
 	static constexpr float MAP_WIDTH = 30000.0f;	 // マップ全体の幅
 	static constexpr float MAP_HEIGHT = 2080.0f;	 // マップ全体の高さ

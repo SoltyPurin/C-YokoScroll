@@ -27,7 +27,7 @@ void Spring::Update() {
 	if (_isSpringActive) {
 		_currentActiveTime += _deltaTime;
 	}
-
+	//バネがアクティブになった後一定時間経ったらバネを元に戻す
 	if (_currentActiveTime >= _springActiveTime) {
 		_currentActiveTime = 0;
 		_isSpringActive = false;

@@ -132,7 +132,6 @@
     <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Jump.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="OutGameInputManager.cpp" />
     <ClCompile Include="Pad.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -165,7 +164,6 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="Jump.h" />
-    <ClInclude Include="Obstacle.h" />
     <ClInclude Include="OutGameInputManager.h" />
     <ClInclude Include="Pad.h" />
     <ClInclude Include="Player.h" />

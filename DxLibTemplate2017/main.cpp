@@ -3,7 +3,6 @@
 #include "SkatePlayer.h"
 #include "Enemy.h"
 #include "Jump.h"
-#include "Obstacle.h"
 #include "Stage.h"
 #include "ThrowAxe.h"
 #include "SoundPlayer.h"
